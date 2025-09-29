@@ -61,3 +61,16 @@ cd backend
 npm install
 npm run dev
 
+📝 Roadmap
+
+Initialiser backend Express
+Créer les routes API (auth, concerts, blog, contact, dons)
+Mettre en place la BDD MySQL
+Développer l’interface React (Home, Musique, Concerts, Blog, Cagnotte, Contact)
+Déploiement (Render + Vercel)
+Rédaction de la documentation finale
+
+Auteur
+
+Projet réalisé par Thomas dans le cadre de l’examen final de développeur web.
+
