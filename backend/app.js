@@ -1,6 +1,8 @@
 import express from "express";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
+import cors from "cors";
+import morgan from "morgan";
 import { errorHandler } from "./middlewares/errorHandler.js";
 
 import userRoutes from "./routes/userRoutes.js";
@@ -12,8 +14,23 @@ import messageRoutes from "./routes/messageRoutes.js";
 dotenv.config();
 const app = express();
 
+
 app.use(express.json());
 app.use(cookieParser());
+
+
+if (process.env.NODE_ENV !== "production") {
+  app.use(morgan("dev"));
+}
+
+
+app.use(
+  cors({
+    origin: process.env.CLIENT_URL || "http://localhost:5173",
+    credentials: true,
+  })
+);
+
 
 app.use("/api/users", userRoutes);
 app.use("/api/articles", articleRoutes);
