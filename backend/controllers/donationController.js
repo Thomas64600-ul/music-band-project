@@ -8,34 +8,29 @@ import {
 } from "../models/Donation.js";
 
 
-export async function addDonation(req, res) {
+export async function addDonation(req, res, next) {
   try {
-    const { user_id, amount, message } = req.body;
-    if (!amount) {
-      return res.status(400).json({ error: "Montant requis" });
-    }
+    const { user_id, amount, message } = req.validatedBody; 
 
     const newDonation = await createDonation(user_id, amount, message);
     res.status(201).json(newDonation);
   } catch (error) {
-    console.error("Erreur ajout don:", error);
-    res.status(500).json({ error: "Erreur serveur" });
+    next(error);
   }
 }
 
 
-export async function fetchDonations(req, res) {
+export async function fetchDonations(req, res, next) {
   try {
     const donations = await getAllDonations();
     res.json(donations);
   } catch (error) {
-    console.error("Erreur récupération dons:", error);
-    res.status(500).json({ error: "Erreur serveur" });
+    next(error);
   }
 }
 
 
-export async function fetchDonationById(req, res) {
+export async function fetchDonationById(req, res, next) {
   try {
     const donation = await getDonationById(req.params.id);
     if (!donation) {
@@ -43,24 +38,22 @@ export async function fetchDonationById(req, res) {
     }
     res.json(donation);
   } catch (error) {
-    console.error("Erreur récupération don:", error);
-    res.status(500).json({ error: "Erreur serveur" });
+    next(error);
   }
 }
 
 
-export async function fetchDonationsByUser(req, res) {
+export async function fetchDonationsByUser(req, res, next) {
   try {
     const donations = await getDonationsByUserId(req.params.user_id);
     res.json(donations);
   } catch (error) {
-    console.error("Erreur récupération dons utilisateur:", error);
-    res.status(500).json({ error: "Erreur serveur" });
+    next(error);
   }
 }
 
 
-export async function removeDonation(req, res) {
+export async function removeDonation(req, res, next) {
   try {
     const success = await deleteDonation(req.params.id);
     if (!success) {
@@ -68,18 +61,16 @@ export async function removeDonation(req, res) {
     }
     res.json({ message: "Don supprimé avec succès" });
   } catch (error) {
-    console.error("Erreur suppression don:", error);
-    res.status(500).json({ error: "Erreur serveur" });
+    next(error);
   }
 }
 
 
-export async function fetchDonationStats(req, res) {
+export async function fetchDonationStats(req, res, next) {
   try {
     const stats = await getDonationStats();
     res.json(stats);
   } catch (error) {
-    console.error("Erreur récupération stats dons:", error);
-    res.status(500).json({ error: "Erreur serveur" });
+    next(error);
   }
 }
