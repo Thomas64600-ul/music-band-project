@@ -1,7 +1,13 @@
 import Joi from "joi";
 
-export const messageSchema = Joi.object({
+
+export const createMessageSchema = Joi.object({
   name: Joi.string().min(2).max(100).required(),
   email: Joi.string().email().required(),
   message: Joi.string().min(5).max(1000).required(),
+});
+
+
+export const updateMessageSchema = Joi.object({
+  message: Joi.string().min(5).max(1000).optional(),
 });
