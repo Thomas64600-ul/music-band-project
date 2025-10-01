@@ -5,7 +5,7 @@ Site web pour un **groupe de musique** : deux artistes qui mélangent solos de g
 
 ---
 
-## 🎯 Objectifs du projet
+## Objectifs du projet
 - Mettre en avant la musique du groupe avec un lecteur audio.
 - Présenter les concerts à venir (réservation en ligne).
 - Proposer un blog d’actualités.
@@ -14,7 +14,7 @@ Site web pour un **groupe de musique** : deux artistes qui mélangent solos de g
 
 ---
 
-## 📂 Structure du projet
+## Structure du projet
 
 
 
@@ -25,6 +25,7 @@ music-band-project/
 │ ├── routes/
 │ ├── controllers/
 │ ├── models/
+  ├── shemas/
 │ ├── config/
 │ └── .env.example
 │
@@ -42,7 +43,7 @@ music-band-project/
 
 ---
 
-## ⚙️ Technologies utilisées
+## Technologies utilisées
 - **Frontend :** React + Vite + Tailwind CSS  
 - **Backend :** Node.js + Express  
 - **Base de données :** MySQL (gérée via phpMyAdmin)  
@@ -53,7 +54,7 @@ music-band-project/
 
 ---
 
-## 🚀 Installation & lancement
+## Installation & lancement
 
 ### 1. Lancer le Backend (API)
 ```bash
@@ -61,7 +62,7 @@ cd backend
 npm install
 npm run dev
 
-📝 Roadmap
+Roadmap
 
 Initialiser backend Express
 Créer les routes API (auth, concerts, blog, contact, dons)
