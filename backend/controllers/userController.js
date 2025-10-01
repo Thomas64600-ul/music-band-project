@@ -10,10 +10,12 @@ import {
 import { hashPassword, comparePassword } from "../middlewares/hashPassword.js";
 import jwt from "jsonwebtoken";
 
-
+/**
+ * REGISTER
+ */
 export async function register(req, res, next) {
   try {
-    const { firstname, lastname, email, password, role } = req.validatedBody; 
+    const { firstname, lastname, email, password, role } = req.validatedBody;
 
     const existingUser = await getUserByEmail(email);
     if (existingUser) {
@@ -29,7 +31,9 @@ export async function register(req, res, next) {
   }
 }
 
-
+/**
+ * LOGIN
+ */
 export async function login(req, res, next) {
   try {
     const { email, password } = req.validatedBody;
@@ -50,21 +54,34 @@ export async function login(req, res, next) {
       { expiresIn: "1h" }
     );
 
-    
+    // Stockage du token dans un cookie sécurisé
     res.cookie("token", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production", 
+      secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
-      maxAge: 60 * 60 * 1000 
+      maxAge: 60 * 60 * 1000 // 1h
     });
 
-    res.json({ message: "Connexion réussie" });
+    // ✅ Retourne aussi le token et les infos utilisateur
+    res.json({
+      message: "Connexion réussie",
+      token,
+      user: {
+        id: user.id,
+        firstname: user.firstname,
+        lastname: user.lastname,
+        email: user.email,
+        role: user.role
+      }
+    });
   } catch (error) {
     next(error);
   }
 }
 
-
+/**
+ * FETCH ALL USERS
+ */
 export async function fetchUsers(req, res, next) {
   try {
     const users = await getAllUsers();
@@ -74,7 +91,9 @@ export async function fetchUsers(req, res, next) {
   }
 }
 
-
+/**
+ * FETCH USER BY ID
+ */
 export async function fetchUserById(req, res, next) {
   try {
     const user = await getUserById(req.params.id);
@@ -85,7 +104,9 @@ export async function fetchUserById(req, res, next) {
   }
 }
 
-
+/**
+ * UPDATE USER
+ */
 export async function editUser(req, res, next) {
   try {
     const { firstname, lastname, email, role } = req.validatedBody;
@@ -99,7 +120,9 @@ export async function editUser(req, res, next) {
   }
 }
 
-
+/**
+ * DELETE USER
+ */
 export async function removeUser(req, res, next) {
   try {
     const deleted = await deleteUser(req.params.id);
@@ -111,10 +134,12 @@ export async function removeUser(req, res, next) {
   }
 }
 
-
+/**
+ * LOGOUT
+ */
 export async function logout(req, res, next) {
   try {
-    res.clearCookie("token"); 
+    res.clearCookie("token");
     res.json({ message: "Déconnexion réussie" });
   } catch (error) {
     next(error);

@@ -1,6 +1,5 @@
 import pool from "../config/db.js";
 
-
 export async function createMessage(name, email, message) {
   if (!name || !email || !message) {
     throw new Error("Tous les champs (name, email, message) sont obligatoires");
@@ -8,13 +7,12 @@ export async function createMessage(name, email, message) {
 
   const [result] = await pool.query(
     `INSERT INTO messages (name, email, message, created_at, status)
-     VALUES (?, ?, ?, NOW(), 'pending')`,
+     VALUES (?, ?, ?, NOW(), 'unread')`,
     [name, email, message]
   );
 
-  return { id: result.insertId, name, email, message, status: "pending" };
+  return { id: result.insertId, name, email, message, status: "unread" };
 }
-
 
 export async function getAllMessages() {
   const [rows] = await pool.query(
@@ -25,7 +23,6 @@ export async function getAllMessages() {
   return rows;
 }
 
-
 export async function getMessageById(id) {
   const [rows] = await pool.query(
     `SELECT id, name, email, message, status, created_at 
@@ -35,7 +32,6 @@ export async function getMessageById(id) {
   );
   return rows[0];
 }
-
 
 export async function getMessagesByEmail(email) {
   const [rows] = await pool.query(
