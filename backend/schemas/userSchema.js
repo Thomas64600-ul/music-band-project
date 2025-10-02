@@ -23,3 +23,10 @@ export const updateUserSchema = Joi.object({
   role: Joi.string().valid("user", "admin").optional(),
 });
 
+export const forgotPasswordSchema = Joi.object({
+  email: Joi.string().email().required()
+});
+
+export const resetPasswordSchema = Joi.object({
+  password: Joi.string().min(6).required()
+});

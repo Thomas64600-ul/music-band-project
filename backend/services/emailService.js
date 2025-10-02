@@ -1,9 +1,11 @@
 import nodemailer from "nodemailer";
+import fs from "fs";
+import path from "path";
 import dotenv from "dotenv";
 dotenv.config();
 
 const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com", 
+  host: "smtp.gmail.com",
   port: 465,
   secure: true,
   auth: {
@@ -12,25 +14,19 @@ const transporter = nodemailer.createTransport({
   }
 });
 
-  @param {string} to 
-  @param {string} subject 
-  @param {string} text 
-  @param {object} data 
- 
-export async function sendEmail(to, subject, text, data = {}) {
-  const html = `
-    <div style="font-family: Arial, sans-serif; padding:20px; background:#f9f9f9; border-radius:8px;">
-      <h2 style="color:#B3122D;">Nouveau message reçu sur Music Band Website</h2>
-      <p><strong>Nom :</strong> ${data.name || "Inconnu"}</p>
-      <p><strong>Email :</strong> ${data.email || "Inconnu"}</p>
-      <p><strong>Message :</strong></p>
-      <div style="padding:10px; background:#fff; border:1px solid #ddd; border-radius:5px;">
-        ${data.message || "Pas de contenu"}
-      </div>
-      <hr style="margin:20px 0;">
-      <p style="font-size:12px; color:#666;">Cet email a été généré automatiquement par le site Music Band.</p>
-    </div>
-  `;
+
+function loadTemplate(templateName, data) {
+  const templatePath = path.join(process.cwd(), "templates", templateName);
+  let template = fs.readFileSync(templatePath, "utf8");
+
+  for (const key in data) {
+    template = template.replace(new RegExp(`{{${key}}}`, "g"), data[key]);
+  }
+  return template;
+}
+
+export async function sendEmail(to, subject, text, templateName = null, data = {}) {
+  const html = templateName ? loadTemplate(templateName, data) : text;
 
   try {
     const info = await transporter.sendMail({
@@ -48,3 +44,4 @@ export async function sendEmail(to, subject, text, data = {}) {
     return false;
   }
 }
+

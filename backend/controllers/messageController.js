@@ -15,12 +15,22 @@ export async function addMessage(req, res, next) {
 
     const newMessage = await createMessage(name, email, message);
 
-    // Envoi email à l’admin
+    
     await sendEmail(
       process.env.ADMIN_EMAIL,
       "Nouveau message du site Music Band",
       `Message reçu de ${name} (${email}): ${message}`,
+      "adminNotification.html",
       { name, email, message }
+    );
+
+    // Email de confirmation à l’utilisateur
+    await sendEmail(
+      email,
+      "Merci pour votre message",
+      `Bonjour ${name}, nous avons bien reçu votre message : ${message}`,
+      "userConfirmation.html",
+      { name, message }
     );
 
     res.status(201).json(newMessage);
@@ -28,6 +38,7 @@ export async function addMessage(req, res, next) {
     next(error);
   }
 }
+
 
 export async function fetchMessages(req, res, next) {
   try {
