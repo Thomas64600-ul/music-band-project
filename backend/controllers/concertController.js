@@ -8,18 +8,21 @@ import {
   getConcertsByLocation
 } from "../models/Concert.js";
 
-
 export async function addConcert(req, res, next) {
   try {
-    const { title, location, date, ticket_url } = req.validatedBody; 
+    const { title, location, date, ticket_url } = req.validatedBody;
+    const imageUrl = req.file?.path || null;
 
-    const newConcert = await createConcert(title, location, date, ticket_url);
+    if (!title || !location || !date) {
+      return res.status(400).json({ error: "Titre, lieu et date sont requis" });
+    }
+
+    const newConcert = await createConcert(title, location, date, ticket_url, imageUrl);
     res.status(201).json(newConcert);
   } catch (error) {
     next(error);
   }
 }
-
 
 export async function fetchConcerts(req, res, next) {
   try {
@@ -29,7 +32,6 @@ export async function fetchConcerts(req, res, next) {
     next(error);
   }
 }
-
 
 export async function fetchConcertById(req, res, next) {
   try {
@@ -43,12 +45,16 @@ export async function fetchConcertById(req, res, next) {
   }
 }
 
-
 export async function editConcert(req, res, next) {
   try {
     const { title, location, date, ticket_url } = req.validatedBody;
+    const imageUrl = req.file?.path || null;
 
-    const success = await updateConcert(req.params.id, title, location, date, ticket_url);
+    if (!title || !location || !date) {
+      return res.status(400).json({ error: "Titre, lieu et date sont requis" });
+    }
+
+    const success = await updateConcert(req.params.id, title, location, date, ticket_url, imageUrl);
     if (!success) {
       return res.status(404).json({ error: "Concert non trouvé" });
     }
@@ -59,7 +65,6 @@ export async function editConcert(req, res, next) {
     next(error);
   }
 }
-
 
 export async function removeConcert(req, res, next) {
   try {
@@ -73,7 +78,6 @@ export async function removeConcert(req, res, next) {
   }
 }
 
-
 export async function fetchUpcomingConcerts(req, res, next) {
   try {
     const concerts = await getUpcomingConcerts();
@@ -82,7 +86,6 @@ export async function fetchUpcomingConcerts(req, res, next) {
     next(error);
   }
 }
-
 
 export async function fetchConcertsByLocation(req, res, next) {
   try {
@@ -93,5 +96,6 @@ export async function fetchConcertsByLocation(req, res, next) {
     next(error);
   }
 }
+
 
 

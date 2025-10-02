@@ -5,9 +5,9 @@ import {
   getUserByEmail,
   updateUser,
   deleteUser,
-  updateUserPassword, 
-  saveResetToken,     
-  getUserByResetToken 
+  updateUserPassword,
+  saveResetToken,
+  getUserByResetToken
 } from "../models/User.js";
 
 import { sendEmail } from "../services/emailService.js";
@@ -16,9 +16,11 @@ import jwt from "jsonwebtoken";
 import crypto from "crypto";
 
 
+
 export async function register(req, res, next) {
   try {
     const { firstname, lastname, email, password, role } = req.validatedBody;
+    const imageUrl = req.file?.path || null; 
 
     const existingUser = await getUserByEmail(email);
     if (existingUser) {
@@ -26,7 +28,7 @@ export async function register(req, res, next) {
     }
 
     const hashed = await hashPassword(password);
-    const newUser = await createUser(firstname, lastname, email, hashed, role);
+    const newUser = await createUser(firstname, lastname, email, hashed, role, imageUrl);
 
     
     await sendEmail(
@@ -41,11 +43,20 @@ export async function register(req, res, next) {
       }
     );
 
-    res.status(201).json(newUser);
+    res.status(201).json({
+      id: newUser.id,
+      firstname,
+      lastname,
+      email,
+      role: newUser.role,
+      image_url: newUser.image_url
+    });
   } catch (error) {
     next(error);
   }
 }
+
+
 
 export async function login(req, res, next) {
   try {
@@ -71,7 +82,7 @@ export async function login(req, res, next) {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
-      maxAge: 60 * 60 * 1000 
+      maxAge: 60 * 60 * 1000
     });
 
     res.json({
@@ -82,7 +93,8 @@ export async function login(req, res, next) {
         firstname: user.firstname,
         lastname: user.lastname,
         email: user.email,
-        role: user.role
+        role: user.role,
+        image_url: user.image_url
       }
     });
   } catch (error) {
@@ -100,16 +112,12 @@ export async function forgotPassword(req, res, next) {
       return res.status(404).json({ error: "Utilisateur non trouvé" });
     }
 
-   
     const resetToken = crypto.randomBytes(32).toString("hex");
     const expiry = new Date(Date.now() + 60 * 60 * 1000); 
 
-    
     await saveResetToken(user.id, resetToken, expiry);
-
     const resetUrl = `${process.env.CLIENT_URL}/reset-password/${resetToken}`;
 
-  
     await sendEmail(
       email,
       "Réinitialisation de votre mot de passe",
@@ -125,6 +133,7 @@ export async function forgotPassword(req, res, next) {
 }
 
 
+
 export async function resetPassword(req, res, next) {
   try {
     const { token } = req.params;
@@ -136,8 +145,6 @@ export async function resetPassword(req, res, next) {
     }
 
     const hashed = await hashPassword(password);
-
-   
     await updateUserPassword(user.id, hashed);
 
     res.json({ message: "Mot de passe réinitialisé avec succès" });
@@ -145,6 +152,7 @@ export async function resetPassword(req, res, next) {
     next(error);
   }
 }
+
 
 
 export async function fetchUsers(req, res, next) {
@@ -155,6 +163,8 @@ export async function fetchUsers(req, res, next) {
     next(error);
   }
 }
+
+
 
 export async function fetchUserById(req, res, next) {
   try {
@@ -167,17 +177,21 @@ export async function fetchUserById(req, res, next) {
 }
 
 
+
 export async function editUser(req, res, next) {
   try {
     const { firstname, lastname, email, role } = req.validatedBody;
-    const updated = await updateUser(req.params.id, firstname, lastname, email, role);
+    const imageUrl = req.file?.path || null;
 
+    const updated = await updateUser(req.params.id, firstname, lastname, email, role, imageUrl);
     if (!updated) return res.status(404).json({ error: "Utilisateur non trouvé" });
+
     res.json({ success: true, message: "Utilisateur mis à jour" });
   } catch (error) {
     next(error);
   }
 }
+
 
 
 export async function removeUser(req, res, next) {
@@ -191,6 +205,7 @@ export async function removeUser(req, res, next) {
 }
 
 
+
 export async function logout(req, res, next) {
   try {
     res.clearCookie("token");
@@ -199,5 +214,6 @@ export async function logout(req, res, next) {
     next(error);
   }
 }
+
 
 

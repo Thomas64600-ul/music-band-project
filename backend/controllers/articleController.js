@@ -6,15 +6,19 @@ import {
   deleteArticle
 } from "../models/Article.js";
 
-
 export async function addArticle(req, res, next) {
   try {
     const { title, content, author_id } = req.validatedBody;
+    const imageUrl = req.file?.path || null; // Cloudinary renvoie une URL
 
-    const newArticle = await createArticle(title, content, author_id);
+    if (!title || !content || !author_id) {
+      return res.status(400).json({ error: "Titre, contenu et auteur sont requis" });
+    }
+
+    const newArticle = await createArticle(title, content, author_id, imageUrl);
     res.status(201).json(newArticle);
   } catch (error) {
-    next(error); 
+    next(error);
   }
 }
 
@@ -26,7 +30,6 @@ export async function fetchArticles(req, res, next) {
     next(error);
   }
 }
-
 
 export async function fetchArticleById(req, res, next) {
   try {
@@ -40,12 +43,16 @@ export async function fetchArticleById(req, res, next) {
   }
 }
 
-
 export async function editArticle(req, res, next) {
   try {
     const { title, content } = req.validatedBody;
+    const imageUrl = req.file?.path || null;
 
-    const success = await updateArticle(req.params.id, title, content);
+    if (!title || !content) {
+      return res.status(400).json({ error: "Titre et contenu sont requis" });
+    }
+
+    const success = await updateArticle(req.params.id, title, content, imageUrl);
     if (!success) {
       return res.status(404).json({ error: "Article non trouvé" });
     }
@@ -56,7 +63,6 @@ export async function editArticle(req, res, next) {
     next(error);
   }
 }
-
 
 export async function removeArticle(req, res, next) {
   try {

@@ -10,11 +10,19 @@ import { validate } from "../middlewares/validationMiddleware.js";
 import { createArticleSchema, updateArticleSchema } from "../schemas/articleSchema.js";
 import { protect } from "../middlewares/authMiddleware.js";
 import { authorizeRoles } from "../middlewares/roleMiddleware.js";
+import upload from "../middlewares/uploadMiddleware.js"; 
 
 const router = express.Router();
 
 
-router.post("/", protect, authorizeRoles("admin"), validate(createArticleSchema), addArticle);
+router.post(
+  "/",
+  protect,
+  authorizeRoles("admin"),
+  upload.single("image"), 
+  validate(createArticleSchema),
+  addArticle
+);
 
 
 router.get("/", fetchArticles);
@@ -23,7 +31,14 @@ router.get("/", fetchArticles);
 router.get("/:id", fetchArticleById);
 
 
-router.put("/:id", protect, authorizeRoles("admin"), validate(updateArticleSchema), editArticle);
+router.put(
+  "/:id",
+  protect,
+  authorizeRoles("admin"),
+  upload.single("image"), 
+  validate(updateArticleSchema),
+  editArticle
+);
 
 
 router.delete("/:id", protect, authorizeRoles("admin"), removeArticle);

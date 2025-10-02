@@ -1,19 +1,28 @@
 import pool from "../config/db.js";
 
 
-export async function createUser(firstname, lastname, email, password, role) {
+export async function createUser(firstname, lastname, email, password, role, image_url = null) {
   const [result] = await pool.query(
-    `INSERT INTO users (firstname, lastname, email, password, role)
-     VALUES (?, ?, ?, ?, ?)`,
-    [firstname, lastname, email, password, role || "user"]
+    `INSERT INTO users (firstname, lastname, email, password, role, image_url)
+     VALUES (?, ?, ?, ?, ?, ?)`,
+    [firstname, lastname, email, password, role || "user", image_url]
   );
-  return { id: result.insertId, firstname, lastname, email, role: role || "user" };
+
+  return {
+    id: result.insertId,
+    firstname,
+    lastname,
+    email,
+    role: role || "user",
+    image_url
+  };
 }
 
 
 export async function getAllUsers() {
   const [rows] = await pool.query(
-    `SELECT id, firstname, lastname, email, role, created_at FROM users`
+    `SELECT id, firstname, lastname, email, role, image_url, created_at 
+     FROM users`
   );
   return rows;
 }
@@ -21,7 +30,7 @@ export async function getAllUsers() {
 
 export async function getUserById(id) {
   const [rows] = await pool.query(
-    `SELECT id, firstname, lastname, email, role, created_at 
+    `SELECT id, firstname, lastname, email, role, image_url, created_at 
      FROM users WHERE id = ?`,
     [id]
   );
@@ -31,7 +40,7 @@ export async function getUserById(id) {
 
 export async function getUserByEmail(email) {
   const [rows] = await pool.query(
-    `SELECT id, firstname, lastname, email, password, role, created_at,
+    `SELECT id, firstname, lastname, email, password, role, image_url, created_at,
             reset_token, reset_token_expires
      FROM users WHERE email = ?`,
     [email]
@@ -40,12 +49,12 @@ export async function getUserByEmail(email) {
 }
 
 
-export async function updateUser(id, firstname, lastname, email, role) {
+export async function updateUser(id, firstname, lastname, email, role, image_url = null) {
   const [result] = await pool.query(
     `UPDATE users 
-     SET firstname = ?, lastname = ?, email = ?, role = ? 
+     SET firstname = ?, lastname = ?, email = ?, role = ?, image_url = ?
      WHERE id = ?`,
-    [firstname, lastname, email, role, id]
+    [firstname, lastname, email, role, image_url, id]
   );
   return result.affectedRows > 0;
 }
@@ -73,7 +82,7 @@ export async function saveResetToken(userId, token, expiry) {
 
 export async function getUserByResetToken(token) {
   const [rows] = await pool.query(
-    `SELECT id, firstname, lastname, email, reset_token, reset_token_expires
+    `SELECT id, firstname, lastname, email, image_url, reset_token, reset_token_expires
      FROM users 
      WHERE reset_token = ? AND reset_token_expires > NOW()`,
     [token]

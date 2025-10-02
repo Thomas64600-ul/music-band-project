@@ -22,18 +22,19 @@ import {
 
 import { protect } from "../middlewares/authMiddleware.js";
 import { authorizeRoles } from "../middlewares/roleMiddleware.js";
+import upload from "../middlewares/uploadMiddleware.js";
 
 const router = express.Router();
 
 
-router.post("/register", validate(registerSchema), register);
+router.post("/register", upload.single("image"), validate(registerSchema), register);
 router.post("/login", validate(loginSchema), login);
 router.post("/logout", protect, logout);
 
 
 router.get("/", protect, authorizeRoles("admin"), fetchUsers);
 router.get("/:id", protect, fetchUserById);
-router.put("/:id", protect, validate(updateUserSchema), editUser);
+router.put("/:id", protect, upload.single("image"), validate(updateUserSchema), editUser);
 router.delete("/:id", protect, authorizeRoles("admin"), removeUser);
 
 
@@ -41,3 +42,4 @@ router.post("/forgot-password", validate(forgotPasswordSchema), forgotPassword);
 router.post("/reset-password/:token", validate(resetPasswordSchema), resetPassword);
 
 export default router;
+
