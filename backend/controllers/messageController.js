@@ -6,19 +6,28 @@ import {
   markMessageAsRead,
   deleteMessage
 } from "../models/Message.js";
+import { sendEmail } from "../services/emailService.js"; 
 
 
 export async function addMessage(req, res, next) {
   try {
-    const { name, email, message } = req.validatedBody; 
+    const { name, email, message } = req.validatedBody;
 
     const newMessage = await createMessage(name, email, message);
+
+    // Envoi email à l’admin
+    await sendEmail(
+      process.env.ADMIN_EMAIL,
+      "Nouveau message du site Music Band",
+      `Message reçu de ${name} (${email}): ${message}`,
+      { name, email, message }
+    );
+
     res.status(201).json(newMessage);
   } catch (error) {
     next(error);
   }
 }
-
 
 export async function fetchMessages(req, res, next) {
   try {
@@ -28,7 +37,6 @@ export async function fetchMessages(req, res, next) {
     next(error);
   }
 }
-
 
 export async function fetchMessageById(req, res, next) {
   try {
@@ -42,7 +50,6 @@ export async function fetchMessageById(req, res, next) {
   }
 }
 
-
 export async function fetchMessagesByEmail(req, res, next) {
   try {
     const messages = await getMessagesByEmail(req.params.email);
@@ -52,21 +59,18 @@ export async function fetchMessagesByEmail(req, res, next) {
   }
 }
 
-
 export async function readMessage(req, res, next) {
   try {
     const success = await markMessageAsRead(req.params.id);
     if (!success) {
       return res.status(404).json({ error: "Message non trouvé" });
     }
-
     const updatedMessage = await getMessageById(req.params.id);
     res.json(updatedMessage);
   } catch (error) {
     next(error);
   }
 }
-
 
 export async function removeMessage(req, res, next) {
   try {
@@ -79,4 +83,5 @@ export async function removeMessage(req, res, next) {
     next(error);
   }
 }
+
 
