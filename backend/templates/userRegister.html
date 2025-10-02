@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f9f9f9;
+      padding: 20px;
+    }
+    .container {
+      background: #fff;
+      border-radius: 8px;
+      padding: 20px;
+      border: 1px solid #ddd;
+    }
+    h2 {
+      color: #FFD700;
+    }
+    .btn {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 10px 20px;
+      background: #B3122D;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Bienvenue, {{firstname}} </h2>
+    <p>Merci de vous être inscrit sur <strong>Music Band Website</strong>.</p>
+    <p>Votre compte est maintenant créé avec l’email : <strong>{{email}}</strong>.</p>
+    <p>Vous pouvez dès maintenant vous connecter et profiter de toutes nos fonctionnalités 🎶</p>
+    <a href="{{loginUrl}}" class="btn">Se connecter</a>
+    <hr>
+    <p style="font-size:12px; color:#666;">Cet email a été généré automatiquement par le site Music Band.</p>
+  </div>
+</body>
+</html>
