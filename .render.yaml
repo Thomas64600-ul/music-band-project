@@ -1,3 +1,4 @@
+# Blueprint config for Music Band Backend
 services:
   - type: web
     name: music-band-backend
