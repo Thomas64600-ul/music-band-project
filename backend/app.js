@@ -10,10 +10,12 @@ import articleRoutes from "./routes/articleRoutes.js";
 import concertRoutes from "./routes/concertRoutes.js";
 import donationRoutes from "./routes/donationRoutes.js";
 import messageRoutes from "./routes/messageRoutes.js";
+import helmet from "helmet";
 
 dotenv.config();
 const app = express();
 
+app.use(helmet());
 
 app.use(express.json());
 app.use(cookieParser());
