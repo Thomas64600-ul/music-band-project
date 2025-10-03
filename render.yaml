@@ -3,7 +3,6 @@ services:
   - type: web
     name: music-band-backend
     env: node
-    plan: free
     rootDir: backend
     buildCommand: "npm install"
     startCommand: "node server.js"
@@ -34,3 +33,4 @@ services:
         sync: false
       - key: CLOUDINARY_API_SECRET
         sync: false
+
