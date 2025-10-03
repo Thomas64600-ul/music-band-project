@@ -35,3 +35,12 @@ export const resetPasswordLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
 });
+
+export const contactLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, 
+  max: 5, 
+  message: { error: "Trop de messages envoyés, réessayez plus tard." },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
