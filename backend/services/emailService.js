@@ -1,20 +1,15 @@
-import nodemailer from "nodemailer";
 import fs from "fs";
 import path from "path";
+import Mailjet from "node-mailjet";
 import dotenv from "dotenv";
 
 dotenv.config();
 
-// === CONFIG MAILJET ===
-const transporter = nodemailer.createTransport({
-  host: "in-v3.mailjet.com",
-  port: 587, // port recommandé
-  secure: false, // doit rester false avec le port 587
-  auth: {
-    user: process.env.MAIL_USER, // clé API publique
-    pass: process.env.MAIL_PASS  // clé secrète
-  },
-});
+// === CONFIGURATION MAILJET ===
+const mailjet = Mailjet.apiConnect(
+  process.env.MJ_APIKEY_PUBLIC,  // Clé API publique Mailjet
+  process.env.MJ_APIKEY_PRIVATE  // Clé API secrète Mailjet
+);
 
 // === CHARGEMENT DES TEMPLATES ===
 function loadTemplate(templateName, data) {
@@ -27,25 +22,35 @@ function loadTemplate(templateName, data) {
   return template;
 }
 
-// === ENVOI DE MAIL ===
+// === ENVOI D'EMAIL ===
 export async function sendEmail(to, subject, text, templateName = null, data = {}) {
   const html = templateName ? loadTemplate(templateName, data) : `<p>${text}</p>`;
 
   try {
-    const info = await transporter.sendMail({
-      from: `"Music Band Website" <no-reply@musicband.com>`, // tu peux laisser comme ça
-      to,
-      subject,
-      text,
-      html,
-    });
+    const result = await mailjet
+      .post("send", { version: "v3.1" })
+      .request({
+        Messages: [
+          {
+            From: {
+              Email: "no-reply@musicband.com", // tu peux le personnaliser
+              Name: "Music Band Website",
+            },
+            To: [{ Email: to }],
+            Subject: subject,
+            TextPart: text,
+            HTMLPart: html,
+          },
+        ],
+      });
 
-    console.log("✅ Email envoyé :", info.messageId);
+    console.log("✅ Email envoyé :", result.body.Messages[0].Status);
     return true;
   } catch (error) {
-    console.error("❌ Erreur envoi email :", error);
+    console.error("❌ Erreur envoi email :", error.message);
     return false;
   }
 }
+
 
 
