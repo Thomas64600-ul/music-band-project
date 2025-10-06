@@ -10,8 +10,11 @@ router.get("/test-email", async (req, res) => {
     "Ceci est un test d’envoi depuis Render via Mailjet."
   );
 
-  if (success) res.json({ message: "Email envoyé avec succès ✅" });
-  else res.status(500).json({ error: "Échec de l'envoi ❌" });
+  if (success) {
+    res.json({ message: "✅ Email envoyé avec succès" });
+  } else {
+    res.status(500).json({ error: "❌ Échec de l'envoi d'email" });
+  }
 });
 
 export default router;
