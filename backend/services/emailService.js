@@ -7,8 +7,8 @@ dotenv.config();
 
 // === CONFIGURATION MAILJET ===
 const mailjet = Mailjet.apiConnect(
-  process.env.MJ_APIKEY_PUBLIC,  // Clé API publique Mailjet
-  process.env.MJ_APIKEY_PRIVATE  // Clé API secrète Mailjet
+  process.env.MAIL_USER,   // clé publique (remplace MJ_APIKEY_PUBLIC)
+  process.env.MAIL_PASS    // clé privée (remplace MJ_APIKEY_PRIVATE)
 );
 
 // === CHARGEMENT DES TEMPLATES ===
@@ -33,7 +33,7 @@ export async function sendEmail(to, subject, text, templateName = null, data = {
         Messages: [
           {
             From: {
-              Email: "no-reply@musicband.com", // tu peux le personnaliser
+              Email: "no-reply@musicband.com",
               Name: "Music Band Website",
             },
             To: [{ Email: to }],
@@ -51,6 +51,7 @@ export async function sendEmail(to, subject, text, templateName = null, data = {
     return false;
   }
 }
+
 
 
 
