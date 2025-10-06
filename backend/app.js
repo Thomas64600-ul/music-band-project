@@ -11,6 +11,7 @@ import concertRoutes from "./routes/concertRoutes.js";
 import donationRoutes from "./routes/donationRoutes.js";
 import messageRoutes from "./routes/messageRoutes.js";
 import helmet from "helmet";
+import testRoute from "./routes/testRoute.js";
 
 dotenv.config();
 const app = express();
@@ -19,6 +20,7 @@ app.use(helmet());
 
 app.use(express.json());
 app.use(cookieParser());
+app.use("/api", testRoute);
 
 
 if (process.env.NODE_ENV !== "production") {
