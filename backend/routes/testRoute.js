@@ -1,35 +1,21 @@
-import Mailjet from "node-mailjet";
-import dotenv from "dotenv";
-dotenv.config();
+import express from "express";
+import { sendEmail } from "../services/emailService.js";
 
-const mailjet = Mailjet.apiConnect(
-  process.env.MJ_APIKEY_PUBLIC,
-  process.env.MJ_APIKEY_PRIVATE
-);
+const router = express.Router();
 
-export async function sendEmail(to, subject, text) {
-  try {
-    const result = await mailjet
-      .post("send", { version: "v3.1" })
-      .request({
-        Messages: [
-          {
-            From: {
-              Email: "thomas@votredomaine.com",
-              Name: "Music Band",
-            },
-            To: [{ Email: to }],
-            Subject: subject,
-            TextPart: text,
-          },
-        ],
-      });
-
-    console.log("✅ Mailjet email envoyé :", result.body);
-    return true;
-  } catch (err) {
-    console.error("❌ Erreur envoi Mailjet :", err.message);
-    return false;
+router.post("/test-email", async (req, res) => {
+  const success = await sendEmail(
+    "tonadresse@gmail.com",
+    "Test Mailjet ✅",
+    "Ceci est un test via Mailjet API depuis Render."
+  );
+  if (success) {
+    res.json({ message: "✅ Email envoyé avec succès !" });
+  } else {
+    res.status(500).json({ message: "❌ Échec de l’envoi." });
   }
-}
+});
+
+export default router;
+
 
