@@ -1,9 +1,16 @@
-export default function App() {
+import { Routes, Route } from "react-router-dom";
+import Intro from "./pages/Intro";
+
+
+function App() {
   return (
-    <div className="h-screen flex items-center justify-center bg-[#0A0A0A] text-[#F2F2F2]">
-      <h1 className="text-4xl font-bold">
-        Hello Tailwind 🎸
-      </h1>
+    <div className="min-h-screen bg-[#0A0A0A] text-[#F2F2F2]">
+      <Routes>
+        <Route path="/" element={<Intro />} />
+        
+      </Routes>
     </div>
-  )
+  );
 }
+
+export default App;
