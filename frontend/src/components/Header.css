@@ -1,0 +1,108 @@
+/* HEADER GLOBAL */
+/* HEADER GLOBAL */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: #0a0a0a;
+  color: #f2f2f2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.8rem 1rem;
+  z-index: 1000;
+}
+
+/* LOGO */
+.logo {
+  width: 45px;
+  height: auto;
+}
+
+/* TOGGLE — centré parfaitement */
+.header .theme-toggle {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* BURGER */
+.burger {
+  width: 28px;
+  height: 22px;
+  position: relative;
+  cursor: pointer;
+  z-index: 1100;
+}
+
+.burger span {
+  background-color: #ffd700;
+  height: 3px;
+  width: 100%;
+  border-radius: 2px;
+  position: absolute;
+  left: 0;
+  transition: all 0.3s ease-in-out;
+}
+
+.burger span:nth-child(1) {
+  top: 0;
+}
+.burger span:nth-child(2) {
+  top: 9px;
+}
+.burger span:nth-child(3) {
+  top: 18px;
+}
+
+/* CROIX */
+.burger.open span:nth-child(1) {
+  transform: rotate(45deg);
+  top: 9px;
+}
+
+.burger.open span:nth-child(2) {
+  opacity: 0;
+}
+
+.burger.open span:nth-child(3) {
+  transform: rotate(-45deg);
+  top: 9px;
+}
+
+/* MENU MOBILE */
+.nav {
+  position: fixed;
+  top: 60px;
+  left: 0;
+  width: 100%;
+  background-color: #111;
+  transform: translateY(-100%);
+  transition: transform 0.4s ease, opacity 0.3s ease;
+  opacity: 0;
+  z-index: 999;
+}
+
+.nav.active {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.nav ul {
+  list-style: none;
+  text-align: center;
+  padding: 0;
+  margin: 0;
+}
+
+.nav li {
+  padding: 1.2rem 0;
+  border-bottom: 1px solid #222;
+  font-size: 1.3rem;
+  transition: color 0.2s;
+}
+
+.nav li:hover {
+  color: #ffd700;
+}
