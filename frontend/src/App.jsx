@@ -1,29 +1,47 @@
+// src/App.jsx
+import { Routes, Route } from "react-router-dom";
 import Header from "./components/Header";
-import logo from "./assets/logo.png";
+import Footer from "./components/Footer";
+import Home from "./pages/Home";
 
 export default function App() {
-  const menuLinks = [
-    { name: "Home", path: "/" },
-    { name: "Musique", path: "/Music" },
-    { name: "Concerts", path: "/concerts" },
-    { name: "Blog", path: "/blog" },
-    { name: "Cagnotte", path: "/cagnotte" },
-    { name: "Contact", path: "/contact" },
-  ];
-
   return (
-    <div className="min-h-screen bg-gray-100 dark:bg-gray-950 text-gray-900 dark:text-gray-100">
+    <div className="min-h-screen flex flex-col bg-[#0A0A0A] text-[#F2F2F2]">
       <Header
-        logoSrc={logo}
+        logoSrc="/src/assets/logo.png"
+        links={[
+          { name: "Accueil", path: "/" },
+          { name: "Musique", path: "/music" },
+          { name: "Concerts", path: "/concerts" },
+          { name: "Blog", path: "/blog" },
+          { name: "Cagnotte", path: "/cagnotte" },
+          { name: "Contact", path: "/contact" },
+        ]}
+      />
+
+      {/* Un padding-bottom modéré suffit pour éviter que le footer chevauche le contenu */}
+      <main className="flex-grow pt-20 md:pt-28 pb-16 md:pb-18">
+        <Routes>
+          <Route path="/" element={<Home />} />
+        </Routes>
+      </main>
+
+      <Footer
         siteTitle="REVEREN"
-        links={menuLinks}
-        bgColor="#0B101C"
-        accentColor="#FFD700"
-        defaultDark={true}
+        socials={[
+          { name: "Instagram", url: "https://instagram.com", Icon: undefined }, // on mettra l'Icon par défaut du footer
+          { name: "YouTube", url: "https://youtube.com", Icon: undefined },
+          { name: "Spotify", url: "https://spotify.com", Icon: undefined },
+        ]}
       />
     </div>
   );
 }
+
+
+
+
+
 
 
 
