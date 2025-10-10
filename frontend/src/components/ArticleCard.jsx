@@ -12,7 +12,7 @@ export default function ArticleCard({ title, excerpt, image, date, link }) {
         sm:max-w-none w-full
       "
     >
-      {/* 🖼️ Image de couverture avec effet glass */}
+    
       <div className="relative w-full h-48 sm:h-56 overflow-hidden group">
         <img
           src={image}
@@ -24,7 +24,7 @@ export default function ArticleCard({ title, excerpt, image, date, link }) {
           draggable="false"
         />
 
-        {/* 🟡 Overlay doré (effet glass) */}
+       
         <div
           className="
             absolute inset-0 bg-gradient-to-t from-[#FFD70033] to-transparent
@@ -33,7 +33,7 @@ export default function ArticleCard({ title, excerpt, image, date, link }) {
           "
         ></div>
 
-        {/* ✨ Brillance diagonale */}
+        
         <div
           className="
             absolute inset-0 bg-gradient-to-tr from-transparent via-[#FFD70022] to-transparent
@@ -42,13 +42,12 @@ export default function ArticleCard({ title, excerpt, image, date, link }) {
           "
         ></div>
 
-        {/* 🗓️ Badge date */}
         <div className="absolute top-3 left-3 bg-[#FFD700] text-black text-xs font-bold px-3 py-1 rounded-md shadow">
           {date}
         </div>
       </div>
 
-      {/* 📰 Contenu texte */}
+ 
       <div className="flex flex-col flex-grow p-5 sm:p-6">
         <h3
           className="

@@ -34,7 +34,7 @@ export default function TestArticles() {
         📰 Dernières actualités
       </h1>
 
-      {/* ✅ grille responsive : 1 colonne sur mobile, 2 sur desktop */}
+      
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
         {articles.map((article, i) => (
           <ArticleCard key={i} {...article} />
