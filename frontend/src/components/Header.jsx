@@ -11,15 +11,15 @@ function LinkItem({ to, children, onClick, className = "" }) {
       end
       className={({ isActive }) =>
         [
-          // base
+          
           "relative group inline-block text-gray-200 transition-colors duration-300",
-          // couleur au survol / focus / tap (mobile)
+          
           "hover:text-[#FFD700] focus-visible:text-[#FFD700] active:text-[#FFD700]",
-          // soulignement animé (centré)
+         
           'after:content-[""] after:absolute after:left-1/2 after:-translate-x-1/2 after:-bottom-1 after:h-[2px] after:bg-[#FFD700] after:transition-all after:duration-300',
-          // au repos : trait caché ; à l’état actif : trait visible
+          
           isActive ? "after:w-3/4 after:opacity-100" : "after:w-0 after:opacity-60",
-          // affiche le trait aussi aux états d’interaction
+          
           "group-hover:after:w-3/4 group-focus-visible:after:w-3/4 active:after:w-3/4",
           className,
         ].join(" ")
@@ -56,9 +56,9 @@ export default function Header({ logoSrc, links }) {
           : "bg-[#F2F2F2]/100"
       }`}
     >
-      {/* Bandeau haut */}
+     
       <div className="flex items-center justify-between px-4 sm:px-8 py-2 sm:py-3">
-        {/* bouton thème */}
+    
         <button
           onClick={toggleTheme}
           className="text-yellow-400 hover:scale-110 transition-transform duration-200"
@@ -67,7 +67,7 @@ export default function Header({ logoSrc, links }) {
           {darkMode ? <FaMoon size={20} /> : <FaSun size={20} />}
         </button>
 
-        {/* logo centré */}
+      
         <div className="flex justify-center flex-1">
           <img
             src={logoSrc}
@@ -78,7 +78,7 @@ export default function Header({ logoSrc, links }) {
           />
         </div>
 
-        {/* burger mobile */}
+       
         <button
           onClick={toggleMenu}
           className="text-yellow-400 hover:scale-110 transition-transform duration-200 sm:hidden"
@@ -88,7 +88,7 @@ export default function Header({ logoSrc, links }) {
         </button>
       </div>
 
-      {/* Menu desktop */}
+     
       <div className="hidden sm:flex justify-center border-t border-gray-800 py-2">
         <nav className="flex space-x-8 text-sm font-semibold">
           {links.map((l) => (
@@ -99,7 +99,7 @@ export default function Header({ logoSrc, links }) {
         </nav>
       </div>
 
-      {/* Menu mobile animé */}
+     
       <AnimatePresence>
         {menuOpen && (
           <motion.nav

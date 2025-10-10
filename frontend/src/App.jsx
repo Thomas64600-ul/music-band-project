@@ -3,6 +3,8 @@ import { Routes, Route } from "react-router-dom";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Home from "./pages/Home";
+import TestButtons from "./pages/TestButtons";
+
 
 export default function App() {
   return (
@@ -19,17 +21,18 @@ export default function App() {
         ]}
       />
 
-      {/* Un padding-bottom modéré suffit pour éviter que le footer chevauche le contenu */}
+     
       <main className="flex-grow pt-20 md:pt-28 pb-16 md:pb-18">
         <Routes>
           <Route path="/" element={<Home />} />
+           <Route path="/test-buttons" element={<TestButtons />} />
         </Routes>
       </main>
 
       <Footer
         siteTitle="REVEREN"
         socials={[
-          { name: "Instagram", url: "https://instagram.com", Icon: undefined }, // on mettra l'Icon par défaut du footer
+          { name: "Instagram", url: "https://instagram.com", Icon: undefined },
           { name: "YouTube", url: "https://youtube.com", Icon: undefined },
           { name: "Spotify", url: "https://spotify.com", Icon: undefined },
         ]}
