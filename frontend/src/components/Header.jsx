@@ -1,172 +1,135 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { motion } from "framer-motion"; // ✅ animations
+import { NavLink } from "react-router-dom";
+import { FaBars, FaTimes, FaSun, FaMoon } from "react-icons/fa";
+import { motion, AnimatePresence } from "framer-motion";
 
-export default function Header({
-  logoSrc,
-  siteTitle = "Reveren",
-  links = [],
-  bgColor = "#0B101C",
-  accentColor = "#FFD700",
-  defaultDark = false,
-}) {
+function LinkItem({ to, children, onClick, className = "" }) {
+  return (
+    <NavLink
+      to={to}
+      onClick={onClick}
+      end
+      className={({ isActive }) =>
+        [
+          // base
+          "relative group inline-block text-gray-200 transition-colors duration-300",
+          // couleur au survol / focus / tap (mobile)
+          "hover:text-[#FFD700] focus-visible:text-[#FFD700] active:text-[#FFD700]",
+          // soulignement animé (centré)
+          'after:content-[""] after:absolute after:left-1/2 after:-translate-x-1/2 after:-bottom-1 after:h-[2px] after:bg-[#FFD700] after:transition-all after:duration-300',
+          // au repos : trait caché ; à l’état actif : trait visible
+          isActive ? "after:w-3/4 after:opacity-100" : "after:w-0 after:opacity-60",
+          // affiche le trait aussi aux états d’interaction
+          "group-hover:after:w-3/4 group-focus-visible:after:w-3/4 active:after:w-3/4",
+          className,
+        ].join(" ")
+      }
+    >
+      {children}
+    </NavLink>
+  );
+}
+
+export default function Header({ logoSrc, links }) {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [darkMode, setDarkMode] = useState(defaultDark);
-  const [scrolled, setScrolled] = useState(false);
+  const [darkMode, setDarkMode] = useState(true);
+  const [isScrolled, setIsScrolled] = useState(false);
 
-  // ✅ Gestion du mode sombre
-  useEffect(() => {
-    document.documentElement.classList.toggle("dark", darkMode);
-  }, [darkMode]);
+  const toggleTheme = () => setDarkMode((v) => !v);
+  const toggleMenu = () => setMenuOpen((v) => !v);
 
-  // ✅ Ombre dynamique au scroll
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 10);
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    const onScroll = () => setIsScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
-
-  // 🔥 Variantes d’animation pour le menu
-  const menuVariants = {
-    hidden: { opacity: 0, y: -10 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { staggerChildren: 0.1, delayChildren: 0.2 },
-    },
-  };
-
-  const linkVariants = {
-    hidden: { opacity: 0, y: -10 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.4 } },
-  };
 
   return (
     <header
-      className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 
-      ${scrolled ? "shadow-[0_2px_10px_rgba(0,0,0,0.4)] dark:shadow-[0_2px_12px_rgba(255,215,0,0.2)]" : ""}
-      ${darkMode ? "bg-[#0A0F1C]" : "bg-[#0B101C]"}`}
-      style={{ backgroundColor: bgColor }}
+      className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 border-b border-gray-800 ${
+        darkMode
+          ? isScrolled
+            ? "bg-[#070B12]/95 shadow-[0_2px_15px_#FFD70030]"
+            : "bg-[#0B0F17]/100"
+          : isScrolled
+          ? "bg-[#F2F2F2]/95 shadow-[0_2px_15px_#FFD70040]"
+          : "bg-[#F2F2F2]/100"
+      }`}
     >
-      {/* === BARRE SUPÉRIEURE === */}
-      <div className="flex items-center justify-between px-4 py-2 md:px-10 md:py-4">
-        {/* 🌙 Bouton Dark/Light */}
+      {/* Bandeau haut */}
+      <div className="flex items-center justify-between px-4 sm:px-8 py-2 sm:py-3">
+        {/* bouton thème */}
         <button
-          onClick={() => setDarkMode(!darkMode)}
-          className={`text-3xl transition-transform duration-300 hover:scale-125 ${
-            darkMode
-              ? "text-[#FFD700] drop-shadow-[0_0_10px_#FFD700]"
-              : `text-[${accentColor}]`
-          }`}
-          aria-label="Basculer le mode sombre"
+          onClick={toggleTheme}
+          className="text-yellow-400 hover:scale-110 transition-transform duration-200"
+          aria-label="Basculer le thème"
         >
-          {darkMode ? "☀️" : "🌙"}
+          {darkMode ? <FaMoon size={20} /> : <FaSun size={20} />}
         </button>
 
-        {/* 🎵 LOGO ANIMÉ */}
+        {/* logo centré */}
         <div className="flex justify-center flex-1">
-          <Link to="/" aria-label="Accueil">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{
-                opacity: 1,
-                scale: [1, 1.1, 1],
-                boxShadow: [
-                  "0 0 0px rgba(255,215,0,0)",
-                  "0 0 30px rgba(255,215,0,0.6)",
-                  "0 0 0px rgba(255,215,0,0)",
-                ],
-              }}
-              transition={{ duration: 3, ease: "easeInOut" }}
-              whileHover={{
-                scale: 1.1,
-                boxShadow: "0 0 25px rgba(255,215,0,0.7)",
-              }}
-              className={`rounded-full transition-transform duration-500 hover:scale-105 ${
-                darkMode ? "drop-shadow-[0_0_25px_#FFD700]" : ""
-              }`}
-            >
-              <motion.img
-                src={logoSrc}
-                alt={`${siteTitle} Logo`}
-                className="h-20 sm:h-28 md:h-40 lg:h-48 w-auto object-contain"
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 1.2, ease: "easeOut" }}
-              />
-            </motion.div>
-          </Link>
+          <img
+            src={logoSrc}
+            alt="Logo REVEREN"
+            className={`object-contain transition-all duration-500 ${
+              isScrolled ? "h-12 sm:h-14" : "h-14 sm:h-16"
+            } drop-shadow-[0_0_10px_#FFD70080] hover:drop-shadow-[0_0_18px_#FFD700]`}
+          />
         </div>
 
-        {/* 🍔 MENU BURGER */}
+        {/* burger mobile */}
         <button
-          onClick={() => setMenuOpen(!menuOpen)}
-          className={`text-4xl md:hidden transition-transform duration-300 hover:scale-125 ${
-            darkMode
-              ? "text-[#FFD700] drop-shadow-[0_0_10px_#FFD700]"
-              : `text-[${accentColor}]`
-          }`}
+          onClick={toggleMenu}
+          className="text-yellow-400 hover:scale-110 transition-transform duration-200 sm:hidden"
           aria-label={menuOpen ? "Fermer le menu" : "Ouvrir le menu"}
         >
-          {menuOpen ? "✖" : "☰"}
+          {menuOpen ? <FaTimes size={22} /> : <FaBars size={22} />}
         </button>
       </div>
 
-      {/* === MENU DE NAVIGATION === */}
-      <nav
-        className={`transition-all duration-500 ease-in-out border-t border-gray-800 ${
-          darkMode ? "bg-gray-900/95" : "bg-[#0F1626]"
-        }`}
-      >
-        {/* 🖥️ Menu Desktop animé */}
-        <motion.ul
-          className="hidden md:flex justify-center items-center space-x-12 py-4 text-lg font-semibold text-gray-100"
-          variants={menuVariants}
-          initial="hidden"
-          animate="visible"
-        >
-          {links.map(({ name, path }) => (
-            <motion.li key={path} variants={linkVariants}>
-              <Link
-                to={path}
-                className={`hover:text-[${accentColor}] transition`}
-              >
-                {name}
-              </Link>
-            </motion.li>
+      {/* Menu desktop */}
+      <div className="hidden sm:flex justify-center border-t border-gray-800 py-2">
+        <nav className="flex space-x-8 text-sm font-semibold">
+          {links.map((l) => (
+            <LinkItem key={l.name} to={l.path}>
+              {l.name}
+            </LinkItem>
           ))}
-        </motion.ul>
+        </nav>
+      </div>
 
-        {/* 📱 Menu mobile animé */}
-        <motion.div
-          className={`md:hidden overflow-hidden transition-all duration-500 ease-in-out ${
-            menuOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
-          }`}
-          variants={menuVariants}
-          initial="hidden"
-          animate={menuOpen ? "visible" : "hidden"}
-        >
-          <motion.ul
-            className="flex flex-col items-center py-4 space-y-4 text-lg font-medium text-gray-100"
-            variants={menuVariants}
+      {/* Menu mobile animé */}
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.nav
+            initial={{ opacity: 0, y: -15 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -15 }}
+            className={`sm:hidden flex flex-col items-center py-3 border-t border-gray-700 ${
+              darkMode ? "bg-[#0B0F17]" : "bg-[#F2F2F2]"
+            }`}
           >
-            {links.map(({ name, path }) => (
-              <motion.li key={path} variants={linkVariants}>
-                <Link
-                  to={path}
-                  onClick={() => setMenuOpen(false)}
-                  className={`hover:text-[${accentColor}] transition`}
-                >
-                  {name}
-                </Link>
-              </motion.li>
+            {links.map((l) => (
+              <LinkItem
+                key={l.name}
+                to={l.path}
+                onClick={() => setMenuOpen(false)}
+                className="block w-full text-center py-3 text-xl"
+              >
+                {l.name}
+              </LinkItem>
             ))}
-          </motion.ul>
-        </motion.div>
-      </nav>
+          </motion.nav>
+        )}
+      </AnimatePresence>
     </header>
   );
 }
+
+
+
+
 
 
 
