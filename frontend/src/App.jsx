@@ -5,6 +5,7 @@ import Footer from "./components/Footer";
 import Home from "./pages/Home";
 import TestButtons from "./pages/TestButtons";
 import TestPlayer from "./pages/TestPlayer";
+import TestArticles from "./pages/TestArticles"; // 🆕 ici
 
 export default function App() {
   return (
@@ -21,12 +22,12 @@ export default function App() {
         ]}
       />
 
-     
       <main className="flex-grow pt-20 md:pt-28 pb-16 md:pb-18">
         <Routes>
           <Route path="/" element={<Home />} />
-           <Route path="/test-buttons" element={<TestButtons />} />
-           <Route path="/test-player" element={<TestPlayer />} />
+          <Route path="/test-buttons" element={<TestButtons />} />
+          <Route path="/test-player" element={<TestPlayer />} />
+          <Route path="/test-articles" element={<TestArticles />} /> {/* 🆕 ici */}
         </Routes>
       </main>
 
