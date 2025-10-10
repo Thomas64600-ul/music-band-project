@@ -4,7 +4,7 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Home from "./pages/Home";
 import TestButtons from "./pages/TestButtons";
-
+import TestPlayer from "./pages/TestPlayer";
 
 export default function App() {
   return (
@@ -26,6 +26,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Home />} />
            <Route path="/test-buttons" element={<TestButtons />} />
+           <Route path="/test-player" element={<TestPlayer />} />
         </Routes>
       </main>
 

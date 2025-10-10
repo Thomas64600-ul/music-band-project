@@ -1,13 +1,20 @@
-/** @type {import('tailwindcss').Config} */
+
 export default {
-  darkMode: 'class',  // <--- obligatoire !
-  content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
-  ],
+  darkMode: 'class',  
+  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
-    extend: {},
+    extend: {
+      keyframes: {
+        pulseGlow: {
+          "0%, 100%": { transform: "scale(1)", opacity: "0.6" },
+          "50%": { transform: "scale(1.3)", opacity: "0.9" },
+        },
+      },
+      animation: {
+        glow: "pulseGlow 2s infinite ease-in-out",
+        pulseGlow: "pulseGlow 2s infinite ease-in-out",
+      },
+    },
   },
   plugins: [],
-}
-
+};
