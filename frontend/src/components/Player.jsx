@@ -14,7 +14,7 @@ export default function Player({
   const [volume, setVolume] = useState(1);
   const [isMuted, setIsMuted] = useState(false);
 
-  // Lecture / pause
+ 
   const togglePlay = () => {
     const audio = audioRef.current;
     if (!audio) return;
@@ -23,7 +23,7 @@ export default function Player({
     setIsPlaying(!isPlaying);
   };
 
-  // Suivi du temps
+ 
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
@@ -36,7 +36,7 @@ export default function Player({
     return () => audio.removeEventListener("timeupdate", updateProgress);
   }, []);
 
-  // Volume
+ 
   const toggleMute = () => {
     const audio = audioRef.current;
     if (!audio) return;
@@ -51,7 +51,7 @@ export default function Player({
     setIsMuted(value === 0);
   };
 
-  // Auto lecture si demandé
+  
   useEffect(() => {
     if (autoplay) {
       audioRef.current.play();
@@ -61,7 +61,7 @@ export default function Player({
 
   return (
     <div className="w-full max-w-md bg-[#0B0F17] border border-[#1E1E1E] rounded-2xl shadow-lg overflow-hidden flex flex-col items-center text-[#F2F2F2]">
-      {/* 🎵 Image de couverture */}
+      
       {cover && (
         <img
           src={cover}
@@ -70,13 +70,13 @@ export default function Player({
         />
       )}
 
-      {/* Infos titre */}
+     
       <div className="p-4 text-center">
         <h3 className="text-lg font-semibold text-[#FFD700]">{title}</h3>
         <p className="text-sm text-gray-400">{artist}</p>
       </div>
 
-      {/* Contrôles principaux */}
+      
       <div className="flex items-center justify-center gap-6 py-3">
         <button
           onClick={togglePlay}
@@ -108,7 +108,7 @@ export default function Player({
         />
       </div>
 
-      {/* Barre de progression */}
+      
       <div className="w-full bg-gray-700 h-1 rounded-full mb-4 relative">
         <div
           className="absolute top-0 left-0 h-1 bg-[#FFD700] rounded-full transition-all duration-300"
@@ -116,7 +116,7 @@ export default function Player({
         ></div>
       </div>
 
-      {/* Élément audio caché */}
+    
       <audio ref={audioRef} src={src} preload="metadata" />
     </div>
   );

@@ -6,6 +6,7 @@ import Home from "./pages/Home";
 import TestButtons from "./pages/TestButtons";
 import TestPlayer from "./pages/TestPlayer";
 import TestArticles from "./pages/TestArticles"; // 🆕 ici
+import TestConcerts from "./pages/TestConcerts";
 
 export default function App() {
   return (
@@ -27,7 +28,8 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/test-buttons" element={<TestButtons />} />
           <Route path="/test-player" element={<TestPlayer />} />
-          <Route path="/test-articles" element={<TestArticles />} /> {/* 🆕 ici */}
+          <Route path="/test-articles" element={<TestArticles />} /> 
+          <Route path="/test-concerts" element={<TestConcerts />} /> 
         </Routes>
       </main>
 

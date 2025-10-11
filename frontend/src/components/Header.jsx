@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { FaBars, FaTimes, FaSun, FaMoon } from "react-icons/fa";
-import { AnimatePresence } from "framer-motion";
+import { motion,AnimatePresence } from "framer-motion";
 
 function LinkItem({ to, children, onClick, className = "" }) {
   return (
