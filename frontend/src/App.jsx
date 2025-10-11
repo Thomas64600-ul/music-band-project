@@ -5,12 +5,12 @@ import Footer from "./components/Footer";
 import Home from "./pages/Home";
 import TestButtons from "./pages/TestButtons";
 import TestPlayer from "./pages/TestPlayer";
-import TestArticles from "./pages/TestArticles"; // 🆕 ici
-import TestConcerts from "./pages/TestConcerts";
+import Cagnotte from "./pages/Cagnotte"; // ✅ Import de la page Cagnotte
 
 export default function App() {
   return (
     <div className="min-h-screen flex flex-col bg-[#0A0A0A] text-[#F2F2F2]">
+      {/* ✅ Header toujours visible */}
       <Header
         logoSrc="/src/assets/logo.png"
         links={[
@@ -18,21 +18,22 @@ export default function App() {
           { name: "Musique", path: "/music" },
           { name: "Concerts", path: "/concerts" },
           { name: "Blog", path: "/blog" },
-          { name: "Cagnotte", path: "/cagnotte" },
+          { name: "Cagnotte", path: "/cagnotte" }, // ✅ lien ajouté dans le menu
           { name: "Contact", path: "/contact" },
         ]}
       />
 
+      {/* ✅ Contenu principal */}
       <main className="flex-grow pt-20 md:pt-28 pb-16 md:pb-18">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/test-buttons" element={<TestButtons />} />
           <Route path="/test-player" element={<TestPlayer />} />
-          <Route path="/test-articles" element={<TestArticles />} /> 
-          <Route path="/test-concerts" element={<TestConcerts />} /> 
+          <Route path="/cagnotte" element={<Cagnotte />} /> {/* ✅ Nouvelle route */}
         </Routes>
       </main>
 
+      {/* ✅ Footer toujours affiché */}
       <Footer
         siteTitle="REVEREN"
         socials={[
@@ -44,6 +45,7 @@ export default function App() {
     </div>
   );
 }
+
 
 
 
