@@ -6,6 +6,8 @@ import Home from "./pages/Home";
 import TestButtons from "./pages/TestButtons";
 import TestPlayer from "./pages/TestPlayer";
 import Cagnotte from "./pages/Cagnotte"; // ✅ Import de la page Cagnotte
+import TestArticles from "./pages/TestArticles";
+import TestConcerts from "./pages/TestConcerts";
 
 export default function App() {
   return (
@@ -29,6 +31,8 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/test-buttons" element={<TestButtons />} />
           <Route path="/test-player" element={<TestPlayer />} />
+          <Route path="/test-articles" element={<TestArticles />} />
+          <Route path="/test-concerts" element={<TestConcerts />} />
           <Route path="/cagnotte" element={<Cagnotte />} /> {/* ✅ Nouvelle route */}
         </Routes>
       </main>
