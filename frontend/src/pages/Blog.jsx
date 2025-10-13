@@ -6,7 +6,7 @@ export default function Articles() {
       title: "🎤 Nouveau concert à Bordeaux",
       excerpt:
         "Le groupe REVEREN revient sur scène avec une performance électro-rock inédite. Réservez vos places dès maintenant !",
-      image: "/src/assets/concert-bordeaux.jpg",
+      image: "/src/assets/concert-bordeaux.png",
       date: "10 Oct 2025",
       link: "/blog/concert-bordeaux",
     },
@@ -14,7 +14,7 @@ export default function Articles() {
       title: "⚡ Sortie du single 'Electric Sunrise'",
       excerpt:
         "Découvrez le nouveau titre de REVEREN, un mélange explosif de riffs électro et d’énergie live.",
-      image: "/src/assets/electric-sunrise.jpg",
+      image: "/src/assets/electric-sunrise.png",
       date: "05 Oct 2025",
       link: "/blog/electric-sunrise",
     },
@@ -22,7 +22,7 @@ export default function Articles() {
       title: "🎧 Backstage : enregistrement du prochain album",
       excerpt:
         "Un aperçu exclusif du processus créatif du groupe REVEREN en studio.",
-      image: "/src/assets/studio.jpg",
+      image: "/src/assets/studio.png",
       date: "02 Oct 2025",
       link: "/blog/studio",
     },

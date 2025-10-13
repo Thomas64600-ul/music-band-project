@@ -3,13 +3,12 @@ import { Routes, Route } from "react-router-dom";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Home from "./pages/Home";
-import TestButtons from "./pages/TestButtons";
 import Music from "./pages/Music";
 import Concerts from "./pages/Concerts";
 import Articles from "./pages/Blog";
+import Contact from "./pages/Contact";
 import Cagnotte from "./pages/Cagnotte"; // ✅ Import de la page Cagnotte
-import TestArticles from "./pages/TestArticles";
-import TestConcerts from "./pages/TestConcerts";
+
 
 export default function App() {
   return (
@@ -31,16 +30,15 @@ export default function App() {
       <main className="flex-grow pt-20 md:pt-28 pb-16 md:pb-18">
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/test-buttons" element={<TestButtons />} />
           <Route path="/music" element={<Music />} />
-
           <Route path="/blog" element={<Articles />} />
           <Route path="/concerts" element={<Concerts />} />
           <Route path="/cagnotte" element={<Cagnotte />} /> {/* ✅ Nouvelle route */}
+          <Route path="/contact" element={<Contact />} />
         </Routes>
       </main>
 
-      {/* ✅ Footer toujours affiché */}
+    
       <Footer
         siteTitle="REVEREN"
         socials={[
