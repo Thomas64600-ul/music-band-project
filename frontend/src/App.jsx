@@ -4,7 +4,9 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Home from "./pages/Home";
 import TestButtons from "./pages/TestButtons";
-import TestPlayer from "./pages/TestPlayer";
+import Music from "./pages/Music";
+import Concerts from "./pages/Concerts";
+import Articles from "./pages/Blog";
 import Cagnotte from "./pages/Cagnotte"; // ✅ Import de la page Cagnotte
 import TestArticles from "./pages/TestArticles";
 import TestConcerts from "./pages/TestConcerts";
@@ -30,9 +32,10 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/test-buttons" element={<TestButtons />} />
-          <Route path="/test-player" element={<TestPlayer />} />
-          <Route path="/test-articles" element={<TestArticles />} />
-          <Route path="/test-concerts" element={<TestConcerts />} />
+          <Route path="/music" element={<Music />} />
+
+          <Route path="/blog" element={<Articles />} />
+          <Route path="/concerts" element={<Concerts />} />
           <Route path="/cagnotte" element={<Cagnotte />} /> {/* ✅ Nouvelle route */}
         </Routes>
       </main>
