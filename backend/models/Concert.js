@@ -1,30 +1,37 @@
 import pool from "../config/db.js";
 
 
-export async function createConcert(title, location, date, ticket_url, imageUrl = null) {
+export async function createConcert(title, location, date, ticket_url, image_url = null) {
   const [result] = await pool.query(
-    `INSERT INTO concerts (title, location, date, ticket_url, image_url, created_at)
-     VALUES (?, ?, ?, ?, ?, NOW())`,
-    [title, location, date, ticket_url, imageUrl]
+    `
+    INSERT INTO concerts (title, location, date, ticket_url, image_url)
+    VALUES (?, ?, ?, ?, ?)
+    `,
+    [title, location, date, ticket_url, image_url]
   );
 
-  return { 
-    id: result.insertId, 
-    title, 
-    location, 
-    date, 
-    ticket_url, 
-    image_url: imageUrl, 
-    created_at: new Date() 
-  };
+  const [rows] = await pool.query(
+    `
+    SELECT id, title, location, date, ticket_url, image_url, created_at
+    FROM concerts
+    WHERE id = ?
+    `,
+    [result.insertId]
+  );
+
+  return rows[0];
 }
 
 
-export async function getAllConcerts() {
+export async function getAllConcerts(limit = 20, offset = 0) {
   const [rows] = await pool.query(
-    `SELECT id, title, location, date, ticket_url, image_url, created_at 
-     FROM concerts 
-     ORDER BY date DESC`
+    `
+    SELECT id, title, location, date, ticket_url, image_url, created_at
+    FROM concerts
+    ORDER BY date DESC
+    LIMIT ? OFFSET ?
+    `,
+    [limit, offset]
   );
   return rows;
 }
@@ -32,34 +39,33 @@ export async function getAllConcerts() {
 
 export async function getConcertById(id) {
   const [rows] = await pool.query(
-    `SELECT id, title, location, date, ticket_url, image_url, created_at 
-     FROM concerts 
-     WHERE id = ?`,
+    `
+    SELECT id, title, location, date, ticket_url, image_url, created_at
+    FROM concerts
+    WHERE id = ?
+    `,
     [id]
   );
   return rows[0];
 }
 
 
-export async function updateConcert(id, title, location, date, ticket_url, imageUrl = null) {
-  let query;
-  let values;
+export async function updateConcert(id, title, location, date, ticket_url, image_url = null) {
+  const query = image_url
+    ? `
+        UPDATE concerts
+        SET title = ?, location = ?, date = ?, ticket_url = ?, image_url = ?
+        WHERE id = ?
+      `
+    : `
+        UPDATE concerts
+        SET title = ?, location = ?, date = ?, ticket_url = ?
+        WHERE id = ?
+      `;
 
-  if (imageUrl) {
-    query = `
-      UPDATE concerts 
-      SET title = ?, location = ?, date = ?, ticket_url = ?, image_url = ?
-      WHERE id = ?
-    `;
-    values = [title, location, date, ticket_url, imageUrl, id];
-  } else {
-    query = `
-      UPDATE concerts 
-      SET title = ?, location = ?, date = ?, ticket_url = ?
-      WHERE id = ?
-    `;
-    values = [title, location, date, ticket_url, id];
-  }
+  const values = image_url
+    ? [title, location, date, ticket_url, image_url, id]
+    : [title, location, date, ticket_url, id];
 
   const [result] = await pool.query(query, values);
   return result.affectedRows > 0;
@@ -77,10 +83,25 @@ export async function deleteConcert(id) {
 
 export async function getUpcomingConcerts() {
   const [rows] = await pool.query(
-    `SELECT id, title, location, date, ticket_url, image_url, created_at 
-     FROM concerts 
-     WHERE date >= CURDATE()
-     ORDER BY date ASC`
+    `
+    SELECT id, title, location, date, ticket_url, image_url, created_at
+    FROM concerts
+    WHERE date >= CURDATE()
+    ORDER BY date ASC
+    `
+  );
+  return rows;
+}
+
+
+export async function getPastConcerts() {
+  const [rows] = await pool.query(
+    `
+    SELECT id, title, location, date, ticket_url, image_url, created_at
+    FROM concerts
+    WHERE date < CURDATE()
+    ORDER BY date DESC
+    `
   );
   return rows;
 }
@@ -88,12 +109,15 @@ export async function getUpcomingConcerts() {
 
 export async function getConcertsByLocation(location) {
   const [rows] = await pool.query(
-    `SELECT id, title, location, date, ticket_url, image_url, created_at 
-     FROM concerts 
-     WHERE location LIKE ? 
-     ORDER BY date ASC`,
+    `
+    SELECT id, title, location, date, ticket_url, image_url, created_at
+    FROM concerts
+    WHERE location LIKE ?
+    ORDER BY date ASC
+    `,
     [`%${location}%`]
   );
   return rows;
 }
+
 

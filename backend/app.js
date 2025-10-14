@@ -7,7 +7,6 @@ import helmet from "helmet";
 
 import { errorHandler } from "./middlewares/errorHandler.js";
 
-
 import userRoutes from "./routes/userRoutes.js";
 import articleRoutes from "./routes/articleRoutes.js";
 import concertRoutes from "./routes/concertRoutes.js";
@@ -19,7 +18,18 @@ dotenv.config();
 const app = express();
 
 
-app.use(helmet());
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      useDefaults: true,
+      directives: {
+        "img-src": ["'self'", "data:", "blob:", "res.cloudinary.com"],
+        "connect-src": ["'self'", process.env.CLIENT_URL, "api.stripe.com"],
+        "script-src": ["'self'", "'unsafe-inline'", "js.stripe.com"],
+      },
+    },
+  })
+);
 app.disable("x-powered-by");
 
 
@@ -30,20 +40,24 @@ app.use(
 );
 
 
-app.use(express.json());
+app.use(express.json({ limit: "10mb" }));
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-
 
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || "http://localhost:5173",
+    origin: [process.env.CLIENT_URL || "http://localhost:5173"],
     credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
 
 if (process.env.NODE_ENV !== "production") {
   app.use(morgan("dev"));
+} else {
+  app.use(morgan("combined"));
 }
 
 
@@ -51,11 +65,12 @@ app.use("/api", testRoute);
 app.use("/api/users", userRoutes);
 app.use("/api/articles", articleRoutes);
 app.use("/api/concerts", concertRoutes);
-app.use("/api/donations", donationRoutes); 
+app.use("/api/donations", donationRoutes);
 app.use("/api/messages", messageRoutes);
 
 
 app.use(errorHandler);
 
 export default app;
+
 
