@@ -16,11 +16,10 @@ import jwt from "jsonwebtoken";
 import crypto from "crypto";
 
 
-
 export async function register(req, res, next) {
   try {
     const { firstname, lastname, email, password, role } = req.validatedBody;
-    const imageUrl = req.file?.path || null; 
+    const imageUrl = req.file?.path || null;
 
     const existingUser = await getUserByEmail(email);
     if (existingUser) {
@@ -30,7 +29,6 @@ export async function register(req, res, next) {
     const hashed = await hashPassword(password);
     const newUser = await createUser(firstname, lastname, email, hashed, role, imageUrl);
 
-    
     await sendEmail(
       email,
       "Bienvenue sur Music Band",
@@ -44,18 +42,21 @@ export async function register(req, res, next) {
     );
 
     res.status(201).json({
-      id: newUser.id,
-      firstname,
-      lastname,
-      email,
-      role: newUser.role,
-      image_url: newUser.image_url
+      success: true,
+      message: "Utilisateur créé avec succès",
+      user: {
+        id: newUser.id,
+        firstname,
+        lastname,
+        email,
+        role: newUser.role,
+        image_url: newUser.image_url
+      }
     });
   } catch (error) {
     next(error);
   }
 }
-
 
 
 export async function login(req, res, next) {
@@ -67,7 +68,7 @@ export async function login(req, res, next) {
       return res.status(404).json({ error: "Utilisateur non trouvé" });
     }
 
-    const validPassword = await comparePassword(password, user.password);
+    const validPassword = await comparePassword(password, user.hashed_password);
     if (!validPassword) {
       return res.status(401).json({ error: "Mot de passe incorrect" });
     }
@@ -78,16 +79,18 @@ export async function login(req, res, next) {
       { expiresIn: "1h" }
     );
 
+    
+    const isProd = process.env.NODE_ENV === "production";
     res.cookie("token", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
+      secure: isProd,
+      sameSite: isProd ? "none" : "lax",
       maxAge: 60 * 60 * 1000
     });
 
     res.json({
+      success: true,
       message: "Connexion réussie",
-      token,
       user: {
         id: user.id,
         firstname: user.firstname,
@@ -109,11 +112,13 @@ export async function forgotPassword(req, res, next) {
     const user = await getUserByEmail(email);
 
     if (!user) {
-      return res.status(404).json({ error: "Utilisateur non trouvé" });
+      return res.json({
+        message: "Si un compte correspond à cet email, un message a été envoyé."
+      });
     }
 
     const resetToken = crypto.randomBytes(32).toString("hex");
-    const expiry = new Date(Date.now() + 60 * 60 * 1000); 
+    const expiry = new Date(Date.now() + 60 * 60 * 1000); // 1h
 
     await saveResetToken(user.id, resetToken, expiry);
     const resetUrl = `${process.env.CLIENT_URL}/reset-password/${resetToken}`;
@@ -121,17 +126,19 @@ export async function forgotPassword(req, res, next) {
     await sendEmail(
       email,
       "Réinitialisation de votre mot de passe",
-      `Cliquez sur ce lien pour réinitialiser : ${resetUrl}`,
+      `Cliquez sur ce lien pour réinitialiser votre mot de passe : ${resetUrl}`,
       "resetPassword.html",
       { firstname: user.firstname, resetUrl }
     );
 
-    res.json({ message: "Email de réinitialisation envoyé" });
+    res.json({
+      success: true,
+      message: "Email de réinitialisation envoyé (si le compte existe)"
+    });
   } catch (error) {
     next(error);
   }
 }
-
 
 
 export async function resetPassword(req, res, next) {
@@ -147,35 +154,34 @@ export async function resetPassword(req, res, next) {
     const hashed = await hashPassword(password);
     await updateUserPassword(user.id, hashed);
 
-    res.json({ message: "Mot de passe réinitialisé avec succès" });
+    res.json({
+      success: true,
+      message: "Mot de passe réinitialisé avec succès"
+    });
   } catch (error) {
     next(error);
   }
 }
-
 
 
 export async function fetchUsers(req, res, next) {
   try {
     const users = await getAllUsers();
-    res.json(users);
+    res.json({ success: true, users });
   } catch (error) {
     next(error);
   }
 }
-
-
 
 export async function fetchUserById(req, res, next) {
   try {
     const user = await getUserById(req.params.id);
     if (!user) return res.status(404).json({ error: "Utilisateur non trouvé" });
-    res.json(user);
+    res.json({ success: true, user });
   } catch (error) {
     next(error);
   }
 }
-
 
 
 export async function editUser(req, res, next) {
@@ -193,7 +199,6 @@ export async function editUser(req, res, next) {
 }
 
 
-
 export async function removeUser(req, res, next) {
   try {
     const deleted = await deleteUser(req.params.id);
@@ -205,15 +210,38 @@ export async function removeUser(req, res, next) {
 }
 
 
-
 export async function logout(req, res, next) {
   try {
-    res.clearCookie("token");
-    res.json({ message: "Déconnexion réussie" });
+    const isProd = process.env.NODE_ENV === "production";
+    res.clearCookie("token", {
+      httpOnly: true,
+      secure: isProd,
+      sameSite: isProd ? "none" : "lax"
+    });
+    res.json({ success: true, message: "Déconnexion réussie" });
   } catch (error) {
     next(error);
   }
 }
 
 
-
+export async function me(req, res, next) {
+  try {
+    if (!req.user) {
+      return res.status(401).json({ error: "Non authentifié" });
+    }
+    res.json({
+      success: true,
+      user: {
+        id: req.user.id,
+        firstname: req.user.firstname,
+        lastname: req.user.lastname,
+        email: req.user.email,
+        role: req.user.role,
+        image_url: req.user.image_url
+      }
+    });
+  } catch (error) {
+    next(error);
+  }
+}
