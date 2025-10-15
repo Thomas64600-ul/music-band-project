@@ -2,7 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 
-
+// Pages publiques
 import Home from "./pages/Home";
 import Music from "./pages/Music";
 import Concerts from "./pages/Concerts";
@@ -16,6 +16,7 @@ import Register from "./pages/Register";
 
 
 import AdminListArticles from "./pages/AdminListArticles";
+import AdminEditArticle from "./pages/AdminEditArticle";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 export default function App() {
@@ -34,7 +35,7 @@ export default function App() {
         ]}
       />
 
-     
+      
       <main className="flex-grow pt-20 md:pt-28 pb-16 md:pb-18">
         <Routes>
           
@@ -58,6 +59,22 @@ export default function App() {
               </ProtectedRoute>
             }
           />
+          <Route
+            path="/admin/articles/new"
+            element={
+              <ProtectedRoute requireAdmin={true}>
+                <AdminEditArticle />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/articles/edit/:id"
+            element={
+              <ProtectedRoute requireAdmin={true}>
+                <AdminEditArticle />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </main>
 
@@ -73,6 +90,7 @@ export default function App() {
     </div>
   );
 }
+
 
 
 
