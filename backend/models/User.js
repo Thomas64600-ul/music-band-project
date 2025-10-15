@@ -1,137 +1,113 @@
 import pool from "../config/db.js";
 
-/**
- * Crée un nouvel utilisateur
- */
+
 export async function createUser(firstname, lastname, email, hashedPassword, role = "user", image_url = null) {
-  const [result] = await pool.query(
+  const result = await pool.query(
     `
     INSERT INTO users (firstname, lastname, email, hashed_password, role, image_url)
-    VALUES (?, ?, ?, ?, ?, ?)
+    VALUES ($1, $2, $3, $4, $5, $6)
+    RETURNING id, firstname, lastname, email, role, image_url
     `,
     [firstname, lastname, email, hashedPassword, role, image_url]
   );
 
-  return {
-    id: result.insertId,
-    firstname,
-    lastname,
-    email,
-    role,
-    image_url
-  };
+  return result.rows[0];
 }
 
-/**
- * Récupère tous les utilisateurs
- */
+
 export async function getAllUsers() {
-  const [rows] = await pool.query(
+  const result = await pool.query(
     `
     SELECT id, firstname, lastname, email, role, image_url, created_at
     FROM users
     ORDER BY created_at DESC
     `
   );
-  return rows;
+  return result.rows;
 }
 
-/**
- * Récupère un utilisateur par ID
- */
+
 export async function getUserById(id) {
-  const [rows] = await pool.query(
+  const result = await pool.query(
     `
     SELECT id, firstname, lastname, email, role, image_url, created_at
     FROM users
-    WHERE id = ?
+    WHERE id = $1
     `,
     [id]
   );
-  return rows[0];
+  return result.rows[0];
 }
 
-/**
- * Récupère un utilisateur par email (pour login ou vérification)
- */
+
 export async function getUserByEmail(email) {
-  const [rows] = await pool.query(
+  const result = await pool.query(
     `
     SELECT id, firstname, lastname, email, hashed_password, role, image_url, created_at,
            reset_token, reset_token_expires_at
     FROM users
-    WHERE email = ?
+    WHERE email = $1
     `,
     [email]
   );
-  return rows[0];
+  return result.rows[0];
 }
 
-/**
- * Met à jour un utilisateur (admin)
- */
+
 export async function updateUser(id, firstname, lastname, email, role, image_url = null) {
-  const [result] = await pool.query(
+  const result = await pool.query(
     `
     UPDATE users
-    SET firstname = ?, lastname = ?, email = ?, role = ?, image_url = ?
-    WHERE id = ?
+    SET firstname = $1, lastname = $2, email = $3, role = $4, image_url = $5
+    WHERE id = $6
     `,
     [firstname, lastname, email, role, image_url, id]
   );
 
-  return result.affectedRows > 0;
+  return result.rowCount > 0;
 }
 
-/**
- * Supprime un utilisateur
- */
+
 export async function deleteUser(id) {
-  const [result] = await pool.query(`DELETE FROM users WHERE id = ?`, [id]);
-  return result.affectedRows > 0;
+  const result = await pool.query(`DELETE FROM users WHERE id = $1`, [id]);
+  return result.rowCount > 0;
 }
 
-/**
- * Sauvegarde le token de réinitialisation du mot de passe
- */
+
 export async function saveResetToken(userId, token, expiry) {
-  const [result] = await pool.query(
+  const result = await pool.query(
     `
     UPDATE users
-    SET reset_token = ?, reset_token_expires_at = ?
-    WHERE id = ?
+    SET reset_token = $1, reset_token_expires_at = $2
+    WHERE id = $3
     `,
     [token, expiry, userId]
   );
-  return result.affectedRows > 0;
+  return result.rowCount > 0;
 }
 
-/**
- * Récupère un utilisateur via un token de réinitialisation valide
- */
+
 export async function getUserByResetToken(token) {
-  const [rows] = await pool.query(
+  const result = await pool.query(
     `
     SELECT id, firstname, lastname, email, image_url
     FROM users
-    WHERE reset_token = ? AND reset_token_expires_at > NOW()
+    WHERE reset_token = $1 AND reset_token_expires_at > NOW()
     `,
     [token]
   );
-  return rows[0];
+  return result.rows[0];
 }
 
-/**
- * Met à jour le mot de passe et efface les tokens de reset
- */
+
 export async function updateUserPassword(userId, newHashedPassword) {
-  const [result] = await pool.query(
+  const result = await pool.query(
     `
     UPDATE users
-    SET hashed_password = ?, reset_token = NULL, reset_token_expires_at = NULL
-    WHERE id = ?
+    SET hashed_password = $1, reset_token = NULL, reset_token_expires_at = NULL
+    WHERE id = $2
     `,
     [newHashedPassword, userId]
   );
-  return result.affectedRows > 0;
+  return result.rowCount > 0;
 }
