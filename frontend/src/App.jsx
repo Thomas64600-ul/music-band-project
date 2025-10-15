@@ -1,14 +1,22 @@
-
 import { Routes, Route } from "react-router-dom";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
+
+
 import Home from "./pages/Home";
 import Music from "./pages/Music";
 import Concerts from "./pages/Concerts";
 import Articles from "./pages/Blog";
 import Contact from "./pages/Contact";
-import Cagnotte from "./pages/Cagnotte"; 
+import Cagnotte from "./pages/Cagnotte";
 
+
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+
+
+import AdminListArticles from "./pages/AdminListArticles";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 export default function App() {
   return (
@@ -21,24 +29,39 @@ export default function App() {
           { name: "Musique", path: "/music" },
           { name: "Concerts", path: "/concerts" },
           { name: "Blog", path: "/blog" },
-          { name: "Cagnotte", path: "/cagnotte" }, 
+          { name: "Cagnotte", path: "/cagnotte" },
           { name: "Contact", path: "/contact" },
         ]}
       />
 
-      
+     
       <main className="flex-grow pt-20 md:pt-28 pb-16 md:pb-18">
         <Routes>
+          
           <Route path="/" element={<Home />} />
           <Route path="/music" element={<Music />} />
-          <Route path="/blog" element={<Articles />} />
           <Route path="/concerts" element={<Concerts />} />
-          <Route path="/cagnotte" element={<Cagnotte />} /> 
+          <Route path="/blog" element={<Articles />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/cagnotte" element={<Cagnotte />} />
+
+          
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+
+          
+          <Route
+            path="/admin/articles"
+            element={
+              <ProtectedRoute requireAdmin={true}>
+                <AdminListArticles />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </main>
 
-    
+      
       <Footer
         siteTitle="REVEREN"
         socials={[
@@ -50,6 +73,7 @@ export default function App() {
     </div>
   );
 }
+
 
 
 
