@@ -13,7 +13,7 @@ export function protect(req, res, next) {
 
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
-    req.user = decoded; // { id, email, role }
+    req.user = decoded; 
     next();
   } catch (error) {
     const msg =
