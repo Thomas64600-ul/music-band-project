@@ -2,7 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 
-// Pages publiques
+
 import Home from "./pages/Home";
 import Music from "./pages/Music";
 import Concerts from "./pages/Concerts";
@@ -15,14 +15,22 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 
 
+import ProtectedRoute from "./components/ProtectedRoute";
+import AdminLayout from "./layouts/AdminLayout";
+import AdminDashboard from "./pages/AdminDashboard";
 import AdminListArticles from "./pages/AdminListArticles";
 import AdminEditArticle from "./pages/AdminEditArticle";
-import ProtectedRoute from "./components/ProtectedRoute";
+import AdminListConcerts from "./pages/AdminListConcerts";
+import AdminEditConcert from "./pages/AdminEditConcert";
+import AdminMessages from "./pages/AdminMessages";
+import AdminDonations from "./pages/AdminDonations";
+import AdminUsers from "./pages/AdminUsers";
+import AdminStats from "./pages/AdminStats";
 
 export default function App() {
   return (
     <div className="min-h-screen flex flex-col bg-[#0A0A0A] text-[#F2F2F2]">
-      
+     
       <Header
         logoSrc="/src/assets/logo.png"
         links={[
@@ -51,11 +59,27 @@ export default function App() {
           <Route path="/register" element={<Register />} />
 
           
+
+          
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute requireAdmin={true}>
+                <AdminLayout>
+                  <AdminDashboard />
+                </AdminLayout>
+              </ProtectedRoute>
+            }
+          />
+
+          
           <Route
             path="/admin/articles"
             element={
               <ProtectedRoute requireAdmin={true}>
-                <AdminListArticles />
+                <AdminLayout>
+                  <AdminListArticles />
+                </AdminLayout>
               </ProtectedRoute>
             }
           />
@@ -63,7 +87,9 @@ export default function App() {
             path="/admin/articles/new"
             element={
               <ProtectedRoute requireAdmin={true}>
-                <AdminEditArticle />
+                <AdminLayout>
+                  <AdminEditArticle />
+                </AdminLayout>
               </ProtectedRoute>
             }
           />
@@ -71,7 +97,89 @@ export default function App() {
             path="/admin/articles/edit/:id"
             element={
               <ProtectedRoute requireAdmin={true}>
-                <AdminEditArticle />
+                <AdminLayout>
+                  <AdminEditArticle />
+                </AdminLayout>
+              </ProtectedRoute>
+            }
+          />
+
+          
+          <Route
+            path="/admin/concerts"
+            element={
+              <ProtectedRoute requireAdmin={true}>
+                <AdminLayout>
+                  <AdminListConcerts />
+                </AdminLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/concerts/new"
+            element={
+              <ProtectedRoute requireAdmin={true}>
+                <AdminLayout>
+                  <AdminEditConcert />
+                </AdminLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/concerts/edit/:id"
+            element={
+              <ProtectedRoute requireAdmin={true}>
+                <AdminLayout>
+                  <AdminEditConcert />
+                </AdminLayout>
+              </ProtectedRoute>
+            }
+          />
+
+          
+          <Route
+            path="/admin/messages"
+            element={
+              <ProtectedRoute requireAdmin={true}>
+                <AdminLayout>
+                  <AdminMessages />
+                </AdminLayout>
+              </ProtectedRoute>
+            }
+          />
+
+          
+          <Route
+            path="/admin/donations"
+            element={
+              <ProtectedRoute requireAdmin={true}>
+                <AdminLayout>
+                  <AdminDonations />
+                </AdminLayout>
+              </ProtectedRoute>
+            }
+          />
+
+          
+          <Route
+            path="/admin/users"
+            element={
+              <ProtectedRoute requireAdmin={true}>
+                <AdminLayout>
+                  <AdminUsers />
+                </AdminLayout>
+              </ProtectedRoute>
+            }
+          />
+
+          
+          <Route
+            path="/admin/stats"
+            element={
+              <ProtectedRoute requireAdmin={true}>
+                <AdminLayout>
+                  <AdminStats />
+                </AdminLayout>
               </ProtectedRoute>
             }
           />
@@ -90,6 +198,7 @@ export default function App() {
     </div>
   );
 }
+
 
 
 

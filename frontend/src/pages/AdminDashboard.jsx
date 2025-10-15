@@ -32,6 +32,9 @@ export default function AdminDashboard() {
           <Button variant="secondary" onClick={() => navigate("/admin/donations")}>
             Gérer les dons
           </Button>
+          <Button variant="primary" onClick={() => navigate("/admin/stats")}>
+            Statistiques globales
+          </Button>
 
           <Button variant="secondary" onClick={() => navigate("/admin/messages")}>
             Gérer les messages
