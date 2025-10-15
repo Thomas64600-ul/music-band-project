@@ -1,4 +1,4 @@
-// src/components/SocialLinks.jsx
+
 import React from "react";
 import { FaInstagram, FaYoutube, FaSpotify, FaLink } from "react-icons/fa";
 

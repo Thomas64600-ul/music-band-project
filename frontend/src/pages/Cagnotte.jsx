@@ -9,15 +9,15 @@ export default function Cagnotte() {
   const [showModal, setShowModal] = useState(false);
   const [lastAmount, setLastAmount] = useState(null);
 
-  // 💛 Fonction appelée quand on clique sur un don
+ 
   const handleDonation = (amount) => {
     setCollected((prev) => Math.min(prev + amount, goal));
     setLastAmount(amount);
     setShowModal(true);
-    launchConfetti(); // 🎉 lance les confettis
+    launchConfetti(); 
   };
 
-  // Ferme la modale automatiquement après 3 secondes
+ 
   useEffect(() => {
     if (showModal) {
       const timer = setTimeout(() => setShowModal(false), 3000);
@@ -25,10 +25,10 @@ export default function Cagnotte() {
     }
   }, [showModal]);
 
-  // 📈 Pourcentage calculé
+  
   const percentage = Math.min((collected / goal) * 100, 100).toFixed(1);
 
-  // 💥 Confettis dorés
+  
   const launchConfetti = () => {
     const duration = 1.5 * 1000;
     const end = Date.now() + duration;
@@ -65,15 +65,15 @@ export default function Cagnotte() {
 
   return (
     <section className="px-6 sm:px-12 py-16 bg-[#0A0A0A] text-center text-[#F2F2F2] relative overflow-hidden">
-      {/* 🟡 Titre principal */}
+      
       <h2 className="text-3xl font-bold text-[#FFD700] mb-6">
-        Soutenez REVEREN 🎸
+        Soutenez REVEREN 
       </h2>
       <p className="max-w-xl mx-auto text-gray-300 mb-10">
         Aidez-nous à financer notre prochain album et nos tournées !
       </p>
 
-      {/* 🔥 Barre de progression dynamique */}
+      
       <div className="max-w-md mx-auto mb-12">
         <div className="bg-gray-700 rounded-full h-4 overflow-hidden">
           <div
@@ -87,7 +87,7 @@ export default function Cagnotte() {
         </p>
       </div>
 
-      {/* 💛 Cartes de dons */}
+     
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {donations.map((d, i) => (
           <DonationCard
@@ -99,11 +99,11 @@ export default function Cagnotte() {
         ))}
       </div>
 
-      {/* 🎁 Modale de remerciement */}
+      
       <AnimatePresence>
         {showModal && (
           <>
-            {/* Fond flouté */}
+            
             <motion.div
               className="fixed inset-0 bg-black/70 backdrop-blur-sm z-40"
               initial={{ opacity: 0 }}
@@ -111,7 +111,7 @@ export default function Cagnotte() {
               exit={{ opacity: 0 }}
             ></motion.div>
 
-            {/* Boîte de remerciement */}
+           
             <motion.div
               className="fixed inset-0 flex items-center justify-center z-50"
               initial={{ scale: 0.8, opacity: 0 }}

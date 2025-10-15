@@ -1,4 +1,4 @@
-// src/pages/Contact.jsx
+
 import React, { useEffect } from "react";
 import ContactForm from "../components/ContactForm";
 import SocialLinks from "../components/SocialLinks";
