@@ -16,7 +16,10 @@ import testRoute from "./routes/testRoute.js";
 
 dotenv.config();
 const app = express();
+
+
 app.set("trust proxy", 1);
+
 
 app.use(
   helmet({
@@ -24,7 +27,11 @@ app.use(
       useDefaults: true,
       directives: {
         "img-src": ["'self'", "data:", "blob:", "res.cloudinary.com"],
-        "connect-src": ["'self'", process.env.CLIENT_URL, "api.stripe.com"],
+        "connect-src": [
+          "'self'",
+          process.env.CLIENT_URL || "http://localhost:5173",
+          "api.stripe.com",
+        ],
         "script-src": ["'self'", "'unsafe-inline'", "js.stripe.com"],
       },
     },
@@ -44,10 +51,14 @@ app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
+
 app.use(
   cors({
-    origin: [process.env.CLIENT_URL || "http://localhost:5173"],
-    credentials: true,
+    origin: [
+      process.env.CLIENT_URL || "http://localhost:5173",
+      "https://music-band-project-frontend.onrender.com", 
+    ],
+    credentials: true, 
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
@@ -70,6 +81,12 @@ app.use("/api/messages", messageRoutes);
 
 
 app.use(errorHandler);
+
+
+app.get("/api/debug/cookies", (req, res) => {
+  console.log("Cookies reçus :", req.cookies);
+  res.json({ cookies: req.cookies || {} });
+});
 
 export default app;
 
