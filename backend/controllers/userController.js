@@ -7,7 +7,7 @@ import {
   deleteUser,
   updateUserPassword,
   saveResetToken,
-  getUserByResetToken
+  getUserByResetToken,
 } from "../models/User.js";
 
 import { sendEmail } from "../services/emailService.js";
@@ -29,6 +29,23 @@ export async function register(req, res, next) {
     const hashed = await hashPassword(password);
     const newUser = await createUser(firstname, lastname, email, hashed, role, imageUrl);
 
+    
+    const token = jwt.sign(
+      { id: newUser.id, email: newUser.email, role: newUser.role },
+      process.env.JWT_SECRET,
+      { expiresIn: "1h" }
+    );
+
+   
+    const isProd = process.env.NODE_ENV === "production";
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: isProd,
+      sameSite: isProd ? "none" : "lax",
+      maxAge: 60 * 60 * 1000, // 1h
+    });
+
+    
     await sendEmail(
       email,
       "Bienvenue sur Music Band",
@@ -37,21 +54,22 @@ export async function register(req, res, next) {
       {
         firstname,
         email,
-        loginUrl: process.env.CLIENT_URL + "/login"
+        loginUrl: process.env.CLIENT_URL + "/login",
       }
     );
 
     res.status(201).json({
       success: true,
       message: "Utilisateur créé avec succès",
+      token,
       user: {
         id: newUser.id,
         firstname,
         lastname,
         email,
         role: newUser.role,
-        image_url: newUser.image_url
-      }
+        image_url: newUser.image_url,
+      },
     });
   } catch (error) {
     next(error);
@@ -79,26 +97,27 @@ export async function login(req, res, next) {
       { expiresIn: "1h" }
     );
 
-    
     const isProd = process.env.NODE_ENV === "production";
     res.cookie("token", token, {
       httpOnly: true,
       secure: isProd,
       sameSite: isProd ? "none" : "lax",
-      maxAge: 60 * 60 * 1000
+      maxAge: 60 * 60 * 1000,
     });
 
+   
     res.json({
       success: true,
       message: "Connexion réussie",
+      token, 
       user: {
         id: user.id,
         firstname: user.firstname,
         lastname: user.lastname,
         email: user.email,
         role: user.role,
-        image_url: user.image_url
-      }
+        image_url: user.image_url,
+      },
     });
   } catch (error) {
     next(error);
@@ -113,7 +132,7 @@ export async function forgotPassword(req, res, next) {
 
     if (!user) {
       return res.json({
-        message: "Si un compte correspond à cet email, un message a été envoyé."
+        message: "Si un compte correspond à cet email, un message a été envoyé.",
       });
     }
 
@@ -133,7 +152,7 @@ export async function forgotPassword(req, res, next) {
 
     res.json({
       success: true,
-      message: "Email de réinitialisation envoyé (si le compte existe)"
+      message: "Email de réinitialisation envoyé (si le compte existe)",
     });
   } catch (error) {
     next(error);
@@ -156,7 +175,7 @@ export async function resetPassword(req, res, next) {
 
     res.json({
       success: true,
-      message: "Mot de passe réinitialisé avec succès"
+      message: "Mot de passe réinitialisé avec succès",
     });
   } catch (error) {
     next(error);
@@ -183,13 +202,19 @@ export async function fetchUserById(req, res, next) {
   }
 }
 
-
 export async function editUser(req, res, next) {
   try {
     const { firstname, lastname, email, role } = req.validatedBody;
     const imageUrl = req.file?.path || null;
 
-    const updated = await updateUser(req.params.id, firstname, lastname, email, role, imageUrl);
+    const updated = await updateUser(
+      req.params.id,
+      firstname,
+      lastname,
+      email,
+      role,
+      imageUrl
+    );
     if (!updated) return res.status(404).json({ error: "Utilisateur non trouvé" });
 
     res.json({ success: true, message: "Utilisateur mis à jour" });
@@ -197,7 +222,6 @@ export async function editUser(req, res, next) {
     next(error);
   }
 }
-
 
 export async function removeUser(req, res, next) {
   try {
@@ -216,7 +240,7 @@ export async function logout(req, res, next) {
     res.clearCookie("token", {
       httpOnly: true,
       secure: isProd,
-      sameSite: isProd ? "none" : "lax"
+      sameSite: isProd ? "none" : "lax",
     });
     res.json({ success: true, message: "Déconnexion réussie" });
   } catch (error) {
@@ -238,10 +262,11 @@ export async function me(req, res, next) {
         lastname: req.user.lastname,
         email: req.user.email,
         role: req.user.role,
-        image_url: req.user.image_url
-      }
+        image_url: req.user.image_url,
+      },
     });
   } catch (error) {
     next(error);
   }
 }
+
