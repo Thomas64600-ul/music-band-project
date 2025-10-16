@@ -10,7 +10,6 @@ export function AuthProvider({ children }) {
   
   useEffect(() => {
     const token = localStorage.getItem("token");
-
     if (!token) {
       setLoading(false);
       return;
@@ -18,12 +17,10 @@ export function AuthProvider({ children }) {
 
     (async () => {
       try {
-        const data = await get("/users/me", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const data = await get("/users/me");
         setUser(data.user || null);
       } catch (error) {
-        console.error("Erreur lors du chargement de /users/me :", error);
+        console.error("Erreur /users/me :", error);
         localStorage.removeItem("token");
         setUser(null);
       } finally {
@@ -35,7 +32,7 @@ export function AuthProvider({ children }) {
   
   async function register(payload) {
     const data = await post("/users/register", payload);
-    if (data?.token) {
+    if (data.token) {
       localStorage.setItem("token", data.token);
       setUser(data.user || null);
     }
@@ -46,12 +43,12 @@ export function AuthProvider({ children }) {
   async function login(payload) {
     try {
       const data = await post("/users/login", payload);
-
-      if (data?.token) {
+      if (data.token) {
         localStorage.setItem("token", data.token);
-        setUser(data.user || null);
       }
 
+      const me = await get("/users/me");
+      setUser(me.user || null);
       return data;
     } catch (error) {
       console.error("Erreur de connexion :", error);
@@ -59,25 +56,21 @@ export function AuthProvider({ children }) {
     }
   }
 
- 
+
   async function logout() {
+    localStorage.removeItem("token");
+    setUser(null);
     try {
       await post("/users/logout");
-    } catch (error) {
-      console.error("⚠️ Erreur lors de la déconnexion :", error);
-    } finally {
-      localStorage.removeItem("token");
-      setUser(null);
+    } catch {
+      /* pas bloquant */
     }
   }
 
-  
+ 
   const isAdmin =
-    user?.roles === "admin" ||
-    user?.role === "admin" ||
-    user?.is_admin === true;
+    user?.role === "admin" || user?.roles === "admin" || user?.is_admin === true;
 
-  
   const value = {
     user,
     loading,
@@ -87,16 +80,12 @@ export function AuthProvider({ children }) {
     isAdmin,
   };
 
-  
   if (loading) {
-    return (
-      <div className="text-center text-[#FFD700] py-10">Chargement...</div>
-    );
+    return <div className="text-center text-[#FFD700] py-10">Chargement...</div>;
   }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
-
 
 export function useAuth() {
   return useContext(AuthContext);
