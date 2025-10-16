@@ -4,13 +4,14 @@ import {
   fetchArticles,
   fetchArticleById,
   editArticle,
-  removeArticle
+  removeArticle,
 } from "../controllers/articleController.js";
+
 import { validate } from "../middlewares/validationMiddleware.js";
 import { createArticleSchema, updateArticleSchema } from "../schemas/articleSchema.js";
 import { protect } from "../middlewares/authMiddleware.js";
 import { authorizeRoles } from "../middlewares/roleMiddleware.js";
-import upload from "../middlewares/uploadMiddleware.js"; 
+import upload, { handleUploadError } from "../middlewares/uploadMiddleware.js";
 
 const router = express.Router();
 
@@ -18,10 +19,11 @@ const router = express.Router();
 router.post(
   "/",
   protect,
-  authorizeRoles("admin"),
+  authorizeRoles("admin"), 
   upload.single("image"), 
-  validate(createArticleSchema),
-  addArticle
+  handleUploadError, 
+  validate(createArticleSchema), 
+  addArticle 
 );
 
 
@@ -35,7 +37,8 @@ router.put(
   "/:id",
   protect,
   authorizeRoles("admin"),
-  upload.single("image"), 
+  upload.single("image"),
+  handleUploadError,
   validate(updateArticleSchema),
   editArticle
 );
@@ -44,3 +47,4 @@ router.put(
 router.delete("/:id", protect, authorizeRoles("admin"), removeArticle);
 
 export default router;
+

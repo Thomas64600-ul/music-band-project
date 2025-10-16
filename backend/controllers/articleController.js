@@ -10,18 +10,19 @@ import {
 
 export async function addArticle(req, res, next) {
   try {
-    const { title, description, content, image_url, author_id } = req.body;
+    const { title, description, content, author_id } = req.body;
+    const image_url = req.file ? `/uploads/${req.file.filename}` : null; 
 
     if (!title || !content || !author_id) {
       return res.status(400).json({ error: "Titre, contenu et auteur sont requis" });
     }
 
-    const newArticle = await createArticle(title, description, content, image_url, author_id);
+    const newArticle = await createArticle(title, description, content, author_id, image_url);
 
     res.status(201).json({
       success: true,
       message: "Article créé avec succès",
-      data: newArticle
+      data: newArticle,
     });
   } catch (error) {
     next(error);
