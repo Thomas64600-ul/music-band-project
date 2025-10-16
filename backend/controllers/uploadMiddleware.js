@@ -6,7 +6,6 @@ import cloudinary from "../config/cloudinary.js";
 const storage = new CloudinaryStorage({
   cloudinary,
   params: async (req, file) => {
-   
     const folder =
       req.baseUrl.includes("concerts")
         ? "reveren_uploads/concerts"
@@ -38,16 +37,16 @@ function fileFilter(req, file, cb) {
 const upload = multer({
   storage,
   fileFilter,
-  limits: { fileSize: 5 * 1024 * 1024 }, 
+  limits: { fileSize: 5 * 1024 * 1024 },
 });
 
 
-function handleUploadError(err, req, res, next) {
+const handleUploadError = (err, req, res, next) => {
   if (err instanceof multer.MulterError) {
     if (err.code === "LIMIT_FILE_SIZE") {
       return res.status(400).json({
         success: false,
-        message: "❌ Fichier trop volumineux (max 5 Mo).",
+        message: "Fichier trop volumineux (max 5 Mo).",
       });
     }
     return res.status(400).json({ success: false, message: err.message });
@@ -55,9 +54,9 @@ function handleUploadError(err, req, res, next) {
     return res.status(400).json({ success: false, message: err.message });
   }
   next();
-}
+};
 
 
-export default upload;
-export { handleUploadError };
+export { upload as default, handleUploadError };
+
 
