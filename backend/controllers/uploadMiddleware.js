@@ -38,27 +38,26 @@ function fileFilter(req, file, cb) {
 const upload = multer({
   storage,
   fileFilter,
-  limits: {
-    fileSize: 5 * 1024 * 1024, 
-  },
+  limits: { fileSize: 5 * 1024 * 1024 }, 
 });
 
 
-export function handleUploadError(err, req, res, next) {
+function handleUploadError(err, req, res, next) {
   if (err instanceof multer.MulterError) {
-    
     if (err.code === "LIMIT_FILE_SIZE") {
       return res.status(400).json({
         success: false,
-        message: "Fichier trop volumineux (max 5 Mo).",
+        message: "❌ Fichier trop volumineux (max 5 Mo).",
       });
     }
     return res.status(400).json({ success: false, message: err.message });
   } else if (err) {
-   
     return res.status(400).json({ success: false, message: err.message });
   }
   next();
 }
 
+
 export default upload;
+export { handleUploadError };
+
