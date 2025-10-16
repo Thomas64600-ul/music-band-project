@@ -2,7 +2,14 @@ import { useEffect, useState } from "react";
 import { get } from "../lib/api";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from "recharts";
+import {
+  PieChart,
+  Pie,
+  Cell,
+  Tooltip,
+  ResponsiveContainer,
+  Legend,
+} from "recharts";
 import Button from "../components/Button";
 
 export default function AdminStats() {
@@ -16,7 +23,7 @@ export default function AdminStats() {
   const { isAdmin } = useAuth();
   const navigate = useNavigate();
 
-  
+ 
   useEffect(() => {
     if (!isAdmin) navigate("/login");
   }, [isAdmin, navigate]);
@@ -25,12 +32,37 @@ export default function AdminStats() {
   useEffect(() => {
     (async () => {
       try {
-        const [users, articles, concerts, donations] = await Promise.all([
-          get("/users"),
-          get("/articles"),
-          get("/concerts"),
-          get("/donations"),
-        ]);
+        const [usersRes, articlesRes, concertsRes, donationsRes] =
+          await Promise.all([
+            get("/users"),
+            get("/articles"),
+            get("/concerts"),
+            get("/donations"),
+          ]);
+
+        console.log("Résultats API stats :", {
+          usersRes,
+          articlesRes,
+          concertsRes,
+          donationsRes,
+        });
+
+      
+        const users = Array.isArray(usersRes)
+          ? usersRes
+          : usersRes.users || [];
+
+        const articles = Array.isArray(articlesRes)
+          ? articlesRes
+          : articlesRes.articles || [];
+
+        const concerts = Array.isArray(concertsRes)
+          ? concertsRes
+          : concertsRes.concerts || [];
+
+        const donations = Array.isArray(donationsRes)
+          ? donationsRes
+          : donationsRes.donations || [];
 
         const totalDonations = donations.reduce(
           (sum, d) => sum + (parseFloat(d.amount) || 0),
@@ -44,7 +76,7 @@ export default function AdminStats() {
           donations: totalDonations,
         });
       } catch (e) {
-        console.error("Erreur chargement stats:", e);
+        console.error("Erreur chargement stats :", e);
       } finally {
         setLoading(false);
       }
@@ -52,7 +84,11 @@ export default function AdminStats() {
   }, []);
 
   if (loading)
-    return <p className="text-center mt-10 text-gray-400">Chargement des statistiques...</p>;
+    return (
+      <p className="text-center mt-10 text-gray-400">
+        Chargement des statistiques...
+      </p>
+    );
 
   
   const roleData = [
@@ -70,7 +106,7 @@ export default function AdminStats() {
           Statistiques globales
         </h1>
 
-       
+        
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
           <div className="bg-[#151515] rounded-xl p-6 text-center border border-gray-700">
             <p className="text-gray-400">Utilisateurs</p>
@@ -95,7 +131,7 @@ export default function AdminStats() {
           </div>
         </div>
 
-       
+        
         <div className="bg-[#151515] rounded-xl p-6 border border-gray-700">
           <h2 className="text-2xl font-semibold text-[#FFD700] mb-6 text-center">
             Répartition des rôles utilisateurs
@@ -120,6 +156,7 @@ export default function AdminStats() {
           </ResponsiveContainer>
         </div>
 
+        
         <div className="mt-10 text-center">
           <Button variant="secondary" onClick={() => navigate("/admin")}>
             Retour Dashboard
@@ -129,3 +166,4 @@ export default function AdminStats() {
     </section>
   );
 }
+

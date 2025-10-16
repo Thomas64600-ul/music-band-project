@@ -10,19 +10,23 @@ export default function AdminUsers() {
   const { isAdmin } = useAuth();
   const navigate = useNavigate();
 
-  
+ 
   useEffect(() => {
     if (!isAdmin) navigate("/login");
   }, [isAdmin, navigate]);
 
- 
+  
   useEffect(() => {
     (async () => {
       try {
         const data = await get("/users");
-        setUsers(data);
+        console.log("Réponse API /users :", data);
+
+        
+        setUsers(Array.isArray(data) ? data : data.users || []);
       } catch (e) {
         console.error("Erreur lors du chargement des utilisateurs :", e);
+        setUsers([]);
       } finally {
         setLoading(false);
       }
@@ -36,7 +40,7 @@ export default function AdminUsers() {
       await del(`/users/${id}`);
       setUsers((prev) => prev.filter((u) => u.id !== id));
     } catch (e) {
-      console.error("Erreur suppression utilisateur:", e);
+      console.error("Erreur suppression utilisateur :", e);
       alert("Erreur lors de la suppression");
     }
   }
@@ -54,6 +58,7 @@ export default function AdminUsers() {
     }
   }
 
+  
   if (loading)
     return (
       <p className="text-center mt-10 text-gray-400">
@@ -61,10 +66,13 @@ export default function AdminUsers() {
       </p>
     );
 
+  
   return (
     <section className="min-h-screen bg-[#0A0A0A] text-[#F2F2F2] py-12 px-6 sm:px-12">
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold text-[#FFD700]">Gestion des utilisateurs</h1>
+        <h1 className="text-3xl font-bold text-[#FFD700]">
+          Gestion des utilisateurs
+        </h1>
         <Button variant="secondary" onClick={() => navigate("/admin")}>
           Retour Dashboard
         </Button>
@@ -78,9 +86,13 @@ export default function AdminUsers() {
             <thead>
               <tr className="text-[#FFD700] border-b border-gray-700">
                 <th className="py-3 px-4 text-left">Nom</th>
-                <th className="py-3 px-4 text-left hidden sm:table-cell">Email</th>
+                <th className="py-3 px-4 text-left hidden sm:table-cell">
+                  Email
+                </th>
                 <th className="py-3 px-4 text-left">Rôle</th>
-                <th className="py-3 px-4 text-left hidden md:table-cell">Vérifié</th>
+                <th className="py-3 px-4 text-left hidden md:table-cell">
+                  Vérifié
+                </th>
                 <th className="py-3 px-4 text-center">Actions</th>
               </tr>
             </thead>
@@ -99,7 +111,9 @@ export default function AdminUsers() {
                   <td className="py-3 px-4">
                     <select
                       value={u.roles}
-                      onChange={(e) => handleRoleChange(u.id, e.target.value)}
+                      onChange={(e) =>
+                        handleRoleChange(u.id, e.target.value)
+                      }
                       className="bg-[#222] text-[#F2F2F2] border border-gray-700 rounded-md p-1 focus:border-[#FFD700]"
                     >
                       <option value="buyer">Utilisateur</option>
@@ -111,7 +125,10 @@ export default function AdminUsers() {
                     {u.is_verified ? "✅" : "❌"}
                   </td>
                   <td className="py-3 px-4 text-center">
-                    <Button variant="danger" onClick={() => handleDelete(u.id)}>
+                    <Button
+                      variant="danger"
+                      onClick={() => handleDelete(u.id)}
+                    >
                       Supprimer
                     </Button>
                   </td>
@@ -124,3 +141,4 @@ export default function AdminUsers() {
     </section>
   );
 }
+

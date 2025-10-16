@@ -7,7 +7,7 @@ import Button from "../components/Button";
 export default function AdminListConcerts() {
   const [concerts, setConcerts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { user, isAdmin } = useAuth();
+  const { isAdmin } = useAuth();
   const navigate = useNavigate();
 
   
@@ -20,15 +20,20 @@ export default function AdminListConcerts() {
     (async () => {
       try {
         const data = await get("/concerts");
-        setConcerts(data);
+        console.log("Réponse API /concerts :", data);
+
+       
+        setConcerts(Array.isArray(data) ? data : data.concerts || []);
       } catch (e) {
         console.error("Erreur lors du chargement des concerts :", e);
+        setConcerts([]);
       } finally {
         setLoading(false);
       }
     })();
   }, []);
 
+  
   async function handleDelete(id) {
     if (!window.confirm("Supprimer ce concert ?")) return;
     try {
@@ -40,6 +45,7 @@ export default function AdminListConcerts() {
     }
   }
 
+  
   if (loading)
     return (
       <p className="text-center mt-10 text-gray-400">
@@ -47,11 +53,17 @@ export default function AdminListConcerts() {
       </p>
     );
 
+  
   return (
     <section className="min-h-screen bg-[#0A0A0A] text-[#F2F2F2] py-12 px-6 sm:px-12">
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold text-[#FFD700]">Gestion des concerts</h1>
-        <Button variant="primary" onClick={() => navigate("/admin/concerts/new")}>
+        <h1 className="text-3xl font-bold text-[#FFD700]">
+          Gestion des concerts
+        </h1>
+        <Button
+          variant="primary"
+          onClick={() => navigate("/admin/concerts/new")}
+        >
           Nouveau concert
         </Button>
       </div>
@@ -64,27 +76,43 @@ export default function AdminListConcerts() {
             <thead>
               <tr className="text-[#FFD700] border-b border-gray-700">
                 <th className="py-3 px-4 text-left">Ville</th>
-                <th className="py-3 px-4 text-left hidden sm:table-cell">Date</th>
-                <th className="py-3 px-4 text-left hidden md:table-cell">Lieu</th>
+                <th className="py-3 px-4 text-left hidden sm:table-cell">
+                  Date
+                </th>
+                <th className="py-3 px-4 text-left hidden md:table-cell">
+                  Lieu
+                </th>
                 <th className="py-3 px-4 text-center">Actions</th>
               </tr>
             </thead>
             <tbody>
               {concerts.map((c) => (
-                <tr key={c.id} className="border-b border-gray-800 hover:bg-[#1a1a1a]">
+                <tr
+                  key={c.id}
+                  className="border-b border-gray-800 hover:bg-[#1a1a1a]"
+                >
                   <td className="py-3 px-4">{c.city}</td>
                   <td className="py-3 px-4 hidden sm:table-cell">
-                    {new Date(c.date).toLocaleDateString("fr-FR")}
+                    {c.date
+                      ? new Date(c.date).toLocaleDateString("fr-FR")
+                      : "—"}
                   </td>
-                  <td className="py-3 px-4 hidden md:table-cell">{c.location}</td>
+                  <td className="py-3 px-4 hidden md:table-cell">
+                    {c.location || "—"}
+                  </td>
                   <td className="py-3 px-4 text-center space-x-2">
                     <Button
                       variant="secondary"
-                      onClick={() => navigate(`/admin/concerts/edit/${c.id}`)}
+                      onClick={() =>
+                        navigate(`/admin/concerts/edit/${c.id}`)
+                      }
                     >
                       Modifier
                     </Button>
-                    <Button variant="danger" onClick={() => handleDelete(c.id)}>
+                    <Button
+                      variant="danger"
+                      onClick={() => handleDelete(c.id)}
+                    >
                       Supprimer
                     </Button>
                   </td>
@@ -97,3 +125,4 @@ export default function AdminListConcerts() {
     </section>
   );
 }
+
