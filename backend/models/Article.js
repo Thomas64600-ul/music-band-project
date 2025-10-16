@@ -1,21 +1,21 @@
 import pool from "../config/db.js";
 
 
-export async function createArticle(title, content, author_id, image_url = null) {
+export async function createArticle(title, description, content, image_url, author_id) {
   const result = await pool.query(
     `
-    INSERT INTO articles (title, content, author_id, image_url)
-    VALUES ($1, $2, $3, $4)
+    INSERT INTO articles (title, description, content, image_url, author_id, created_at)
+    VALUES ($1, $2, $3, $4, $5, NOW())
     RETURNING id
     `,
-    [title, content, author_id, image_url]
+    [title, description, content, image_url, author_id]
   );
 
   const articleId = result.rows[0].id;
 
   const article = await pool.query(
     `
-    SELECT a.id, a.title, a.content, a.image_url, a.created_at,
+    SELECT a.id, a.title, a.description, a.content, a.image_url, a.created_at,
            u.firstname AS author_firstname, u.lastname AS author_lastname
     FROM articles AS a
     LEFT JOIN users AS u ON a.author_id = u.id
@@ -31,7 +31,7 @@ export async function createArticle(title, content, author_id, image_url = null)
 export async function getAllArticles(limit = 10, offset = 0) {
   const result = await pool.query(
     `
-    SELECT a.id, a.title, a.content, a.image_url, a.created_at,
+    SELECT a.id, a.title, a.description, a.content, a.image_url, a.created_at,
            u.firstname AS author_firstname, u.lastname AS author_lastname
     FROM articles AS a
     LEFT JOIN users AS u ON a.author_id = u.id
@@ -45,10 +45,11 @@ export async function getAllArticles(limit = 10, offset = 0) {
 }
 
 
+
 export async function getArticleById(id) {
   const result = await pool.query(
     `
-    SELECT a.id, a.title, a.content, a.image_url, a.created_at,
+    SELECT a.id, a.title, a.description, a.content, a.image_url, a.created_at,
            u.firstname AS author_firstname, u.lastname AS author_lastname
     FROM articles AS a
     LEFT JOIN users AS u ON a.author_id = u.id
@@ -61,36 +62,36 @@ export async function getArticleById(id) {
 }
 
 
-export async function updateArticle(id, title, content, image_url = null) {
+
+export async function updateArticle(id, title, description, content, image_url = null) {
   const query = image_url
     ? `
       UPDATE articles
-      SET title = $1, content = $2, image_url = $3
-      WHERE id = $4
+      SET title = $1, description = $2, content = $3, image_url = $4, updated_at = NOW()
+      WHERE id = $5
       `
     : `
       UPDATE articles
-      SET title = $1, content = $2
-      WHERE id = $3
+      SET title = $1, description = $2, content = $3, updated_at = NOW()
+      WHERE id = $4
       `;
 
   const values = image_url
-    ? [title, content, image_url, id]
-    : [title, content, id];
+    ? [title, description, content, image_url, id]
+    : [title, description, content, id];
 
   const result = await pool.query(query, values);
   return result.rowCount > 0;
 }
 
 
+
 export async function deleteArticle(id) {
   const result = await pool.query(
-    `
-    DELETE FROM articles
-    WHERE id = $1
-    `,
+    `DELETE FROM articles WHERE id = $1`,
     [id]
   );
   return result.rowCount > 0;
 }
+
 

@@ -7,16 +7,16 @@ import {
 } from "../models/Article.js";
 
 
+
 export async function addArticle(req, res, next) {
   try {
-    const { title, content, author_id } = req.validatedBody;
-    const imageUrl = req.file?.path || null;
+    const { title, description, content, image_url, author_id } = req.body;
 
     if (!title || !content || !author_id) {
       return res.status(400).json({ error: "Titre, contenu et auteur sont requis" });
     }
 
-    const newArticle = await createArticle(title, content, author_id, imageUrl);
+    const newArticle = await createArticle(title, description, content, image_url, author_id);
 
     res.status(201).json({
       success: true,
@@ -29,9 +29,9 @@ export async function addArticle(req, res, next) {
 }
 
 
+
 export async function fetchArticles(req, res, next) {
   try {
-    
     const page = parseInt(req.query.page, 10) || 1;
     const limit = parseInt(req.query.limit, 10) || 10;
     const offset = (page - 1) * limit;
@@ -51,6 +51,7 @@ export async function fetchArticles(req, res, next) {
 }
 
 
+
 export async function fetchArticleById(req, res, next) {
   try {
     const article = await getArticleById(req.params.id);
@@ -64,16 +65,16 @@ export async function fetchArticleById(req, res, next) {
 }
 
 
+
 export async function editArticle(req, res, next) {
   try {
-    const { title, content } = req.validatedBody;
-    const imageUrl = req.file?.path || null;
+    const { title, description, content, image_url } = req.body;
 
     if (!title || !content) {
       return res.status(400).json({ error: "Titre et contenu sont requis" });
     }
 
-    const success = await updateArticle(req.params.id, title, content, imageUrl);
+    const success = await updateArticle(req.params.id, title, description, content, image_url);
     if (!success) {
       return res.status(404).json({ error: "Article non trouvé" });
     }
@@ -91,6 +92,7 @@ export async function editArticle(req, res, next) {
 }
 
 
+
 export async function removeArticle(req, res, next) {
   try {
     const success = await deleteArticle(req.params.id);
@@ -106,6 +108,7 @@ export async function removeArticle(req, res, next) {
     next(error);
   }
 }
+
 
 
 
