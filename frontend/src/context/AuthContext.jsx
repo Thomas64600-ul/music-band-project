@@ -7,14 +7,24 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // === Chargement automatique de l'utilisateur via le cookie JWT ===
+  
   useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      setLoading(false);
+      return;
+    }
+
     (async () => {
       try {
-        const data = await get("/users/me");
+        const data = await get("/users/me", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
         setUser(data.user || null);
       } catch (error) {
-        console.error("Erreur lors du chargement de l'utilisateur :", error);
+        console.error("Erreur lors du chargement de /users/me :", error);
+        localStorage.removeItem("token");
         setUser(null);
       } finally {
         setLoading(false);
@@ -22,46 +32,52 @@ export function AuthProvider({ children }) {
     })();
   }, []);
 
-  // === Inscription ===
+  
   async function register(payload) {
     const data = await post("/users/register", payload);
-    return data;
-  }
-
-  // === Connexion ===
-  async function login(payload) {
-    const data = await post("/users/login", payload);
-    try {
-      const me = await get("/users/me");
-      setUser(me.user || null);
-    } catch (error) {
-      console.error("Erreur lors du chargement de /users/me après login :", error);
+    if (data?.token) {
+      localStorage.setItem("token", data.token);
+      setUser(data.user || null);
     }
     return data;
   }
 
-  // === Déconnexion ===
+  
+  async function login(payload) {
+    try {
+      const data = await post("/users/login", payload);
+
+      if (data?.token) {
+        localStorage.setItem("token", data.token);
+        setUser(data.user || null);
+      }
+
+      return data;
+    } catch (error) {
+      console.error("Erreur de connexion :", error);
+      throw error;
+    }
+  }
+
+ 
   async function logout() {
     try {
       await post("/users/logout");
     } catch (error) {
-      console.error("Erreur lors de la déconnexion :", error);
+      console.error("⚠️ Erreur lors de la déconnexion :", error);
     } finally {
+      localStorage.removeItem("token");
       setUser(null);
     }
   }
 
-  // === Détection du rôle admin (selon la structure du backend) ===
+  
   const isAdmin =
     user?.roles === "admin" ||
     user?.role === "admin" ||
     user?.is_admin === true;
 
-  // === Debug (à supprimer une fois validé) ===
-  console.log("Utilisateur connecté :", user);
-  console.log("isAdmin =", isAdmin);
-
-  // === Valeur globale du contexte ===
+  
   const value = {
     user,
     loading,
@@ -71,20 +87,19 @@ export function AuthProvider({ children }) {
     isAdmin,
   };
 
-  // === Loader pendant le chargement initial ===
+  
   if (loading) {
     return (
-      <div className="text-center text-[#FFD700] py-10">
-        Chargement...
-      </div>
+      <div className="text-center text-[#FFD700] py-10">Chargement...</div>
     );
   }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
-// === Hook personnalisé ===
+
 export function useAuth() {
   return useContext(AuthContext);
 }
+
 
