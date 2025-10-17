@@ -7,11 +7,13 @@ import helmet from "helmet";
 
 import { errorHandler } from "./middlewares/errorHandler.js";
 
+
 import userRoutes from "./routes/userRoutes.js";
 import articleRoutes from "./routes/articleRoutes.js";
 import concertRoutes from "./routes/concertRoutes.js";
 import donationRoutes from "./routes/donationRoutes.js";
 import messageRoutes from "./routes/messageRoutes.js";
+import commentRoutes from "./routes/commentRoutes.js";
 import testRoute from "./routes/testRoute.js";
 
 dotenv.config();
@@ -19,7 +21,7 @@ const app = express();
 
 
 app.set("trust proxy", 1);
-
+app.disable("x-powered-by");
 
 app.use(
   helmet({
@@ -30,14 +32,13 @@ app.use(
         "connect-src": [
           "'self'",
           process.env.CLIENT_URL || "http://localhost:5173",
-          "api.stripe.com",
+          "https://api.stripe.com",
         ],
-        "script-src": ["'self'", "'unsafe-inline'", "js.stripe.com"],
+        "script-src": ["'self'", "'unsafe-inline'", "https://js.stripe.com"],
       },
     },
   })
 );
-app.disable("x-powered-by");
 
 
 app.use(
@@ -56,9 +57,9 @@ app.use(
   cors({
     origin: [
       process.env.CLIENT_URL || "http://localhost:5173",
-      "https://music-band-project-frontend.onrender.com", 
+      "https://music-band-project-frontend.onrender.com",
     ],
-    credentials: true, 
+    credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
@@ -78,6 +79,7 @@ app.use("/api/articles", articleRoutes);
 app.use("/api/concerts", concertRoutes);
 app.use("/api/donations", donationRoutes);
 app.use("/api/messages", messageRoutes);
+app.use("/api/comments", commentRoutes);
 
 
 app.use(errorHandler);
@@ -89,5 +91,6 @@ app.get("/api/debug/cookies", (req, res) => {
 });
 
 export default app;
+
 
 

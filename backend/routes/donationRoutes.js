@@ -1,7 +1,7 @@
 import express from "express";
 import {
   addDonation,
-  editDonation, // ✅ ajoutée
+  editDonation,
   fetchDonations,
   fetchDonationById,
   fetchDonationsByUser,
@@ -14,24 +14,47 @@ import {
 import { validate } from "../middlewares/validationMiddleware.js";
 import { createDonationSchema, updateDonationSchema } from "../schemas/donationSchema.js";
 import { protect } from "../middlewares/authMiddleware.js";
+import { authorizeRoles } from "../middlewares/roleMiddleware.js";
+import bodyParser from "body-parser";
 
 const router = express.Router();
 
 
+
+
 router.post("/", validate(createDonationSchema), addDonation);
-router.get("/", fetchDonations);
-router.get("/stats", fetchDonationStats);
-router.get("/user/:user_id", fetchDonationsByUser);
-router.get("/:id", fetchDonationById);
 
 
-router.put("/:id", protect, validate(updateDonationSchema), editDonation);
-router.delete("/:id", protect, removeDonation);
+router.post("/create-checkout-session", validate(createDonationSchema), createCheckoutSession);
 
 
-router.post("/create-checkout-session", createCheckoutSession);
+router.post(
+  "/webhook",
+  bodyParser.raw({ type: "application/json" }),
+  handleStripeWebhook
+);
 
 
-router.post("/webhook", handleStripeWebhook);
+
+
+router.get("/user", protect, fetchDonationsByUser);
+
+
+
+
+router.get("/", protect, authorizeRoles("admin"), fetchDonations);
+
+
+router.get("/stats", protect, authorizeRoles("admin"), fetchDonationStats);
+
+
+router.get("/:id", protect, authorizeRoles("admin"), fetchDonationById);
+
+
+router.put("/:id", protect, authorizeRoles("admin"), validate(updateDonationSchema), editDonation);
+
+
+router.delete("/:id", protect, authorizeRoles("admin"), removeDonation);
 
 export default router;
+

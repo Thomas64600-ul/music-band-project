@@ -1,29 +1,35 @@
 import pool from "../config/db.js";
 
 
-export async function createDonation(user_id, amount, message, stripeSessionId, paymentIntent, currency = "eur") {
+export async function createDonation(
+  user_id = null,
+  amount,
+  message = null,
+  stripe_session_id = null,
+  stripe_payment_intent = null,
+  currency = "eur",
+  email = null
+) {
   const result = await pool.query(
     `
-    INSERT INTO donations 
-      (user_id, amount, message, stripe_session_id, stripe_payment_intent, currency, status, created_at)
-    VALUES ($1, $2, $3, $4, $5, $6, 'pending', NOW())
-    RETURNING id, user_id, amount, message, stripe_session_id, stripe_payment_intent, currency, status, created_at
+    INSERT INTO donations
+      (user_id, amount, message, stripe_session_id, stripe_payment_intent, currency, email)
+    VALUES ($1, $2, $3, $4, $5, $6, $7)
+    RETURNING *
     `,
-    [user_id || null, amount, message, stripeSessionId || null, paymentIntent || null, currency]
+    [user_id, amount, message, stripe_session_id, stripe_payment_intent, currency, email]
   );
-
   return result.rows[0];
 }
 
 
 export async function getAllDonations() {
-  const result = await pool.query(
-    `
-    SELECT id, user_id, amount, currency, message, status, created_at
-    FROM donations
-    ORDER BY created_at DESC
-    `
-  );
+  const result = await pool.query(`
+    SELECT d.*, u.firstname, u.lastname, u.email AS user_email
+    FROM donations AS d
+    LEFT JOIN users AS u ON d.user_id = u.id
+    ORDER BY d.created_at DESC
+  `);
   return result.rows;
 }
 
@@ -31,9 +37,10 @@ export async function getAllDonations() {
 export async function getDonationById(id) {
   const result = await pool.query(
     `
-    SELECT id, user_id, amount, currency, message, status, stripe_session_id, stripe_payment_intent, created_at
-    FROM donations
-    WHERE id = $1
+    SELECT d.*, u.firstname, u.lastname, u.email AS user_email
+    FROM donations AS d
+    LEFT JOIN users AS u ON d.user_id = u.id
+    WHERE d.id = $1
     `,
     [id]
   );
@@ -44,8 +51,7 @@ export async function getDonationById(id) {
 export async function getDonationsByUserId(user_id) {
   const result = await pool.query(
     `
-    SELECT id, user_id, amount, currency, message, status, created_at
-    FROM donations
+    SELECT * FROM donations
     WHERE user_id = $1
     ORDER BY created_at DESC
     `,
@@ -56,59 +62,35 @@ export async function getDonationsByUserId(user_id) {
 
 
 export async function deleteDonation(id) {
+  const result = await pool.query(`DELETE FROM donations WHERE id = $1`, [id]);
+  return result.rowCount > 0;
+}
+
+
+export async function updateDonationStatus(session_id, status, payment_intent = null) {
   const result = await pool.query(
-    `DELETE FROM donations WHERE id = $1`,
-    [id]
+    `
+    UPDATE donations
+    SET status = $1,
+        stripe_payment_intent = COALESCE($2, stripe_payment_intent),
+        updated_at = NOW()
+    WHERE stripe_session_id = $3
+    `,
+    [status, payment_intent, session_id]
   );
   return result.rowCount > 0;
 }
 
 
 export async function getDonationStats() {
-  const result = await pool.query(
-    `
+  const result = await pool.query(`
     SELECT 
-      COUNT(*)::int AS count,
-      COALESCE(SUM(amount), 0)::float AS total
-    FROM donations
-    WHERE status = 'succeeded'
-    `
-  );
+      COUNT(*) AS total_dons,
+      SUM(amount) AS total_montant,
+      COUNT(CASE WHEN user_id IS NULL THEN 1 END) AS dons_anonymes,
+      COUNT(CASE WHEN user_id IS NOT NULL THEN 1 END) AS dons_connectes
+    FROM donations;
+  `);
   return result.rows[0];
 }
 
-
-export async function updateDonationStatus(stripeSessionId, status, paymentIntent = null) {
-  const result = await pool.query(
-    `
-    UPDATE donations
-    SET status = $1,
-        stripe_payment_intent = $2,
-        updated_at = NOW()
-    WHERE stripe_session_id = $3
-    `,
-    [status, paymentIntent, stripeSessionId]
-  );
-  return result.rowCount > 0;
-}
-
-
-export async function updateDonationById(id, data) {
-  const { amount, message, currency, status } = data;
-
-  const result = await pool.query(
-    `
-    UPDATE donations
-    SET 
-      amount = COALESCE($1, amount),
-      message = COALESCE($2, message),
-      currency = COALESCE($3, currency),
-      status = COALESCE($4, status),
-      updated_at = NOW()
-    WHERE id = $5
-    `,
-    [amount, message, currency, status, id]
-  );
-
-  return result.rowCount > 0;
-}

@@ -12,8 +12,12 @@ import {
 
 export async function addConcert(req, res, next) {
   try {
+    if (req.user.role !== "admin") {
+      return res.status(403).json({ error: "Accès refusé : réservé aux administrateurs." });
+    }
+
     const { title, location, date, ticket_url } = req.validatedBody;
-    const imageUrl = req.file?.path || null;
+    const image_url = req.file?.path || null;
 
     if (!title || !location || !date) {
       return res.status(400).json({ error: "Titre, lieu et date sont requis." });
@@ -24,7 +28,7 @@ export async function addConcert(req, res, next) {
       return res.status(400).json({ error: "La date du concert ne peut pas être passée." });
     }
 
-    const newConcert = await createConcert(title, location, date, ticket_url, imageUrl);
+    const newConcert = await createConcert(title, location, date, ticket_url, image_url);
 
     res.status(201).json({
       success: true,
@@ -64,7 +68,6 @@ export async function fetchConcertById(req, res, next) {
     if (!concert) {
       return res.status(404).json({ error: "Concert non trouvé." });
     }
-
     res.json({ success: true, data: concert });
   } catch (error) {
     next(error);
@@ -74,14 +77,23 @@ export async function fetchConcertById(req, res, next) {
 
 export async function editConcert(req, res, next) {
   try {
+    if (req.user.role !== "admin") {
+      return res.status(403).json({ error: "Accès refusé : réservé aux administrateurs." });
+    }
+
     const { title, location, date, ticket_url } = req.validatedBody;
-    const imageUrl = req.file?.path || null;
+    const image_url = req.file?.path || null;
 
     if (!title || !location || !date) {
       return res.status(400).json({ error: "Titre, lieu et date sont requis." });
     }
 
-    const success = await updateConcert(req.params.id, title, location, date, ticket_url, imageUrl);
+    const concert = await getConcertById(req.params.id);
+    if (!concert) {
+      return res.status(404).json({ error: "Concert non trouvé." });
+    }
+
+    const success = await updateConcert(req.params.id, title, location, date, ticket_url, image_url);
     if (!success) {
       return res.status(404).json({ error: "Concert non trouvé." });
     }
@@ -100,12 +112,24 @@ export async function editConcert(req, res, next) {
 
 export async function removeConcert(req, res, next) {
   try {
+    if (req.user.role !== "admin") {
+      return res.status(403).json({ error: "Accès refusé : réservé aux administrateurs." });
+    }
+
+    const concert = await getConcertById(req.params.id);
+    if (!concert) {
+      return res.status(404).json({ error: "Concert non trouvé." });
+    }
+
     const success = await deleteConcert(req.params.id);
     if (!success) {
       return res.status(404).json({ error: "Concert non trouvé." });
     }
 
-    res.json({ success: true, message: "Concert supprimé avec succès." });
+    res.json({
+      success: true,
+      message: "Concert supprimé avec succès."
+    });
   } catch (error) {
     next(error);
   }
@@ -157,6 +181,7 @@ export async function fetchConcertsByLocation(req, res, next) {
     next(error);
   }
 }
+
 
 
 
