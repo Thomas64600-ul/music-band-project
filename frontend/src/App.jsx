@@ -2,16 +2,16 @@ import { Routes, Route } from "react-router-dom";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 
-
 import Home from "./pages/Home";
 import Music from "./pages/Music";
 import Concerts from "./pages/Concerts";
-import Articles from "./pages/Blog";
+import Blog from "./pages/Blog";
+import ArticleDetail from "./pages/ArticleDetail";
 import Contact from "./pages/Contact";
 import Cagnotte from "./pages/Cagnotte";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-
+import NotFound from "./pages/NotFound";
 
 import ProtectedRoute from "./components/ProtectedRoute";
 import AdminLayout from "./layouts/AdminLayout";
@@ -26,9 +26,11 @@ import AdminUsers from "./pages/AdminUsers";
 import AdminStats from "./pages/AdminStats";
 
 export default function App() {
+  console.log("🌍 API URL =", import.meta.env.VITE_API_URL);
+
   return (
     <div className="min-h-screen flex flex-col bg-[#0A0A0A] text-[#F2F2F2]">
-      
+     
       <Header
         logoSrc="/src/assets/logo.png"
         links={[
@@ -48,13 +50,14 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/music" element={<Music />} />
           <Route path="/concerts" element={<Concerts />} />
-          <Route path="/blog" element={<Articles />} />
-          <Route path="/contact" element={<Contact />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/blog/:id" element={<ArticleDetail />} />
           <Route path="/cagnotte" element={<Cagnotte />} />
+          <Route path="/contact" element={<Contact />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
 
-         
+          
           <Route
             path="/admin"
             element={
@@ -66,7 +69,7 @@ export default function App() {
             }
           />
 
-         
+          
           <Route
             path="/admin/articles"
             element={
@@ -110,7 +113,7 @@ export default function App() {
             }
           />
 
-         
+          
           <Route
             path="/admin/messages"
             element={
@@ -121,8 +124,6 @@ export default function App() {
               </ProtectedRoute>
             }
           />
-
-        
           <Route
             path="/admin/donations"
             element={
@@ -133,8 +134,6 @@ export default function App() {
               </ProtectedRoute>
             }
           />
-
-          
           <Route
             path="/admin/users"
             element={
@@ -145,8 +144,6 @@ export default function App() {
               </ProtectedRoute>
             }
           />
-
-          
           <Route
             path="/admin/stats"
             element={
@@ -157,6 +154,9 @@ export default function App() {
               </ProtectedRoute>
             }
           />
+
+         
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
 
@@ -172,16 +172,6 @@ export default function App() {
     </div>
   );
 }
-
-
-
-
-
-
-
-
-
-
 
 
 
