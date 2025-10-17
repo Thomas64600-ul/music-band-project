@@ -69,11 +69,13 @@ export async function updateArticle(id, title, description, content, image_url =
       UPDATE articles
       SET title = $1, description = $2, content = $3, image_url = $4, updated_at = NOW()
       WHERE id = $5
+      RETURNING *
       `
     : `
       UPDATE articles
       SET title = $1, description = $2, content = $3, updated_at = NOW()
       WHERE id = $4
+      RETURNING *
       `;
 
   const values = image_url
@@ -81,8 +83,9 @@ export async function updateArticle(id, title, description, content, image_url =
     : [title, description, content, id];
 
   const result = await pool.query(query, values);
-  return result.rowCount > 0;
+  return result.rows[0];
 }
+
 
 
 
