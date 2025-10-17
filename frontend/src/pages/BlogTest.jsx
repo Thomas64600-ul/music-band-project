@@ -1,13 +1,13 @@
 import ArticleCard from "../components/ArticleCard";
 import Button from "../components/Button";
 
-export default function Blog() {
+export default function BlogTest() {
   const articles = [
     {
       title: "🎤 REVEREN en concert à Bordeaux",
       excerpt:
         "Le groupe revient sur scène avec une performance électro-rock inédite. Découvrez l’énergie brute du live !",
-      image: "/src/assets/concert-bordeaux.jpg",
+      image: "/src/assets/concert-bordeaux.png",
       date: "10 Oct 2025",
       link: "/blog/concert-bordeaux",
     },
@@ -15,7 +15,7 @@ export default function Blog() {
       title: "⚡ Nouveau single 'Electric Sunrise'",
       excerpt:
         "Le nouveau titre de REVEREN plonge dans une ambiance électrisante, mêlant puissance et émotion.",
-      image: "/src/assets/electric-sunrise.jpg",
+      image: "/src/assets/electric-sunrise.png",
       date: "05 Oct 2025",
       link: "/blog/electric-sunrise",
     },
@@ -23,7 +23,7 @@ export default function Blog() {
       title: "🎧 Backstage : enregistrement du prochain album",
       excerpt:
         "Un aperçu exclusif du processus créatif du groupe REVEREN dans leur studio à Bayonne.",
-      image: "/src/assets/studio.jpg",
+      image: "/src/assets/studio.png",
       date: "02 Oct 2025",
       link: "/blog/studio",
     },

@@ -5,7 +5,9 @@ import Footer from "./components/Footer";
 import Home from "./pages/Home";
 import Music from "./pages/Music";
 import Concerts from "./pages/Concerts";
+import ConcertsTest from "./pages/ConcertsTest";
 import Blog from "./pages/Blog";
+import BlogTest from "./pages/BlogTest";
 import ArticleDetail from "./pages/ArticleDetail";
 import Contact from "./pages/Contact";
 import Cagnotte from "./pages/Cagnotte";
@@ -49,8 +51,10 @@ export default function App() {
           
           <Route path="/" element={<Home />} />
           <Route path="/music" element={<Music />} />
-          <Route path="/concerts" element={<Concerts />} />
-          <Route path="/blog" element={<Blog />} />
+          {/* <Route path="/concerts" element={<Concerts />} /> */}
+          <Route path="/concerts" element={<ConcertsTest />} />
+          {/* <Route path="/blog" element={<Blog />} /> */}
+          <Route path="/blog" element={<BlogTest />} />
           <Route path="/blog/:id" element={<ArticleDetail />} />
           <Route path="/cagnotte" element={<Cagnotte />} />
           <Route path="/contact" element={<Contact />} />
