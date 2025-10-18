@@ -4,9 +4,9 @@ import dotenv from "dotenv";
 import cors from "cors";
 import morgan from "morgan";
 import helmet from "helmet";
+import compression from "compression";
 
 import { errorHandler } from "./middlewares/errorHandler.js";
-
 
 import userRoutes from "./routes/userRoutes.js";
 import articleRoutes from "./routes/articleRoutes.js";
@@ -14,7 +14,6 @@ import concertRoutes from "./routes/concertRoutes.js";
 import donationRoutes from "./routes/donationRoutes.js";
 import messageRoutes from "./routes/messageRoutes.js";
 import commentRoutes from "./routes/commentRoutes.js";
-import testRoute from "./routes/testRoute.js";
 
 dotenv.config();
 const app = express();
@@ -22,6 +21,10 @@ const app = express();
 
 app.set("trust proxy", 1);
 app.disable("x-powered-by");
+
+
+app.use(compression());
+
 
 app.use(
   helmet({
@@ -66,14 +69,15 @@ app.use(
 );
 
 
+app.use(morgan(process.env.NODE_ENV !== "production" ? "dev" : "combined"));
+
+
 if (process.env.NODE_ENV !== "production") {
-  app.use(morgan("dev"));
-} else {
-  app.use(morgan("combined"));
+  const { default: testRoute } = await import("./routes/testRoute.js");
+  app.use("/api", testRoute);
 }
 
 
-app.use("/api", testRoute);
 app.use("/api/users", userRoutes);
 app.use("/api/articles", articleRoutes);
 app.use("/api/concerts", concertRoutes);
@@ -85,12 +89,15 @@ app.use("/api/comments", commentRoutes);
 app.use(errorHandler);
 
 
-app.get("/api/debug/cookies", (req, res) => {
-  console.log("Cookies reçus :", req.cookies);
-  res.json({ cookies: req.cookies || {} });
-});
+if (process.env.NODE_ENV !== "production") {
+  app.get("/api/debug/cookies", (req, res) => {
+    console.log("Cookies reçus :", req.cookies);
+    res.json({ cookies: req.cookies || {} });
+  });
+}
 
 export default app;
+
 
 
 
