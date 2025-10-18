@@ -11,7 +11,7 @@ import { validate } from "../middlewares/validationMiddleware.js";
 import { createArticleSchema, updateArticleSchema } from "../schemas/articleSchema.js";
 import { protect } from "../middlewares/authMiddleware.js";
 import { authorizeRoles } from "../middlewares/roleMiddleware.js";
-import upload from "../middlewares/uploadMiddleware.js"; 
+import upload from "../middlewares/uploadMiddleware.js";
 
 const router = express.Router();
 
@@ -20,7 +20,7 @@ router.post(
   "/",
   protect,
   authorizeRoles("admin"),
-  upload.single("image"),         
+  upload.single("image"),
   validate(createArticleSchema),
   addArticle
 );
@@ -36,7 +36,7 @@ router.put(
   "/:id",
   protect,
   authorizeRoles("admin"),
-  upload.single("image"),         
+  upload.single("image"),
   validate(updateArticleSchema),
   editArticle
 );
@@ -50,5 +50,6 @@ router.delete(
 );
 
 export default router;
+
 
 

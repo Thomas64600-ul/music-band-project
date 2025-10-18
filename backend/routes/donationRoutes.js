@@ -1,4 +1,5 @@
 import express from "express";
+import bodyParser from "body-parser";
 import {
   addDonation,
   editDonation,
@@ -15,17 +16,8 @@ import { validate } from "../middlewares/validationMiddleware.js";
 import { createDonationSchema, updateDonationSchema } from "../schemas/donationSchema.js";
 import { protect } from "../middlewares/authMiddleware.js";
 import { authorizeRoles } from "../middlewares/roleMiddleware.js";
-import bodyParser from "body-parser";
 
 const router = express.Router();
-
-
-
-
-router.post("/", validate(createDonationSchema), addDonation);
-
-
-router.post("/create-checkout-session", validate(createDonationSchema), createCheckoutSession);
 
 
 router.post(
@@ -35,11 +27,13 @@ router.post(
 );
 
 
+router.post("/", validate(createDonationSchema), addDonation);
+
+
+router.post("/create-checkout-session", validate(createDonationSchema), createCheckoutSession);
 
 
 router.get("/user", protect, fetchDonationsByUser);
-
-
 
 
 router.get("/", protect, authorizeRoles("admin"), fetchDonations);
@@ -57,4 +51,5 @@ router.put("/:id", protect, authorizeRoles("admin"), validate(updateDonationSche
 router.delete("/:id", protect, authorizeRoles("admin"), removeDonation);
 
 export default router;
+
 

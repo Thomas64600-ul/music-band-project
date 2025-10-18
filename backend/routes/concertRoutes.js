@@ -22,12 +22,13 @@ const router = express.Router();
 router.get("/", fetchConcerts);
 
 
+router.get("/search", fetchConcertsByLocation);
+
+
 router.get("/upcoming", fetchUpcomingConcerts);
 
 
 router.get("/past", fetchPastConcerts);
-
-router.get("/search", fetchConcertsByLocation);
 
 
 router.get("/:id", fetchConcertById);
@@ -42,6 +43,7 @@ router.post(
   addConcert
 );
 
+
 router.put(
   "/:id",
   protect,
@@ -51,8 +53,10 @@ router.put(
   editConcert
 );
 
+
 router.delete("/:id", protect, authorizeRoles("admin"), removeConcert);
 
 export default router;
+
 
 
