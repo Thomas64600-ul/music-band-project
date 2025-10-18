@@ -1,6 +1,5 @@
 import pool from "../config/db.js";
 
-
 export async function createDonation(
   user_id = null,
   amount,
@@ -93,4 +92,44 @@ export async function getDonationStats() {
   `);
   return result.rows[0];
 }
+
+
+export async function updateDonationById(id, data) {
+  const fields = [];
+  const values = [];
+  let index = 1;
+
+  
+  for (const [key, value] of Object.entries(data)) {
+    fields.push(`${key} = $${index}`);
+    values.push(value);
+    index++;
+  }
+
+  if (fields.length === 0) return false;
+
+  const query = `
+    UPDATE donations
+    SET ${fields.join(", ")}, updated_at = NOW()
+    WHERE id = $${index}
+    RETURNING *;
+  `;
+
+  values.push(id);
+  const result = await pool.query(query, values);
+  return result.rows[0] || null;
+}
+
+
+export {
+  createDonation,
+  getAllDonations,
+  getDonationById,
+  getDonationsByUserId,
+  deleteDonation,
+  updateDonationStatus,
+  getDonationStats,
+  updateDonationById 
+};
+
 
