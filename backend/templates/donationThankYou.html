@@ -19,7 +19,7 @@
       margin: 0 auto;
     }
     h2 {
-      color: #B3122D;
+      color: #FFD700;
     }
     p {
       line-height: 1.5;
@@ -30,48 +30,38 @@
       border-top: 1px solid #eee;
       margin: 20px 0;
     }
-    .btn-container {
-      margin: 25px 0;
-      text-align: center;
-    }
     a.button {
-      background: #FFD700;
-      color: #000;
+      background: #B3122D;
+      color: #fff;
       text-decoration: none;
       padding: 12px 24px;
       display: inline-block;
       border-radius: 5px;
+      font-size: 16px;
       font-weight: bold;
-    }
-    .footer {
-      font-size: 12px;
-      color: #666;
-      text-align: center;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h2>Réinitialisation de votre mot de passe</h2>
+    <h2>Merci pour votre soutien, {{firstname}} 🎶</h2>
 
-    <p>Bonjour {{firstname}},</p>
-    <p>Vous avez demandé à réinitialiser votre mot de passe. Cliquez sur le bouton ci-dessous pour définir un nouveau mot de passe :</p>
+    <p>Nous avons bien reçu votre don de <strong>{{amount}} €</strong>.</p>
+    <p>Votre générosité aide directement <strong>REVEREN</strong> à continuer de créer, enregistrer et partager sa musique avec le monde.</p>
 
-    <div class="btn-container">
-      <a href="{{resetUrl}}" target="_blank" class="button">Réinitialiser le mot de passe</a>
+    <div style="margin:25px 0; text-align:center;">
+      <a href="{{siteUrl}}" target="_blank" class="button">Retourner sur le site</a>
     </div>
 
-    <p>Ce lien est valable pendant 1 heure. Si vous n’êtes pas à l’origine de cette demande, ignorez simplement cet e-mail.</p>
+    <p>Chaque don compte 💛<br>
+    Merci d’avoir choisi de soutenir notre aventure musicale.</p>
 
     <hr>
-
-    <p class="footer">
-      Cet e-mail a été envoyé automatiquement par le site <strong>REVEREN</strong>.<br>
-      Pour toute question, contactez-nous à
+    <p style="font-size:12px; color:#666;">
+      Cet email a été envoyé automatiquement par le site <strong>REVEREN</strong>.<br>
+      Si vous n’êtes pas à l’origine de ce don, veuillez contacter notre équipe à
       <a href="mailto:admin@contactfastasturtlerecords.fr">admin@contactfastasturtlerecords.fr</a>.
     </p>
   </div>
 </body>
 </html>
-
-

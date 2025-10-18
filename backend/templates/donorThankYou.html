@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f9f9f9;
+      padding: 20px;
+      margin: 0;
+    }
+    .container {
+      background: #fff;
+      border-radius: 8px;
+      padding: 20px;
+      border: 1px solid #ddd;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    h2 {
+      color: #FFD700;
+    }
+    p {
+      line-height: 1.5;
+      color: #333;
+    }
+    .cta {
+      display: inline-block;
+      background: #B3122D;
+      color: #fff;
+      padding: 12px 24px;
+      text-decoration: none;
+      border-radius: 5px;
+      margin-top: 15px;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #eee;
+      margin: 20px 0;
+    }
+    .footer {
+      font-size: 12px;
+      color: #666;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Merci pour votre soutien, {{firstname}} 🎵</h2>
+
+    <p>Nous avons bien reçu votre don de <strong>{{amount}} €</strong>.</p>
+    <p>Votre contribution aide <strong>REVEREN</strong> à poursuivre son aventure musicale et à partager sa passion avec le monde.</p>
+
+    <a href="{{siteUrl}}" target="_blank" class="cta">Retourner sur le site</a>
+
+    <hr>
+    <p class="footer">
+      Cet e-mail automatique a été envoyé par le site <strong>REVEREN</strong>.<br>
+      Si vous n’êtes pas à l’origine de ce don, contactez notre équipe à 
+      <a href="mailto:admin@contactfastasturtlerecords.fr">admin@contactfastasturtlerecords.fr</a>.
+    </p>
+  </div>
+</body>
+</html>

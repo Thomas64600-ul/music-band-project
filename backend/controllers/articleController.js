@@ -6,23 +6,39 @@ import {
   deleteArticle
 } from "../models/Article.js";
 
+import { sendEmail } from "../services/emailService.js";
+
 
 export async function addArticle(req, res, next) {
   try {
-    const { title, description, content } = req.body;
-    const author_id = req.user.id;
-    const image_url = req.file ? req.file.path : null; 
+    const { title, description, content } = req.validatedBody;
+    const author_id = req.user?.id;
+    const image_url = req.file?.path || null;
 
     if (!title || !content) {
-      return res.status(400).json({ error: "Titre et contenu sont requis." });
+      return res.status(400).json({ error: "Le titre et le contenu sont requis." });
     }
 
     const newArticle = await createArticle(title, description, content, image_url, author_id);
 
+   
+    await sendEmail(
+      process.env.ADMIN_EMAIL,
+      "Nouvel article publié",
+      `Un nouvel article vient d’être créé par ${req.user.firstname || "un auteur inconnu"}.`,
+      "adminNewArticle.html",
+      {
+        title,
+        description: description || "—",
+        author: `${req.user.firstname || ""} ${req.user.lastname || ""}`,
+        date: new Date().toLocaleString("fr-FR", { timeZone: "Europe/Paris", hour12: false }),
+      }
+    );
+
     res.status(201).json({
       success: true,
       message: "Article créé avec succès.",
-      data: newArticle
+      data: newArticle,
     });
   } catch (error) {
     next(error);
@@ -38,12 +54,12 @@ export async function fetchArticles(req, res, next) {
 
     const articles = await getAllArticles(limit, offset);
 
-    res.json({
+    res.status(200).json({
       success: true,
       page,
       limit,
       count: articles.length,
-      data: articles
+      data: articles,
     });
   } catch (error) {
     next(error);
@@ -57,7 +73,11 @@ export async function fetchArticleById(req, res, next) {
     if (!article) {
       return res.status(404).json({ error: "Article non trouvé." });
     }
-    res.json({ success: true, data: article });
+
+    res.status(200).json({
+      success: true,
+      data: article,
+    });
   } catch (error) {
     next(error);
   }
@@ -66,10 +86,11 @@ export async function fetchArticleById(req, res, next) {
 
 export async function editArticle(req, res, next) {
   try {
-    const { title, description, content, image_url } = req.body;
+    const { title, description, content } = req.validatedBody;
+    const image_url = req.file?.path || null;
     const user = req.user;
-    const article = await getArticleById(req.params.id);
 
+    const article = await getArticleById(req.params.id);
     if (!article) {
       return res.status(404).json({ error: "Article non trouvé." });
     }
@@ -78,20 +99,16 @@ export async function editArticle(req, res, next) {
       return res.status(403).json({ error: "Non autorisé à modifier cet article." });
     }
 
-    if (!title || !content) {
-      return res.status(400).json({ error: "Titre et contenu sont requis." });
-    }
-
-    const success = await updateArticle(req.params.id, title, description, content, image_url);
-    if (!success) {
-      return res.status(404).json({ error: "Article non trouvé." });
+    const updated = await updateArticle(req.params.id, title, description, content, image_url);
+    if (!updated) {
+      return res.status(404).json({ error: "Échec de la mise à jour de l’article." });
     }
 
     const updatedArticle = await getArticleById(req.params.id);
-    res.json({
+    res.status(200).json({
       success: true,
       message: "Article mis à jour avec succès.",
-      data: updatedArticle
+      data: updatedArticle,
     });
   } catch (error) {
     next(error);
@@ -114,17 +131,31 @@ export async function removeArticle(req, res, next) {
 
     const success = await deleteArticle(req.params.id);
     if (!success) {
-      return res.status(404).json({ error: "Article non trouvé." });
+      return res.status(404).json({ error: "Échec de la suppression de l’article." });
     }
 
-    res.json({
+    
+    await sendEmail(
+      process.env.ADMIN_EMAIL,
+      "Article supprimé",
+      `Un article vient d’être supprimé.`,
+      "adminArticleDeleted.html",
+      {
+        title: article.title,
+        author: `${req.user.firstname || ""} ${req.user.lastname || ""}`,
+        date: new Date().toLocaleString("fr-FR", { timeZone: "Europe/Paris", hour12: false }),
+      }
+    );
+
+    res.status(200).json({
       success: true,
-      message: "Article supprimé avec succès."
+      message: "Article supprimé avec succès.",
     });
   } catch (error) {
     next(error);
   }
 }
+
 
 
 

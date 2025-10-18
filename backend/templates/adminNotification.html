@@ -7,33 +7,74 @@
       font-family: Arial, sans-serif;
       background: #f9f9f9;
       padding: 20px;
+      margin: 0;
     }
     .container {
       background: #fff;
       border-radius: 8px;
       padding: 20px;
       border: 1px solid #ddd;
+      max-width: 600px;
+      margin: 0 auto;
     }
     h2 {
       color: #B3122D;
+      margin-top: 0;
+    }
+    .event-type {
+      background: #FFD700;
+      color: #000;
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 4px;
+      font-size: 14px;
+      font-weight: bold;
     }
     .message-box {
       background: #f4f4f4;
       padding: 15px;
       border-radius: 5px;
       margin-top: 10px;
+      white-space: pre-line;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #eee;
+      margin: 20px 0;
+    }
+    .footer {
+      font-size: 12px;
+      color: #666;
+      text-align: center;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h2>Nouveau message reçu sur Music Band Website</h2>
+    <h2>🔔 Nouvelle activité sur Music Band Website</h2>
+
+    <p class="event-type">{{event_type}}</p>
+
     <p><strong>Nom :</strong> {{name}}</p>
     <p><strong>Email :</strong> {{email}}</p>
+
+    {{#if amount}}
+    <p><strong>Montant :</strong> {{amount}}</p>
+    {{/if}}
+
+    {{#if message}}
     <p><strong>Message :</strong></p>
     <div class="message-box">{{message}}</div>
+    {{/if}}
+
+    <p><strong>Date :</strong> {{date}}</p>
+
     <hr>
-    <p style="font-size:12px; color:#666;">Cet email a été généré automatiquement par le site Music Band.</p>
+    <p class="footer">
+      Cet email a été généré automatiquement par le site <strong>Music Band</strong>.<br>
+      Ne répondez pas directement à ce message.
+    </p>
   </div>
 </body>
 </html>
+

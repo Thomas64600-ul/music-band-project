@@ -40,10 +40,8 @@ export async function register(req, res, next) {
 
     const hashed = await hashPassword(password);
     const newUser = await createUser(firstname, lastname, email, hashed, role, imageUrl);
-
     const token = generateToken(newUser);
 
-   
     const isProd = process.env.NODE_ENV === "production";
     res.cookie("token", token, {
       httpOnly: true,
@@ -55,13 +53,30 @@ export async function register(req, res, next) {
     
     await sendEmail(
       email,
-      "Bienvenue sur Music Band",
+      "Bienvenue sur Music Band 🎵",
       `Bienvenue ${firstname}, votre compte a bien été créé.`,
       "userRegister.html",
       {
         firstname,
         email,
         loginUrl: `${process.env.CLIENT_URL}/login`,
+      }
+    );
+
+    
+    await sendEmail(
+      process.env.ADMIN_EMAIL,
+      "👋 Nouvel utilisateur inscrit sur Music Band",
+      `Nouvel utilisateur : ${firstname} ${lastname} (${email})`,
+      "adminNewUserAlert.html",
+      {
+        firstname,
+        lastname,
+        email,
+        date: new Date().toLocaleString("fr-FR", {
+          timeZone: "Europe/Paris",
+          hour12: false,
+        }),
       }
     );
 
@@ -97,15 +112,14 @@ export async function login(req, res, next) {
     }
 
     const token = generateToken(user);
-
- 
     const isProd = process.env.NODE_ENV === "production";
-res.cookie("token", token, {
-  httpOnly: true,
-  secure: isProd, 
-  sameSite: isProd ? "none" : "lax", 
-  maxAge: 60 * 60 * 1000, 
-});
+
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: isProd,
+      sameSite: isProd ? "none" : "lax",
+      maxAge: 60 * 60 * 1000,
+    });
 
     return res.json({
       success: true,
@@ -187,12 +201,28 @@ export async function forgotPassword(req, res, next) {
     await saveResetToken(user.id, resetToken, expiry);
     const resetUrl = `${process.env.CLIENT_URL}/reset-password/${resetToken}`;
 
+    
     await sendEmail(
       email,
-      "Réinitialisation du mot de passe",
+      "Réinitialisation du mot de passe 🔐",
       `Cliquez sur ce lien pour réinitialiser votre mot de passe : ${resetUrl}`,
       "resetPassword.html",
       { firstname: user.firstname, resetUrl }
+    );
+
+    
+    await sendEmail(
+      process.env.ADMIN_EMAIL,
+      "⚠️ Réinitialisation de mot de passe demandée",
+      `L’utilisateur ${user.email} a demandé une réinitialisation.`,
+      "adminPasswordResetAlert.html",
+      {
+        email: user.email,
+        date: new Date().toLocaleString("fr-FR", {
+          timeZone: "Europe/Paris",
+          hour12: false,
+        }),
+      }
     );
 
     res.json({
@@ -214,6 +244,7 @@ export async function fetchUsers(req, res, next) {
   }
 }
 
+
 export async function fetchUserById(req, res, next) {
   try {
     const user = await getUserById(req.params.id);
@@ -223,6 +254,7 @@ export async function fetchUserById(req, res, next) {
     next(error);
   }
 }
+
 
 export async function editUser(req, res, next) {
   try {
@@ -238,6 +270,7 @@ export async function editUser(req, res, next) {
   }
 }
 
+
 export async function removeUser(req, res, next) {
   try {
     const deleted = await deleteUser(req.params.id);
@@ -247,6 +280,7 @@ export async function removeUser(req, res, next) {
     next(error);
   }
 }
+
 
 export async function resetPassword(req, res, next) {
   try {
@@ -260,6 +294,15 @@ export async function resetPassword(req, res, next) {
 
     const hashed = await hashPassword(password);
     await updateUserPassword(user.id, hashed);
+
+    
+    await sendEmail(
+      user.email,
+      "Mot de passe réinitialisé ✅",
+      "Votre mot de passe a été modifié avec succès.",
+      "passwordResetSuccess.html",
+      { firstname: user.firstname }
+    );
 
     res.json({
       success: true,

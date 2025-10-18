@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f9f9f9;
+      padding: 20px;
+      margin: 0;
+    }
+    .container {
+      background: #fff;
+      border-radius: 8px;
+      padding: 20px;
+      border: 1px solid #ddd;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    h2 {
+      color: #B3122D;
+    }
+    p {
+      line-height: 1.5;
+      color: #333;
+    }
+    .info-box {
+      background: #f4f4f4;
+      padding: 15px;
+      border-radius: 6px;
+      border-left: 4px solid #FFD700;
+      margin-top: 10px;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #eee;
+      margin: 20px 0;
+    }
+    .footer {
+      font-size: 12px;
+      color: #666;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>💰 Nouveau don reçu sur REVEREN</h2>
+    <p>Un don vient d'être effectué sur le site <strong>REVEREN</strong>.</p>
+
+    <div class="info-box">
+      <p><strong>Montant :</strong> {{amount}} €</p>
+      <p><strong>Message :</strong> {{message}}</p>
+      <p><strong>Statut :</strong> {{status}}</p>
+      <p><strong>Donateur :</strong> {{donor}}</p>
+      <p><strong>Date :</strong> {{date}}</p>
+    </div>
+
+    <p>Consultez le tableau de bord pour plus d'informations.</p>
+
+    <hr>
+    <p class="footer">
+      Cet e-mail automatique a été envoyé par le site <strong>REVEREN</strong>.<br>
+      Il est destiné à l’administrateur pour le suivi des dons.
+    </p>
+  </div>
+</body>
+</html>
