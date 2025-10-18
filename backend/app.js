@@ -18,13 +18,10 @@ import commentRoutes from "./routes/commentRoutes.js";
 dotenv.config();
 const app = express();
 
-
 app.set("trust proxy", 1);
 app.disable("x-powered-by");
 
-
 app.use(compression());
-
 
 app.use(
   helmet({
@@ -50,7 +47,6 @@ app.use(
   donationRoutes
 );
 
-
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -75,8 +71,13 @@ app.use(morgan(process.env.NODE_ENV !== "production" ? "dev" : "combined"));
 if (process.env.NODE_ENV !== "production") {
   const { default: testRoute } = await import("./routes/testRoute.js");
   app.use("/api", testRoute);
-}
 
+ 
+  app.get("/api/debug/cookies", (req, res) => {
+    console.log("Cookies reçus :", req.cookies);
+    res.json({ cookies: req.cookies || {} });
+  });
+}
 
 app.use("/api/users", userRoutes);
 app.use("/api/articles", articleRoutes);
@@ -87,14 +88,6 @@ app.use("/api/comments", commentRoutes);
 
 
 app.use(errorHandler);
-
-
-if (process.env.NODE_ENV !== "production") {
-  app.get("/api/debug/cookies", (req, res) => {
-    console.log("Cookies reçus :", req.cookies);
-    res.json({ cookies: req.cookies || {} });
-  });
-}
 
 export default app;
 
