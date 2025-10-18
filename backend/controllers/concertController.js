@@ -9,6 +9,8 @@ import {
   getConcertsByLocation
 } from "../models/Concert.js";
 
+import { sendEmail } from "../services/emailService.js";
+
 
 export async function addConcert(req, res, next) {
   try {
@@ -23,17 +25,30 @@ export async function addConcert(req, res, next) {
       return res.status(400).json({ error: "Titre, lieu et date sont requis." });
     }
 
-    
     if (new Date(date) < new Date()) {
       return res.status(400).json({ error: "La date du concert ne peut pas être passée." });
     }
 
     const newConcert = await createConcert(title, location, date, ticket_url, image_url);
 
+    
+    await sendEmail(
+      process.env.ADMIN_EMAIL,
+      "Nouveau concert ajouté",
+      "Un nouveau concert a été ajouté sur Music Band Website.",
+      "adminNewConcert.html",
+      {
+        title,
+        location,
+        date: new Date(date).toLocaleDateString("fr-FR"),
+        ticket_url,
+      }
+    );
+
     res.status(201).json({
       success: true,
-      message: "Concert créé avec succès.",
-      data: newConcert
+      message: "Concert créé avec succès et notification envoyée.",
+      data: newConcert,
     });
   } catch (error) {
     next(error);
@@ -49,12 +64,12 @@ export async function fetchConcerts(req, res, next) {
 
     const concerts = await getAllConcerts(limit, offset);
 
-    res.json({
+    res.status(200).json({
       success: true,
       page,
       limit,
       count: concerts.length,
-      data: concerts
+      data: concerts,
     });
   } catch (error) {
     next(error);
@@ -68,7 +83,7 @@ export async function fetchConcertById(req, res, next) {
     if (!concert) {
       return res.status(404).json({ error: "Concert non trouvé." });
     }
-    res.json({ success: true, data: concert });
+    res.status(200).json({ success: true, data: concert });
   } catch (error) {
     next(error);
   }
@@ -95,14 +110,14 @@ export async function editConcert(req, res, next) {
 
     const success = await updateConcert(req.params.id, title, location, date, ticket_url, image_url);
     if (!success) {
-      return res.status(404).json({ error: "Concert non trouvé." });
+      return res.status(404).json({ error: "Échec de la mise à jour du concert." });
     }
 
     const updatedConcert = await getConcertById(req.params.id);
-    res.json({
+    res.status(200).json({
       success: true,
       message: "Concert mis à jour avec succès.",
-      data: updatedConcert
+      data: updatedConcert,
     });
   } catch (error) {
     next(error);
@@ -123,12 +138,25 @@ export async function removeConcert(req, res, next) {
 
     const success = await deleteConcert(req.params.id);
     if (!success) {
-      return res.status(404).json({ error: "Concert non trouvé." });
+      return res.status(404).json({ error: "Échec de la suppression du concert." });
     }
 
-    res.json({
+    
+    await sendEmail(
+      process.env.ADMIN_EMAIL,
+      "Concert supprimé",
+      "Un concert a été supprimé du site Music Band.",
+      "adminConcertDeleted.html",
+      {
+        title: concert.title,
+        location: concert.location,
+        date: new Date(concert.date).toLocaleDateString("fr-FR"),
+      }
+    );
+
+    res.status(200).json({
       success: true,
-      message: "Concert supprimé avec succès."
+      message: "Concert supprimé avec succès et notification envoyée.",
     });
   } catch (error) {
     next(error);
@@ -139,10 +167,10 @@ export async function removeConcert(req, res, next) {
 export async function fetchUpcomingConcerts(req, res, next) {
   try {
     const concerts = await getUpcomingConcerts();
-    res.json({
+    res.status(200).json({
       success: true,
       count: concerts.length,
-      data: concerts
+      data: concerts,
     });
   } catch (error) {
     next(error);
@@ -153,10 +181,10 @@ export async function fetchUpcomingConcerts(req, res, next) {
 export async function fetchPastConcerts(req, res, next) {
   try {
     const concerts = await getPastConcerts();
-    res.json({
+    res.status(200).json({
       success: true,
       count: concerts.length,
-      data: concerts
+      data: concerts,
     });
   } catch (error) {
     next(error);
@@ -172,15 +200,16 @@ export async function fetchConcertsByLocation(req, res, next) {
     }
 
     const concerts = await getConcertsByLocation(location);
-    res.json({
+    res.status(200).json({
       success: true,
       count: concerts.length,
-      data: concerts
+      data: concerts,
     });
   } catch (error) {
     next(error);
   }
 }
+
 
 
 

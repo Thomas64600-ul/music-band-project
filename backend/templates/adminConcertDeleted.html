@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f9f9f9;
+      padding: 20px;
+      margin: 0;
+    }
+    .container {
+      background: #fff;
+      border-radius: 8px;
+      padding: 20px;
+      border: 1px solid #ddd;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    h2 {
+      color: #B3122D;
+    }
+    p {
+      line-height: 1.5;
+      color: #333;
+    }
+    .info-box {
+      background: #f4f4f4;
+      padding: 15px;
+      border-radius: 6px;
+      margin-top: 15px;
+    }
+    .warning {
+      color: #B3122D;
+      font-weight: bold;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #eee;
+      margin: 20px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>❌ Concert supprimé</h2>
+    <p>Bonjour,</p>
+    <p>Un concert vient d’être <span class="warning">supprimé</span> sur <strong>Music Band Website</strong>.</p>
+
+    <div class="info-box">
+      <p><strong>Titre :</strong> {{title}}</p>
+      <p><strong>Ville :</strong> {{location}}</p>
+      <p><strong>Date prévue :</strong> {{date}}</p>
+    </div>
+
+    <p>Si cette suppression n’a pas été planifiée, vérifiez les logs d’administration.</p>
+
+    <hr>
+    <p style="font-size:12px; color:#666;">
+      Cet email a été généré automatiquement par le site Music Band.<br>
+      Aucune action n’est requise si cette suppression est volontaire.
+    </p>
+  </div>
+</body>
+</html>
