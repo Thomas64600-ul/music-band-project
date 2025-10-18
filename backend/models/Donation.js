@@ -1,6 +1,7 @@
 import pool from "../config/db.js";
 
-export async function createDonation(
+
+async function createDonation(
   user_id = null,
   amount,
   message = null,
@@ -22,7 +23,7 @@ export async function createDonation(
 }
 
 
-export async function getAllDonations() {
+async function getAllDonations() {
   const result = await pool.query(`
     SELECT d.*, u.firstname, u.lastname, u.email AS user_email
     FROM donations AS d
@@ -33,7 +34,7 @@ export async function getAllDonations() {
 }
 
 
-export async function getDonationById(id) {
+async function getDonationById(id) {
   const result = await pool.query(
     `
     SELECT d.*, u.firstname, u.lastname, u.email AS user_email
@@ -46,8 +47,7 @@ export async function getDonationById(id) {
   return result.rows[0];
 }
 
-
-export async function getDonationsByUserId(user_id) {
+async function getDonationsByUserId(user_id) {
   const result = await pool.query(
     `
     SELECT * FROM donations
@@ -60,13 +60,13 @@ export async function getDonationsByUserId(user_id) {
 }
 
 
-export async function deleteDonation(id) {
+async function deleteDonation(id) {
   const result = await pool.query(`DELETE FROM donations WHERE id = $1`, [id]);
   return result.rowCount > 0;
 }
 
 
-export async function updateDonationStatus(session_id, status, payment_intent = null) {
+async function updateDonationStatus(session_id, status, payment_intent = null) {
   const result = await pool.query(
     `
     UPDATE donations
@@ -81,7 +81,7 @@ export async function updateDonationStatus(session_id, status, payment_intent = 
 }
 
 
-export async function getDonationStats() {
+async function getDonationStats() {
   const result = await pool.query(`
     SELECT 
       COUNT(*) AS total_dons,
@@ -94,12 +94,11 @@ export async function getDonationStats() {
 }
 
 
-export async function updateDonationById(id, data) {
+async function updateDonationById(id, data) {
   const fields = [];
   const values = [];
   let index = 1;
 
-  
   for (const [key, value] of Object.entries(data)) {
     fields.push(`${key} = $${index}`);
     values.push(value);
@@ -129,7 +128,7 @@ export {
   deleteDonation,
   updateDonationStatus,
   getDonationStats,
-  updateDonationById 
+  updateDonationById
 };
 
 

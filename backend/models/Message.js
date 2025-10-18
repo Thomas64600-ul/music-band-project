@@ -1,11 +1,11 @@
 import pool from "../config/db.js";
 
 
-export async function createMessage(name, email, message) {
+async function createMessage(name, email, message) {
   const result = await pool.query(
     `
-    INSERT INTO messages (name, email, message, status)
-    VALUES ($1, $2, $3, 'unread')
+    INSERT INTO messages (name, email, message, status, created_at)
+    VALUES ($1, $2, $3, 'unread', NOW())
     RETURNING id, name, email, message, status, created_at
     `,
     [name, email, message]
@@ -15,10 +15,10 @@ export async function createMessage(name, email, message) {
 }
 
 
-export async function getAllMessages() {
+async function getAllMessages() {
   const result = await pool.query(
     `
-    SELECT id, name, email, message, status, created_at
+    SELECT id, name, email, message, status, created_at, updated_at
     FROM messages
     ORDER BY created_at DESC
     `
@@ -27,10 +27,10 @@ export async function getAllMessages() {
 }
 
 
-export async function getMessageById(id) {
+async function getMessageById(id) {
   const result = await pool.query(
     `
-    SELECT id, name, email, message, status, created_at
+    SELECT id, name, email, message, status, created_at, updated_at
     FROM messages
     WHERE id = $1
     `,
@@ -40,10 +40,10 @@ export async function getMessageById(id) {
 }
 
 
-export async function getMessagesByEmail(email) {
+async function getMessagesByEmail(email) {
   const result = await pool.query(
     `
-    SELECT id, name, email, message, status, created_at
+    SELECT id, name, email, message, status, created_at, updated_at
     FROM messages
     WHERE email = $1
     ORDER BY created_at DESC
@@ -54,10 +54,10 @@ export async function getMessagesByEmail(email) {
 }
 
 
-export async function getUnreadMessages() {
+async function getUnreadMessages() {
   const result = await pool.query(
     `
-    SELECT id, name, email, message, status, created_at
+    SELECT id, name, email, message, status, created_at, updated_at
     FROM messages
     WHERE status = 'unread'
     ORDER BY created_at DESC
@@ -67,28 +67,35 @@ export async function getUnreadMessages() {
 }
 
 
-export async function markMessageAsRead(id) {
+async function markMessageAsRead(id) {
   const result = await pool.query(
     `
     UPDATE messages
-    SET status = 'read'
+    SET status = 'read', updated_at = NOW()
     WHERE id = $1
+    RETURNING *
     `,
     [id]
   );
+  return result.rows[0] || null;
+}
+
+
+async function deleteMessage(id) {
+  const result = await pool.query(`DELETE FROM messages WHERE id = $1`, [id]);
   return result.rowCount > 0;
 }
 
 
-export async function deleteMessage(id) {
-  const result = await pool.query(
-    `
-    DELETE FROM messages
-    WHERE id = $1
-    `,
-    [id]
-  );
-  return result.rowCount > 0;
-}
+export {
+  createMessage,
+  getAllMessages,
+  getMessageById,
+  getMessagesByEmail,
+  getUnreadMessages,
+  markMessageAsRead,
+  deleteMessage
+};
+
 
 

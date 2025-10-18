@@ -1,7 +1,7 @@
 import pool from "../config/db.js";
 
 
-export async function createArticle(title, description, content, image_url, author_id) {
+async function createArticle(title, description, content, image_url, author_id) {
   const result = await pool.query(
     `
     INSERT INTO articles (title, description, content, image_url, author_id, created_at)
@@ -28,10 +28,10 @@ export async function createArticle(title, description, content, image_url, auth
 }
 
 
-export async function getAllArticles(limit = 10, offset = 0) {
+async function getAllArticles(limit = 10, offset = 0) {
   const result = await pool.query(
     `
-    SELECT a.id, a.title, a.description, a.content, a.image_url, a.created_at,
+    SELECT a.id, a.title, a.description, a.content, a.image_url, a.created_at, a.updated_at,
            u.firstname AS author_firstname, u.lastname AS author_lastname
     FROM articles AS a
     LEFT JOIN users AS u ON a.author_id = u.id
@@ -45,11 +45,10 @@ export async function getAllArticles(limit = 10, offset = 0) {
 }
 
 
-
-export async function getArticleById(id) {
+async function getArticleById(id) {
   const result = await pool.query(
     `
-    SELECT a.id, a.title, a.description, a.content, a.image_url, a.created_at,
+    SELECT a.id, a.title, a.description, a.content, a.image_url, a.created_at, a.updated_at,
            u.firstname AS author_firstname, u.lastname AS author_lastname
     FROM articles AS a
     LEFT JOIN users AS u ON a.author_id = u.id
@@ -62,8 +61,7 @@ export async function getArticleById(id) {
 }
 
 
-
-export async function updateArticle(id, title, description, content, image_url = null) {
+async function updateArticle(id, title, description, content, image_url = null) {
   const query = image_url
     ? `
       UPDATE articles
@@ -87,14 +85,18 @@ export async function updateArticle(id, title, description, content, image_url =
 }
 
 
-
-
-export async function deleteArticle(id) {
-  const result = await pool.query(
-    `DELETE FROM articles WHERE id = $1`,
-    [id]
-  );
+async function deleteArticle(id) {
+  const result = await pool.query(`DELETE FROM articles WHERE id = $1`, [id]);
   return result.rowCount > 0;
 }
+
+
+export {
+  createArticle,
+  getAllArticles,
+  getArticleById,
+  updateArticle,
+  deleteArticle
+};
 
 
