@@ -21,8 +21,8 @@ const app = express();
 app.set("trust proxy", 1);
 app.disable("x-powered-by");
 
-app.use(compression());
 
+app.use(compression());
 app.use(
   helmet({
     contentSecurityPolicy: {
@@ -42,37 +42,38 @@ app.use(
 
 
 app.use(
-  "/api/donations/webhook",
-  express.raw({ type: "application/json" }),
-  donationRoutes
+  cors({
+    origin: [
+      "http://localhost:5173",                          
+      process.env.CLIENT_URL,                            
+      "https://music-band-project-frontend.onrender.com", 
+    ].filter(Boolean), 
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
 );
+
 
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 
-app.use(
-  cors({
-    origin: [
-      process.env.CLIENT_URL || "http://localhost:5173",
-      "https://music-band-project-frontend.onrender.com",
-    ],
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-  })
-);
-
-
 app.use(morgan(process.env.NODE_ENV !== "production" ? "dev" : "combined"));
+
+
+app.use(
+  "/api/donations/webhook",
+  express.raw({ type: "application/json" }),
+  donationRoutes
+);
 
 
 if (process.env.NODE_ENV !== "production") {
   const { default: testRoute } = await import("./routes/testRoute.js");
   app.use("/api", testRoute);
 
- 
   app.get("/api/debug/cookies", (req, res) => {
     console.log("Cookies reçus :", req.cookies);
     res.json({ cookies: req.cookies || {} });
