@@ -9,7 +9,7 @@ export const createConcertSchema = Joi.object({
     .messages({
       "string.empty": "Le titre du concert est requis.",
       "string.min": "Le titre doit contenir au moins 3 caractères.",
-      "string.max": "Le titre ne peut pas dépasser 100 caractères."
+      "string.max": "Le titre ne peut pas dépasser 100 caractères.",
     }),
 
   location: Joi.string()
@@ -19,17 +19,17 @@ export const createConcertSchema = Joi.object({
     .messages({
       "string.empty": "Le lieu du concert est requis.",
       "string.min": "Le lieu doit contenir au moins 3 caractères.",
-      "string.max": "Le lieu ne peut pas dépasser 100 caractères."
+      "string.max": "Le lieu ne peut pas dépasser 100 caractères.",
     }),
 
-  date: Joi.date()
-    .iso()
-    .min("now")
+  
+  date: Joi.alternatives()
+    .try(Joi.date().iso(), Joi.string().isoDate())
     .required()
     .messages({
       "date.base": "La date doit être valide.",
-      "date.min": "La date du concert doit être ultérieure à aujourd’hui.",
-      "any.required": "La date du concert est requise."
+      "date.format": "Le format de la date doit être ISO (YYYY-MM-DD).",
+      "any.required": "La date du concert est requise.",
     }),
 
   ticket_url: Joi.string()
@@ -37,16 +37,22 @@ export const createConcertSchema = Joi.object({
     .allow(null, "")
     .optional()
     .messages({
-      "string.uri": "Le lien du billet doit être une URL valide."
+      "string.uri": "Le lien du billet doit être une URL valide.",
     }),
+
+ 
+  image: Joi.any().optional(),
 });
 
 
 export const updateConcertSchema = Joi.object({
   title: Joi.string().min(3).max(100).optional(),
   location: Joi.string().min(3).max(100).optional(),
-  date: Joi.date().iso().min("now").optional(),
-  ticket_url: Joi.string().uri().allow(null, "").optional()
+  date: Joi.alternatives()
+    .try(Joi.date().iso(), Joi.string().isoDate())
+    .optional(),
+  ticket_url: Joi.string().uri().allow(null, "").optional(),
+  image: Joi.any().optional(),
 });
 
 

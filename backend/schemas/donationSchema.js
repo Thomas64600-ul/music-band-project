@@ -2,14 +2,26 @@ import Joi from "joi";
 
 
 export const createDonationSchema = Joi.object({
-  user_id: Joi.number().integer().allow(null), 
+ 
+  user_id: Joi.alternatives()
+    .try(Joi.number().integer(), Joi.string().regex(/^\d+$/))
+    .allow(null)
+    .messages({
+      "alternatives.match": "L’identifiant utilisateur doit être un nombre.",
+    }),
 
-  amount: Joi.number().positive().precision(2).required().messages({
-    "number.base": "Le montant doit être un nombre.",
-    "number.positive": "Le montant doit être positif.",
-    "any.required": "Le montant est obligatoire.",
-  }),
+  
+  amount: Joi.alternatives()
+    .try(Joi.number().positive().precision(2), Joi.string().pattern(/^\d+(\.\d{1,2})?$/))
+    .required()
+    .messages({
+      "any.required": "Le montant est obligatoire.",
+      "number.base": "Le montant doit être un nombre.",
+      "number.positive": "Le montant doit être positif.",
+      "string.pattern.base": "Le montant doit être un nombre valide (ex: 10.00).",
+    }),
 
+  
   message: Joi.string().max(250).allow(null, "").messages({
     "string.max": "Le message ne peut pas dépasser 250 caractères.",
   }),
@@ -22,10 +34,10 @@ export const createDonationSchema = Joi.object({
       "string.email": "L’adresse e-mail doit être valide.",
     }),
 
+ 
   stripe_session_id: Joi.string().allow(null, ""),
   stripe_payment_intent: Joi.string().allow(null, ""),
   currency: Joi.string().valid("eur", "usd").default("eur"),
-
   status: Joi.string()
     .valid("pending", "succeeded", "failed")
     .default("pending"),
@@ -33,10 +45,14 @@ export const createDonationSchema = Joi.object({
 
 
 export const updateDonationSchema = Joi.object({
-  amount: Joi.number().positive().precision(2).optional().messages({
-    "number.base": "Le montant doit être un nombre.",
-    "number.positive": "Le montant doit être positif.",
-  }),
+  amount: Joi.alternatives()
+    .try(Joi.number().positive().precision(2), Joi.string().pattern(/^\d+(\.\d{1,2})?$/))
+    .optional()
+    .messages({
+      "number.base": "Le montant doit être un nombre.",
+      "number.positive": "Le montant doit être positif.",
+      "string.pattern.base": "Le montant doit être un nombre valide.",
+    }),
 
   message: Joi.string().max(250).allow(null, "").optional(),
 
@@ -49,11 +65,7 @@ export const updateDonationSchema = Joi.object({
     }),
 
   currency: Joi.string().valid("eur", "usd").optional(),
-
-  status: Joi.string()
-    .valid("pending", "succeeded", "failed")
-    .optional(),
-
+  status: Joi.string().valid("pending", "succeeded", "failed").optional(),
   stripe_session_id: Joi.string().allow(null, "").optional(),
   stripe_payment_intent: Joi.string().allow(null, "").optional(),
 });
