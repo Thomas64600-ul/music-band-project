@@ -20,7 +20,7 @@ router.post(
   "/",
   protect,
   authorizeRoles("admin"),
-  upload.single("image"),
+  upload.single("image"),           
   validate(createArticleSchema),
   addArticle
 );
@@ -50,6 +50,7 @@ router.delete(
 );
 
 export default router;
+
 
 
 
