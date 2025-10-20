@@ -13,11 +13,16 @@ function LinkItem({ to, children, onClick, className = "" }) {
       end
       className={({ isActive }) =>
         [
-          "relative group inline-block text-gray-200 transition-colors duration-300",
-          "hover:text-[#FFD700] focus-visible:text-[#FFD700] active:text-[#FFD700]",
-          'after:content-[""] after:absolute after:left-1/2 after:-translate-x-1/2 after:-bottom-1 after:h-[2px] after:bg-[#FFD700] after:transition-all after:duration-300',
-          isActive ? "after:w-3/4 after:opacity-100" : "after:w-0 after:opacity-60",
-          "group-hover:after:w-3/4 group-focus-visible:after:w-3/4 active:after:w-3/4",
+          "relative group inline-block transition-colors duration-300",
+          isActive
+            ? "text-[#B3122D]" 
+            : "text-[#F2F2F2]",
+          "hover:text-[#FF4C4C] focus-visible:text-[#FF4C4C]",
+          'after:content-[""] after:absolute after:left-1/2 after:-translate-x-1/2 after:-bottom-1 after:h-[2px] after:bg-[#B3122D] after:transition-all after:duration-300',
+          isActive
+            ? "after:w-3/4 after:opacity-100"
+            : "after:w-0 after:opacity-60",
+          "group-hover:after:w-3/4 group-focus-visible:after:w-3/4",
           className,
         ].join(" ")
       }
@@ -48,44 +53,40 @@ export default function Header({ logoSrc, links }) {
 
   return (
     <header
-      className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 border-b border-gray-800 ${
-        darkMode
-          ? isScrolled
-            ? "bg-[#070B12]/95 shadow-[0_2px_15px_#FFD70030]"
-            : "bg-[#0B0F17]/100"
-          : isScrolled
-          ? "bg-[#F2F2F2]/95 shadow-[0_2px_15px_#FFD70040]"
-          : "bg-[#F2F2F2]/100"
+      className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 border-b border-[#B3122D]/60 ${
+        isScrolled
+          ? "bg-[#0A0A0A]/95 shadow-[0_2px_25px_#B3122D40]"
+          : "bg-[#0A0A0A]"
       }`}
     >
-     
+    
       {isAdmin && (
-        <div className="bg-[#FFD700] text-black text-center text-sm py-1 font-semibold tracking-wide">
-          Mode administrateur activé 🛠️
-        </div>
-      )}
+  <div className="bg-[#B3122D] text-[#F2F2F2] text-center text-sm py-1 font-semibold tracking-wide border-b border-[#FFD700]/40 shadow-[0_0_12px_#B3122D80] animate-pulse">
+    Mode administrateur activé 
+  </div>
+)}
 
-     
+      
       <div className="flex items-center justify-between px-4 sm:px-12 py-3 sm:py-5">
-       
+     
         <button
           onClick={toggleTheme}
-          className="hidden sm:block text-yellow-400 hover:scale-110 transition-transform duration-200"
+          className="hidden sm:block text-[#B3122D] hover:text-[#FF4C4C] hover:scale-110 transition-transform duration-200"
           aria-label="Basculer le thème"
         >
-          {darkMode ? <FaMoon size={24} /> : <FaSun size={24} />}
+          {darkMode ? <FaMoon size={22} /> : <FaSun size={22} />}
         </button>
 
-       
+        
         <div className="flex justify-center items-center flex-1 sm:translate-x-[20px]">
           <motion.img
             src={logoSrc}
             alt="Logo REVEREN"
             animate={{
               boxShadow: [
-                "0 0 15px #FFD70080",
-                "0 0 25px #FFD70060",
-                "0 0 15px #FFD70080",
+                "0 0 20px #B3122D90",
+                "0 0 35px #FFD70060",
+                "0 0 20px #B3122D90",
               ],
             }}
             transition={{
@@ -93,13 +94,13 @@ export default function Header({ logoSrc, links }) {
               repeat: Infinity,
               repeatType: "mirror",
             }}
-            className={`object-contain transition-all duration-500
-              ${isScrolled ? "h-16 sm:h-[100px]" : "h-20 sm:h-[115px]"}
-              drop-shadow-[0_0_14px_#FFD70090] hover:drop-shadow-[0_0_25px_#FFD700]`}
+            className={`object-contain transition-all duration-500 ${
+              isScrolled ? "h-16 sm:h-[95px]" : "h-20 sm:h-[110px]"
+            } drop-shadow-[0_0_20px_#B3122D] hover:drop-shadow-[0_0_30px_#FFD700]`}
           />
         </div>
 
-        
+       
         <div className="hidden sm:flex items-center gap-4 text-sm ml-auto">
           {user ? (
             <>
@@ -114,20 +115,17 @@ export default function Header({ logoSrc, links }) {
               </span>
               <button
                 onClick={logout}
-                className="text-red-400 hover:text-red-500 flex items-center gap-1"
+                className="text-[#B3122D] hover:text-[#FF4C4C] flex items-center gap-1"
               >
                 <LogOut size={14} /> Déconnexion
               </button>
             </>
           ) : (
             <>
-              <NavLink
-                to="/register"
-                className="hover:text-[#FFD700] transition"
-              >
+              <NavLink to="/register" className="hover:text-[#FFD700]">
                 Inscription
               </NavLink>
-              <NavLink to="/login" className="hover:text-[#FFD700] transition">
+              <NavLink to="/login" className="hover:text-[#FFD700]">
                 Connexion
               </NavLink>
             </>
@@ -137,7 +135,7 @@ export default function Header({ logoSrc, links }) {
        
         <button
           onClick={toggleMenu}
-          className="text-yellow-400 hover:scale-110 transition-transform duration-200 sm:hidden"
+          className="text-[#B3122D] hover:text-[#FF4C4C] hover:scale-110 transition-transform duration-200 sm:hidden"
           aria-label={menuOpen ? "Fermer le menu" : "Ouvrir le menu"}
         >
           {menuOpen ? <FaTimes size={22} /> : <FaBars size={22} />}
@@ -145,26 +143,46 @@ export default function Header({ logoSrc, links }) {
       </div>
 
      
-      <div className="hidden sm:flex justify-center border-t border-gray-800 py-2">
-        <nav className="flex space-x-8 text-sm font-semibold">
-          {links.map((l) => (
-            <LinkItem key={l.name} to={l.path}>
-              {l.name}
-            </LinkItem>
-          ))}
-        </nav>
+      <div className="hidden sm:flex flex-col items-center">
+        <div className="flex justify-center border-t border-[#B3122D]/60 py-2 bg-[#0A0A0A] relative w-full">
+          <nav className="flex space-x-8 text-sm font-semibold">
+            {links.map((l) => (
+              <LinkItem key={l.name} to={l.path}>
+                {l.name}
+              </LinkItem>
+            ))}
+          </nav>
+
+         
+          <motion.div
+            initial={{ opacity: 0.4 }}
+            animate={{
+              opacity: [0.4, 0.8, 0.4],
+              boxShadow: [
+                "0 0 12px #B3122D",
+                "0 0 18px #FF4C4C",
+                "0 0 12px #B3122D",
+              ],
+            }}
+            transition={{
+              duration: 3,
+              repeat: Infinity,
+              repeatType: "mirror",
+            }}
+            className="absolute bottom-0 left-0 w-full h-[2px] bg-[#B3122D]"
+          />
+        </div>
       </div>
 
-      
+     
       <AnimatePresence>
         {menuOpen && (
           <motion.nav
-            initial={{ opacity: 0, y: -15 }}
+            initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -15 }}
-            className={`sm:hidden flex flex-col items-center py-4 border-t border-gray-700 ${
-              darkMode ? "bg-[#0B0F17]" : "bg-[#F2F2F2]"
-            }`}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3 }}
+            className="sm:hidden flex flex-col items-center py-4 border-t border-[#B3122D]/60 bg-[#0A0A0A]"
           >
             {links.map((l) => (
               <LinkItem
@@ -181,7 +199,7 @@ export default function Header({ logoSrc, links }) {
             <div className="flex justify-center mt-4">
               <button
                 onClick={toggleTheme}
-                className="text-yellow-400 hover:scale-110 transition-transform duration-200"
+                className="text-[#B3122D] hover:text-[#FF4C4C] hover:scale-110 transition-transform duration-200"
                 aria-label="Basculer le thème"
               >
                 {darkMode ? <FaMoon size={22} /> : <FaSun size={22} />}
@@ -206,7 +224,7 @@ export default function Header({ logoSrc, links }) {
                       logout();
                       setMenuOpen(false);
                     }}
-                    className="text-red-400 hover:text-red-500 flex items-center gap-1 mt-2"
+                    className="text-[#B3122D] hover:text-[#FF4C4C] flex items-center gap-1 mt-2"
                   >
                     <LogOut size={14} /> Déconnexion
                   </button>
@@ -236,6 +254,9 @@ export default function Header({ logoSrc, links }) {
     </header>
   );
 }
+
+
+
 
 
 
