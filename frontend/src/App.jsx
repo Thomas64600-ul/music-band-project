@@ -2,6 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 
+
 import Home from "./pages/Home";
 import Music from "./pages/Music";
 import Concerts from "./pages/Concerts";
@@ -13,6 +14,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import NotFound from "./pages/NotFound";
 
+
 import ProtectedRoute from "./components/ProtectedRoute";
 import AdminLayout from "./layouts/AdminLayout";
 import AdminDashboard from "./pages/AdminDashboard";
@@ -20,6 +22,8 @@ import AdminListArticles from "./pages/AdminListArticles";
 import AdminEditArticle from "./pages/AdminEditArticle";
 import AdminListConcerts from "./pages/AdminListConcerts";
 import AdminEditConcert from "./pages/AdminEditConcert";
+import AdminListMusics from "./pages/AdminListMusics";
+import AdminEditMusic from "./pages/AdminEditMusic";
 import AdminMessages from "./pages/AdminMessages";
 import AdminDonations from "./pages/AdminDonations";
 import AdminUsers from "./pages/AdminUsers";
@@ -30,7 +34,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#0A0A0A] text-[#F2F2F2]">
-     
+      
       <Header
         logoSrc="/src/assets/logo.png"
         links={[
@@ -43,10 +47,10 @@ export default function App() {
         ]}
       />
 
-     
+      
       <main className="flex-grow pt-20 md:pt-28 pb-16 md:pb-18">
         <Routes>
-         
+          
           <Route path="/" element={<Home />} />
           <Route path="/music" element={<Music />} />
           <Route path="/concerts" element={<Concerts />} />
@@ -57,7 +61,7 @@ export default function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
 
-         
+          
           <Route
             path="/admin"
             element={
@@ -69,7 +73,7 @@ export default function App() {
             }
           />
 
-          
+         
           <Route
             path="/admin/articles"
             element={
@@ -80,7 +84,6 @@ export default function App() {
               </ProtectedRoute>
             }
           />
-        
           <Route
             path="/admin/articles/new"
             element={
@@ -91,7 +94,6 @@ export default function App() {
               </ProtectedRoute>
             }
           />
-         
           <Route
             path="/admin/articles/edit/:id"
             element={
@@ -103,44 +105,71 @@ export default function App() {
             }
           />
 
+          
+          <Route
+            path="/admin/concerts"
+            element={
+              <ProtectedRoute requireAdmin={true}>
+                <AdminLayout>
+                  <AdminListConcerts />
+                </AdminLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/concerts/new"
+            element={
+              <ProtectedRoute requireAdmin={true}>
+                <AdminLayout>
+                  <AdminEditConcert />
+                </AdminLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/concerts/edit/:id"
+            element={
+              <ProtectedRoute requireAdmin={true}>
+                <AdminLayout>
+                  <AdminEditConcert />
+                </AdminLayout>
+              </ProtectedRoute>
+            }
+          />
+
          
-          
-<Route
-  path="/admin/concerts"
-  element={
-    <ProtectedRoute requireAdmin={true}>
-      <AdminLayout>
-        <AdminListConcerts />
-      </AdminLayout>
-    </ProtectedRoute>
-  }
-/>
+          <Route
+            path="/admin/musics"
+            element={
+              <ProtectedRoute requireAdmin={true}>
+                <AdminLayout>
+                  <AdminListMusics />
+                </AdminLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/musics/new"
+            element={
+              <ProtectedRoute requireAdmin={true}>
+                <AdminLayout>
+                  <AdminEditMusic />
+                </AdminLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/musics/edit/:id"
+            element={
+              <ProtectedRoute requireAdmin={true}>
+                <AdminLayout>
+                  <AdminEditMusic />
+                </AdminLayout>
+              </ProtectedRoute>
+            }
+          />
 
-
-<Route
-  path="/admin/concerts/new"
-  element={
-    <ProtectedRoute requireAdmin={true}>
-      <AdminLayout>
-        <AdminEditConcert />
-      </AdminLayout>
-    </ProtectedRoute>
-  }
-/>
-
-
-<Route
-  path="/admin/concerts/edit/:id"
-  element={
-    <ProtectedRoute requireAdmin={true}>
-      <AdminLayout>
-        <AdminEditConcert />
-      </AdminLayout>
-    </ProtectedRoute>
-  }
-/>
-
-          
+         
           <Route
             path="/admin/messages"
             element={
@@ -187,7 +216,7 @@ export default function App() {
         </Routes>
       </main>
 
-    
+     
       <Footer
         siteTitle="REVEREN"
         socials={[

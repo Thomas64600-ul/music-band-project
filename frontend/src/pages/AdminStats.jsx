@@ -17,37 +17,29 @@ export default function AdminStats() {
     users: [],
     articles: 0,
     concerts: 0,
+    musics: 0,
     donations: 0,
   });
   const [loading, setLoading] = useState(true);
   const { isAdmin } = useAuth();
   const navigate = useNavigate();
 
- 
   useEffect(() => {
     if (!isAdmin) navigate("/login");
   }, [isAdmin, navigate]);
 
-  
   useEffect(() => {
     (async () => {
       try {
-        const [usersRes, articlesRes, concertsRes, donationsRes] =
+        const [usersRes, articlesRes, concertsRes, musicsRes, donationsRes] =
           await Promise.all([
             get("/users"),
             get("/articles"),
             get("/concerts"),
+            get("/musics"),
             get("/donations"),
           ]);
 
-        console.log("Résultats API stats :", {
-          usersRes,
-          articlesRes,
-          concertsRes,
-          donationsRes,
-        });
-
-      
         const users = Array.isArray(usersRes)
           ? usersRes
           : usersRes.users || [];
@@ -59,6 +51,10 @@ export default function AdminStats() {
         const concerts = Array.isArray(concertsRes)
           ? concertsRes
           : concertsRes.concerts || [];
+
+        const musics = Array.isArray(musicsRes)
+          ? musicsRes
+          : musicsRes.musics || [];
 
         const donations = Array.isArray(donationsRes)
           ? donationsRes
@@ -73,6 +69,7 @@ export default function AdminStats() {
           users,
           articles: articles.length,
           concerts: concerts.length,
+          musics: musics.length,
           donations: totalDonations,
         });
       } catch (e) {
@@ -90,42 +87,46 @@ export default function AdminStats() {
       </p>
     );
 
-  
   const roleData = [
-    { name: "Admin", value: stats.users.filter((u) => u.roles === "admin").length },
-    { name: "Vendeur", value: stats.users.filter((u) => u.roles === "seller").length },
-    { name: "Utilisateur", value: stats.users.filter((u) => u.roles === "buyer").length },
+    { name: "Admins", value: stats.users.filter((u) => u.roles === "admin").length },
+    { name: "Vendeurs", value: stats.users.filter((u) => u.roles === "seller").length },
+    { name: "Utilisateurs", value: stats.users.filter((u) => u.roles === "buyer").length },
   ];
 
-  const COLORS = ["#FFD700", "#B3122D", "#00E0FF"];
+  const COLORS = ["#FF1744", "#00E0FF", "#F2F2F2"];
 
   return (
     <section className="min-h-screen bg-[#0A0A0A] text-[#F2F2F2] py-12 px-6 sm:px-12 flex flex-col items-center">
-      <div className="w-full max-w-5xl bg-[#111] border border-[#FFD70040] rounded-2xl shadow-lg p-10">
-        <h1 className="text-4xl font-bold text-center text-[#FFD700] mb-8">
+      <div className="w-full max-w-5xl bg-[#111] border border-[#FF1744]/40 rounded-2xl shadow-lg p-10">
+        <h1 className="text-4xl font-bold text-center text-[#FF1744] mb-10">
           Statistiques globales
         </h1>
 
         
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-          <div className="bg-[#151515] rounded-xl p-6 text-center border border-gray-700">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 mb-12">
+          <div className="bg-[#151515] rounded-xl p-6 text-center border border-gray-700 hover:border-[#FF1744] transition">
             <p className="text-gray-400">Utilisateurs</p>
-            <p className="text-3xl font-bold text-[#FFD700]">{stats.users.length}</p>
+            <p className="text-3xl font-bold text-[#FF1744]">{stats.users.length}</p>
           </div>
 
-          <div className="bg-[#151515] rounded-xl p-6 text-center border border-gray-700">
+          <div className="bg-[#151515] rounded-xl p-6 text-center border border-gray-700 hover:border-[#FF1744] transition">
             <p className="text-gray-400">Articles</p>
-            <p className="text-3xl font-bold text-[#FFD700]">{stats.articles}</p>
+            <p className="text-3xl font-bold text-[#FF1744]">{stats.articles}</p>
           </div>
 
-          <div className="bg-[#151515] rounded-xl p-6 text-center border border-gray-700">
+          <div className="bg-[#151515] rounded-xl p-6 text-center border border-gray-700 hover:border-[#FF1744] transition">
             <p className="text-gray-400">Concerts</p>
-            <p className="text-3xl font-bold text-[#FFD700]">{stats.concerts}</p>
+            <p className="text-3xl font-bold text-[#FF1744]">{stats.concerts}</p>
           </div>
 
-          <div className="bg-[#151515] rounded-xl p-6 text-center border border-gray-700">
-            <p className="text-gray-400">Total des dons (€)</p>
-            <p className="text-3xl font-bold text-[#FFD700]">
+          <div className="bg-[#151515] rounded-xl p-6 text-center border border-gray-700 hover:border-[#FF1744] transition">
+            <p className="text-gray-400">Musiques</p>
+            <p className="text-3xl font-bold text-[#FF1744]">{stats.musics}</p>
+          </div>
+
+          <div className="bg-[#151515] rounded-xl p-6 text-center border border-gray-700 hover:border-[#FF1744] transition">
+            <p className="text-gray-400">Total dons (€)</p>
+            <p className="text-3xl font-bold text-[#FF1744]">
               {stats.donations.toFixed(2)}
             </p>
           </div>
@@ -133,7 +134,7 @@ export default function AdminStats() {
 
         
         <div className="bg-[#151515] rounded-xl p-6 border border-gray-700">
-          <h2 className="text-2xl font-semibold text-[#FFD700] mb-6 text-center">
+          <h2 className="text-2xl font-semibold text-[#FF1744] mb-6 text-center">
             Répartition des rôles utilisateurs
           </h2>
           <ResponsiveContainer width="100%" height={300}>
@@ -156,14 +157,15 @@ export default function AdminStats() {
           </ResponsiveContainer>
         </div>
 
-        
+       
         <div className="mt-10 text-center">
           <Button variant="secondary" onClick={() => navigate("/admin")}>
-            Retour Dashboard
+            ⏎ Retour Dashboard
           </Button>
         </div>
       </div>
     </section>
   );
 }
+
 
