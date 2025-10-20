@@ -1,4 +1,3 @@
-
 import express from "express";
 import {
   addMusic,
@@ -16,26 +15,40 @@ import upload from "../middlewares/uploadMiddleware.js";
 
 const router = express.Router();
 
+/* ======================
+   🎵 CRÉER UNE MUSIQUE
+====================== */
 router.post(
   "/",
   protect,
   authorizeRoles("admin"),
-  upload.single("cover"),
+  upload.single("cover"), // Nom du champ pour l’image de pochette
   validate(createMusicSchema),
   addMusic
 );
 
+/* ======================
+   🎧 LISTER TOUTES LES MUSIQUES
+====================== */
 router.get("/", fetchMusics);
+
+/* ======================
+   🎵 OBTENIR UNE MUSIQUE PAR ID
+====================== */
 router.get("/:id", fetchMusicById);
 
+/* ======================
+   ✏️ MODIFIER UNE MUSIQUE
+====================== */
 router.put(
   "/:id",
   protect,
   authorizeRoles("admin"),
-  upload.single("cover"),
+  upload.single("cover"), // mise à jour de la pochette
   validate(updateMusicSchema),
   editMusic
 );
+
 
 router.delete(
   "/:id",

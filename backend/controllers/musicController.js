@@ -3,7 +3,7 @@ import {
   getAllMusics,
   getMusicById,
   updateMusic,
-  deleteMusic
+  deleteMusic,
 } from "../models/Music.js";
 
 import { sendEmail } from "../services/emailService.js";
@@ -16,12 +16,15 @@ export async function addMusic(req, res, next) {
     const cover_url = req.file?.path || null;
 
     if (!title || !url) {
-      return res.status(400).json({ error: "Le titre et le lien audio sont requis." });
+      return res.status(400).json({
+        success: false,
+        error: "Le titre et le lien audio sont requis.",
+      });
     }
 
     const newMusic = await createMusic(title, artist, url, cover_url, author_id);
 
-    
+   
     await sendEmail(
       process.env.ADMIN_EMAIL,
       "Nouveau morceau ajouté",
@@ -32,6 +35,8 @@ export async function addMusic(req, res, next) {
         artist: artist || "—",
         author: `${req.user.firstname || ""} ${req.user.lastname || ""}`,
         date: new Date().toLocaleString("fr-FR", { timeZone: "Europe/Paris" }),
+        url,
+        cover_url,
       }
     );
 
@@ -70,8 +75,12 @@ export async function fetchMusics(req, res, next) {
 export async function fetchMusicById(req, res, next) {
   try {
     const music = await getMusicById(req.params.id);
+
     if (!music) {
-      return res.status(404).json({ error: "Musique non trouvée." });
+      return res.status(404).json({
+        success: false,
+        error: "Musique non trouvée.",
+      });
     }
 
     res.status(200).json({
@@ -92,19 +101,45 @@ export async function editMusic(req, res, next) {
 
     const music = await getMusicById(req.params.id);
     if (!music) {
-      return res.status(404).json({ error: "Musique non trouvée." });
+      return res.status(404).json({
+        success: false,
+        error: "Musique non trouvée.",
+      });
     }
 
     if (user.role !== "admin" && music.author_id !== user.id) {
-      return res.status(403).json({ error: "Non autorisé à modifier cette musique." });
+      return res.status(403).json({
+        success: false,
+        error: "Non autorisé à modifier cette musique.",
+      });
     }
 
     const updated = await updateMusic(req.params.id, title, artist, url, cover_url);
     if (!updated) {
-      return res.status(404).json({ error: "Échec de la mise à jour de la musique." });
+      return res.status(404).json({
+        success: false,
+        error: "Échec de la mise à jour de la musique.",
+      });
     }
 
     const updatedMusic = await getMusicById(req.params.id);
+
+    
+    await sendEmail(
+      process.env.ADMIN_EMAIL,
+      "Musique mise à jour",
+      `Une musique a été modifiée par ${req.user.firstname || "un administrateur"}.`,
+      "adminMusicUpdated.html",
+      {
+        title: title || updatedMusic.title,
+        artist: artist || updatedMusic.artist,
+        author: `${req.user.firstname || ""} ${req.user.lastname || ""}`,
+        date: new Date().toLocaleString("fr-FR", { timeZone: "Europe/Paris" }),
+        url: url || updatedMusic.url,
+        cover_url: cover_url || updatedMusic.cover_url,
+      }
+    );
+
     res.status(200).json({
       success: true,
       message: "Musique mise à jour avec succès.",
@@ -122,16 +157,25 @@ export async function removeMusic(req, res, next) {
     const music = await getMusicById(req.params.id);
 
     if (!music) {
-      return res.status(404).json({ error: "Musique non trouvée." });
+      return res.status(404).json({
+        success: false,
+        error: "Musique non trouvée.",
+      });
     }
 
     if (user.role !== "admin" && music.author_id !== user.id) {
-      return res.status(403).json({ error: "Non autorisé à supprimer cette musique." });
+      return res.status(403).json({
+        success: false,
+        error: "Non autorisé à supprimer cette musique.",
+      });
     }
 
     const success = await deleteMusic(req.params.id);
     if (!success) {
-      return res.status(404).json({ error: "Échec de la suppression de la musique." });
+      return res.status(404).json({
+        success: false,
+        error: "Échec de la suppression de la musique.",
+      });
     }
 
     
@@ -155,3 +199,4 @@ export async function removeMusic(req, res, next) {
     next(error);
   }
 }
+
