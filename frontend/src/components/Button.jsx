@@ -1,7 +1,6 @@
-
 function cx(...args) {
   return args
-    .flatMap(a => {
+    .flatMap((a) => {
       if (!a) return [];
       if (typeof a === "string") return [a];
       if (Array.isArray(a)) return a;
@@ -18,22 +17,22 @@ function cx(...args) {
 
 export default function Button({
   children,
-  variant = "primary",     
-  size = "md",             
+  variant = "primary",
+  size = "md",
   fullWidth = false,
   disabled = false,
   className = "",
   onClick,
   type = "button",
-  iconLeft = null,          
+  iconLeft = null,
   iconRight = null,
-  href,                     
+  href,
 }) {
   const base = cx(
     "inline-flex items-center justify-center gap-2",
-    "rounded-xl font-semibold tracking-wide",
-    "transition-all duration-200",
-    "focus:outline-none focus-visible:ring-2 focus-visible:ring-yellow-400/70",
+    "rounded-xl font-semibold tracking-wide uppercase",
+    "transition-all duration-300 ease-in-out",
+    "focus:outline-none focus-visible:ring-2 focus-visible:ring-[#FF2B6A80]",
     "active:scale-[0.98]",
     fullWidth && "w-full",
     disabled && "opacity-50 pointer-events-none"
@@ -45,21 +44,19 @@ export default function Button({
     lg: "text-lg px-6 py-3",
   }[size];
 
-
   const variants = {
     primary: cx(
-      "bg-yellow-400 text-black border border-yellow-400",
-     
-      "hover:bg-black hover:text-yellow-400 hover:border-yellow-400",
-      "hover:shadow-[0_0_16px_#FFD70080]"
+      "bg-[#FF2B6A] text-white border border-[#FF2B6A]",
+      "hover:bg-black hover:text-[#FF2B6A]",
+      "hover:shadow-neon"
     ),
     secondary: cx(
-      "bg-black text-yellow-400 border border-yellow-400/40",
-      "hover:border-yellow-400 hover:shadow-[0_0_16px_#FFD70080]"
+      "bg-black text-[#FF2B6A] border border-[#FF2B6A]/70",
+      "hover:bg-[#FF2B6A] hover:text-black hover:shadow-neon"
     ),
     outline: cx(
-      "bg-transparent text-yellow-400 border border-yellow-400",
-      "hover:bg-black hover:text-yellow-300 hover:shadow-[0_0_16px_#FFD70080]"
+      "bg-transparent text-[#FF2B6A] border border-[#FF2B6A]",
+      "hover:bg-black hover:shadow-neon"
     ),
   }[variant];
 
@@ -73,7 +70,6 @@ export default function Button({
     </>
   );
 
-  
   if (href) {
     return (
       <a href={href} className={classes} aria-disabled={disabled}>
@@ -88,4 +84,5 @@ export default function Button({
     </button>
   );
 }
+
 

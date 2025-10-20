@@ -5,9 +5,7 @@ import Footer from "./components/Footer";
 import Home from "./pages/Home";
 import Music from "./pages/Music";
 import Concerts from "./pages/Concerts";
-import ConcertsTest from "./pages/ConcertsTest";
 import Blog from "./pages/Blog";
-import BlogTest from "./pages/BlogTest";
 import ArticleDetail from "./pages/ArticleDetail";
 import Contact from "./pages/Contact";
 import Cagnotte from "./pages/Cagnotte";
@@ -45,23 +43,21 @@ export default function App() {
         ]}
       />
 
-      
+     
       <main className="flex-grow pt-20 md:pt-28 pb-16 md:pb-18">
         <Routes>
-          
+         
           <Route path="/" element={<Home />} />
           <Route path="/music" element={<Music />} />
-          {/* <Route path="/concerts" element={<Concerts />} /> */}
-          <Route path="/concerts" element={<ConcertsTest />} />
-          {/* <Route path="/blog" element={<Blog />} /> */}
-          <Route path="/blog" element={<BlogTest />} />
+          <Route path="/concerts" element={<Concerts />} />
+          <Route path="/blog" element={<Blog />} />
           <Route path="/blog/:id" element={<ArticleDetail />} />
           <Route path="/cagnotte" element={<Cagnotte />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
 
-          
+         
           <Route
             path="/admin"
             element={
@@ -84,8 +80,20 @@ export default function App() {
               </ProtectedRoute>
             }
           />
+        
           <Route
-            path="/admin/articles/:id"
+            path="/admin/articles/new"
+            element={
+              <ProtectedRoute requireAdmin={true}>
+                <AdminLayout>
+                  <AdminEditArticle />
+                </AdminLayout>
+              </ProtectedRoute>
+            }
+          />
+         
+          <Route
+            path="/admin/articles/edit/:id"
             element={
               <ProtectedRoute requireAdmin={true}>
                 <AdminLayout>
@@ -96,26 +104,41 @@ export default function App() {
           />
 
          
-          <Route
-            path="/admin/concerts"
-            element={
-              <ProtectedRoute requireAdmin={true}>
-                <AdminLayout>
-                  <AdminListConcerts />
-                </AdminLayout>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/admin/concerts/:id"
-            element={
-              <ProtectedRoute requireAdmin={true}>
-                <AdminLayout>
-                  <AdminEditConcert />
-                </AdminLayout>
-              </ProtectedRoute>
-            }
-          />
+          
+<Route
+  path="/admin/concerts"
+  element={
+    <ProtectedRoute requireAdmin={true}>
+      <AdminLayout>
+        <AdminListConcerts />
+      </AdminLayout>
+    </ProtectedRoute>
+  }
+/>
+
+
+<Route
+  path="/admin/concerts/new"
+  element={
+    <ProtectedRoute requireAdmin={true}>
+      <AdminLayout>
+        <AdminEditConcert />
+      </AdminLayout>
+    </ProtectedRoute>
+  }
+/>
+
+
+<Route
+  path="/admin/concerts/edit/:id"
+  element={
+    <ProtectedRoute requireAdmin={true}>
+      <AdminLayout>
+        <AdminEditConcert />
+      </AdminLayout>
+    </ProtectedRoute>
+  }
+/>
 
           
           <Route
@@ -159,12 +182,12 @@ export default function App() {
             }
           />
 
-         
+          
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
 
-     
+    
       <Footer
         siteTitle="REVEREN"
         socials={[
@@ -176,6 +199,7 @@ export default function App() {
     </div>
   );
 }
+
 
 
 

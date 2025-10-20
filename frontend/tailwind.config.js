@@ -7,11 +7,16 @@ export default {
   theme: {
     extend: {
       colors: {
-        gold: "#FFD700",
-        dark: "#0A0A0A",
-        light: "#F2F2F2",
-        accent: "#B3122D",
+        
+        primary: "#FF2B6A",      
+        primaryGlow: "#FF5C8D",   
+        primaryDark: "#A01438",  
+        dark: "#0A0A0A",          
+        light: "#F2F2F2",         
+        accent: "#FF2B6A",       
       },
+
+     
       keyframes: {
         fadeIn: {
           "0%": { opacity: 0, transform: "translateY(-10px)" },
@@ -26,9 +31,13 @@ export default {
         "fade-in": "fadeIn 0.3s ease-out",
         "slide-in-left": "slideInLeft 0.3s ease-out",
       },
+
+      
       transitionTimingFunction: {
         "in-out-smooth": "cubic-bezier(0.25, 0.1, 0.25, 1)",
       },
+
+     
       fontFamily: {
         sans: ["Inter", "system-ui", "sans-serif"],
       },

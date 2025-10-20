@@ -17,22 +17,23 @@ export default function AdminListArticles() {
 
   
   useEffect(() => {
-    (async () => {
-      try {
-        const data = await get("/articles");
-        console.log("Réponse API /articles :", data);
-      
-        setArticles(Array.isArray(data) ? data : data.articles || []);
-      } catch (e) {
-        console.error("Erreur lors du chargement des articles :", e);
-        setArticles([]);
-      } finally {
-        setLoading(false);
-      }
-    })();
-  }, []);
+  (async () => {
+    try {
+      const data = await get("/articles");
+      console.log("Réponse API /articles :", data);
 
- 
+      
+      setArticles(data.data || []); 
+    } catch (e) {
+      console.error("Erreur lors du chargement des articles :", e);
+      setArticles([]);
+    } finally {
+      setLoading(false);
+    }
+  })();
+}, []);
+
+  
   async function handleDelete(id) {
     if (!window.confirm("Supprimer cet article ?")) return;
     try {
@@ -47,7 +48,7 @@ export default function AdminListArticles() {
   
   if (loading)
     return (
-      <p className="text-center mt-10 text-gray-400">
+      <p className="text-center mt-10 text-gray-400 animate-pulse">
         Chargement des articles...
       </p>
     );
@@ -63,19 +64,26 @@ export default function AdminListArticles() {
           variant="primary"
           onClick={() => navigate("/admin/articles/new")}
         >
-          ➕ Nouvel article
+          Nouvel article
         </Button>
       </div>
 
       {articles.length === 0 ? (
-        <p className="text-gray-400">Aucun article pour le moment.</p>
+        <p className="text-gray-400 text-center mt-10">
+          Aucun article pour le moment.
+        </p>
       ) : (
         <div className="overflow-x-auto">
-          <table className="min-w-full border border-gray-700 bg-[#111] rounded-xl">
+          <table className="min-w-full border border-gray-700 bg-[#111] rounded-xl shadow-md">
             <thead>
-              <tr className="text-[#FFD700] border-b border-gray-700">
+              <tr className="text-[#FFD700] border-b border-gray-700 bg-[#161616]">
+                <th className="py-3 px-4 text-left hidden sm:table-cell">
+                  Image
+                </th>
                 <th className="py-3 px-4 text-left">Titre</th>
-                <th className="py-3 px-4 text-left hidden sm:table-cell">Date</th>
+                <th className="py-3 px-4 text-left hidden sm:table-cell">
+                  Date
+                </th>
                 <th className="py-3 px-4 text-left hidden md:table-cell">
                   Auteur
                 </th>
@@ -86,23 +94,43 @@ export default function AdminListArticles() {
               {articles.map((a) => (
                 <tr
                   key={a.id}
-                  className="border-b border-gray-800 hover:bg-[#1a1a1a]"
+                  className="border-b border-gray-800 hover:bg-[#1a1a1a] transition"
                 >
-                  <td className="py-3 px-4">{a.title}</td>
+                  
+                  <td className="py-2 px-4 hidden sm:table-cell">
+                    {a.image_url ? (
+                      <img
+                        src={a.image_url}
+                        alt={a.title}
+                        className="w-20 h-14 object-cover rounded-md border border-gray-700"
+                      />
+                    ) : (
+                      <div className="w-20 h-14 bg-gray-800 rounded-md flex items-center justify-center text-gray-500 text-xs">
+                        Aucune
+                      </div>
+                    )}
+                  </td>
+
+                
+                  <td className="py-3 px-4 font-medium">{a.title}</td>
+
+                 
                   <td className="py-3 px-4 hidden sm:table-cell">
                     {a.created_at
                       ? new Date(a.created_at).toLocaleDateString("fr-FR")
                       : "—"}
                   </td>
+
+                  
                   <td className="py-3 px-4 hidden md:table-cell">
-                    {a.author || "—"}
+                    {a.author_name || a.author || "—"}
                   </td>
-                  <td className="py-3 px-4 text-center space-x-2">
+
+                 
+                  <td className="py-3 px-4 text-center space-x-2 flex flex-wrap justify-center gap-2">
                     <Button
                       variant="secondary"
-                      onClick={() =>
-                        navigate(`/admin/articles/edit/${a.id}`)
-                      }
+                      onClick={() => navigate(`/admin/articles/edit/${a.id}`)}
                     >
                       Modifier
                     </Button>
@@ -111,6 +139,12 @@ export default function AdminListArticles() {
                       onClick={() => handleDelete(a.id)}
                     >
                       Supprimer
+                    </Button>
+                    <Button
+                      variant="outline"
+                      onClick={() => navigate(`/blog/${a.id}`)}
+                    >
+                      Voir
                     </Button>
                   </td>
                 </tr>
@@ -122,3 +156,4 @@ export default function AdminListArticles() {
     </section>
   );
 }
+

@@ -11,9 +11,11 @@ export default function ArticleDetail() {
   useEffect(() => {
     (async () => {
       try {
-        const data = await get(`/articles/${id}`);
-        
-        setArticle(Array.isArray(data) ? data[0] : data);
+        const response = await get(`/articles/${id}`);
+        console.log("Détail article :", response);
+
+      
+        setArticle(response.data || null);
         setStatus("success");
       } catch (error) {
         console.error("Erreur récupération article:", error);
@@ -23,38 +25,46 @@ export default function ArticleDetail() {
   }, [id]);
 
   if (status === "loading") return <Loader />;
+
   if (status === "error" || !article)
     return (
-      <p className="text-center text-red-400 py-12">
+      <p className="text-center text-[#FF2B6A] py-12">
         Article introuvable ou erreur de chargement.
       </p>
     );
 
   return (
     <main className="px-6 py-12 max-w-3xl mx-auto text-[#F2F2F2]">
-      <h1 className="text-3xl md:text-4xl font-extrabold text-[#FFD700] mb-4">
+     
+      <h1 className="text-4xl md:text-5xl font-extrabold text-[#FF2B6A] mb-6 drop-shadow-[0_0_12px_#FF2B6A80] text-center">
         {article.title}
       </h1>
-      <p className="text-gray-400 text-sm mb-8">
+
+      <p className="text-gray-400 text-sm text-center mb-10">
         Publié le{" "}
-        {new Date(article.created_at).toLocaleDateString("fr-FR", {
-          day: "2-digit",
-          month: "long",
-          year: "numeric",
-        })}
+        {article.created_at
+          ? new Date(article.created_at).toLocaleDateString("fr-FR", {
+              day: "2-digit",
+              month: "long",
+              year: "numeric",
+            })
+          : "—"}
       </p>
+
       {article.image_url && (
         <img
           src={article.image_url}
           alt={article.title}
-          className="rounded-xl mb-8 border border-[#FFD70040]"
+          className="rounded-2xl mb-10 border border-[#FF2B6A50] shadow-[0_0_25px_#FF2B6A40] mx-auto"
           loading="lazy"
         />
       )}
+
       <article
-        className="prose prose-invert max-w-none leading-relaxed"
+        className="prose prose-invert max-w-none leading-relaxed text-justify text-[#EAEAEA]"
         dangerouslySetInnerHTML={{ __html: article.content }}
       />
     </main>
   );
 }
+
