@@ -9,11 +9,15 @@ import {
   removeDonation,
   fetchDonationStats,
   createCheckoutSession,
-  handleStripeWebhook
+  handleStripeWebhook,
 } from "../controllers/donationController.js";
 
 import { validate } from "../middlewares/validationMiddleware.js";
-import { createDonationSchema, updateDonationSchema } from "../schemas/donationSchema.js";
+import {
+  createDonationSchema,
+  updateDonationSchema,
+  stripeDonationSchema, 
+} from "../schemas/donationSchema.js";
 import { protect } from "../middlewares/authMiddleware.js";
 import { authorizeRoles } from "../middlewares/roleMiddleware.js";
 
@@ -30,7 +34,11 @@ router.post(
 router.post("/", validate(createDonationSchema), addDonation);
 
 
-router.post("/create-checkout-session", validate(createDonationSchema), createCheckoutSession);
+router.post(
+  "/create-checkout-session",
+  validate(stripeDonationSchema),
+  createCheckoutSession
+);
 
 
 router.get("/user", protect, fetchDonationsByUser);
@@ -45,11 +53,18 @@ router.get("/stats", protect, authorizeRoles("admin"), fetchDonationStats);
 router.get("/:id", protect, authorizeRoles("admin"), fetchDonationById);
 
 
-router.put("/:id", protect, authorizeRoles("admin"), validate(updateDonationSchema), editDonation);
+router.put(
+  "/:id",
+  protect,
+  authorizeRoles("admin"),
+  validate(updateDonationSchema),
+  editDonation
+);
 
 
 router.delete("/:id", protect, authorizeRoles("admin"), removeDonation);
 
 export default router;
+
 
 

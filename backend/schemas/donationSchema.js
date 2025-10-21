@@ -2,7 +2,6 @@ import Joi from "joi";
 
 
 export const createDonationSchema = Joi.object({
- 
   user_id: Joi.alternatives()
     .try(Joi.number().integer(), Joi.string().regex(/^\d+$/))
     .allow(null)
@@ -10,7 +9,6 @@ export const createDonationSchema = Joi.object({
       "alternatives.match": "L’identifiant utilisateur doit être un nombre.",
     }),
 
-  
   amount: Joi.alternatives()
     .try(Joi.number().positive().precision(2), Joi.string().pattern(/^\d+(\.\d{1,2})?$/))
     .required()
@@ -21,12 +19,10 @@ export const createDonationSchema = Joi.object({
       "string.pattern.base": "Le montant doit être un nombre valide (ex: 10.00).",
     }),
 
-  
   message: Joi.string().max(250).allow(null, "").messages({
     "string.max": "Le message ne peut pas dépasser 250 caractères.",
   }),
 
-  
   email: Joi.string()
     .email({ tlds: { allow: false } })
     .allow(null, "")
@@ -34,13 +30,25 @@ export const createDonationSchema = Joi.object({
       "string.email": "L’adresse e-mail doit être valide.",
     }),
 
- 
   stripe_session_id: Joi.string().allow(null, ""),
   stripe_payment_intent: Joi.string().allow(null, ""),
   currency: Joi.string().valid("eur", "usd").default("eur"),
   status: Joi.string()
     .valid("pending", "succeeded", "failed")
     .default("pending"),
+});
+
+
+export const stripeDonationSchema = Joi.object({
+  user_id: Joi.alternatives()
+    .try(Joi.number().integer(), Joi.string().regex(/^\d+$/))
+    .allow(null),
+
+  amount: Joi.number().positive().precision(2).required(),
+
+  message: Joi.string().max(250).allow(null, ""),
+
+  email: Joi.string().email({ tlds: { allow: false } }).allow(null, ""),
 });
 
 
@@ -69,3 +77,4 @@ export const updateDonationSchema = Joi.object({
   stripe_session_id: Joi.string().allow(null, "").optional(),
   stripe_payment_intent: Joi.string().allow(null, "").optional(),
 });
+

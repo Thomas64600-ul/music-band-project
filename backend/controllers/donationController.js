@@ -11,12 +11,15 @@ import {
   deleteDonation,
   getDonationStats,
   updateDonationStatus,
-  updateDonationById
+  updateDonationById,
 } from "../models/Donation.js";
 
 import { sendEmail } from "../services/emailService.js";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+  apiVersion: "2025-04-30",
+});
+
 
 
 export async function addDonation(req, res, next) {
@@ -24,7 +27,6 @@ export async function addDonation(req, res, next) {
     const { user_id, amount, message } = req.validatedBody;
     const newDonation = await createDonation(user_id, amount, message);
 
-    
     await sendEmail(
       process.env.ADMIN_EMAIL,
       "Nouveau don ajouté (manuel)",
@@ -34,10 +36,7 @@ export async function addDonation(req, res, next) {
         amount,
         donor: user_id ? `Utilisateur #${user_id}` : "Ajout manuel",
         message: message || "—",
-        date: new Date().toLocaleString("fr-FR", {
-          timeZone: "Europe/Paris",
-          hour12: false,
-        }),
+        date: new Date().toLocaleString("fr-FR", { timeZone: "Europe/Paris" }),
         status: "Ajouté manuellement",
       }
     );
@@ -47,6 +46,7 @@ export async function addDonation(req, res, next) {
     next(error);
   }
 }
+
 
 
 export async function editDonation(req, res, next) {
@@ -69,6 +69,7 @@ export async function editDonation(req, res, next) {
 }
 
 
+
 export async function fetchDonations(req, res, next) {
   try {
     const donations = await getAllDonations();
@@ -77,6 +78,7 @@ export async function fetchDonations(req, res, next) {
     next(error);
   }
 }
+
 
 
 export async function fetchDonationById(req, res, next) {
@@ -90,9 +92,10 @@ export async function fetchDonationById(req, res, next) {
 }
 
 
+
 export async function fetchDonationsByUser(req, res, next) {
   try {
-    const donations = await getDonationsByUserId(req.params.user_id);
+    const donations = await getDonationsByUserId(req.params.user_id || req.user?.id);
     res.json(donations);
   } catch (error) {
     next(error);
@@ -100,16 +103,17 @@ export async function fetchDonationsByUser(req, res, next) {
 }
 
 
+
 export async function removeDonation(req, res, next) {
   try {
     const success = await deleteDonation(req.params.id);
     if (!success) return res.status(404).json({ error: "Don non trouvé" });
-
     res.json({ message: "Don supprimé avec succès" });
   } catch (error) {
     next(error);
   }
 }
+
 
 
 export async function fetchDonationStats(req, res, next) {
@@ -122,14 +126,16 @@ export async function fetchDonationStats(req, res, next) {
 }
 
 
+
 export async function createCheckoutSession(req, res, next) {
   try {
-    const { user_id, amount, message, email } = req.body;
+    const { user_id, amount, message, email } = req.validatedBody;
 
     if (!amount || isNaN(amount)) {
-      return res.status(400).json({ error: "Montant invalide" });
+      return res.status(400).json({ error: "Montant invalide." });
     }
 
+    
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       customer_email: email || undefined,
@@ -149,8 +155,13 @@ export async function createCheckoutSession(req, res, next) {
       mode: "payment",
       success_url: `${process.env.CLIENT_URL}/donation-success`,
       cancel_url: `${process.env.CLIENT_URL}/donation-cancel`,
+      metadata: {
+        user_id: user_id || "anonyme",
+        message: message || "",
+      },
     });
 
+  
     await createDonation(
       user_id || null,
       amount,
@@ -163,10 +174,11 @@ export async function createCheckoutSession(req, res, next) {
 
     res.status(200).json({ url: session.url });
   } catch (error) {
-    console.error("Erreur Stripe :", error);
+    console.error("Erreur Stripe Checkout:", error.message);
     next(error);
   }
 }
+
 
 
 export async function handleStripeWebhook(req, res, next) {
@@ -175,7 +187,7 @@ export async function handleStripeWebhook(req, res, next) {
 
   try {
     event = stripe.webhooks.constructEvent(
-      req.body,
+      req.body, 
       sig,
       process.env.STRIPE_WEBHOOK_SECRET
     );
@@ -185,101 +197,87 @@ export async function handleStripeWebhook(req, res, next) {
   }
 
   try {
-   
-    if (event.type === "checkout.session.completed") {
-      const session = event.data.object;
+    switch (event.type) {
+      case "checkout.session.completed": {
+        const session = event.data.object;
+        await updateDonationStatus(session.id, "succeeded", session.payment_intent);
+        console.log(`Paiement confirmé pour session ${session.id}`);
 
-      await updateDonationStatus(session.id, "succeeded", session.payment_intent);
-      console.log(`Paiement confirmé pour session ${session.id}`);
-
-      
-      const { rows } = await pool.query(
-        "SELECT * FROM donations WHERE stripe_session_id = $1 LIMIT 1",
-        [session.id]
-      );
-      const donation = rows[0];
-
-      if (donation) {
-        const donorEmail = donation.email || session.customer_details?.email;
-        const donorName =
-          session.customer_details?.name?.split(" ")[0] || "Cher·e donateur·rice";
-
-       
-        await sendEmail(
-          process.env.ADMIN_EMAIL,
-          "Nouveau don reçu sur REVEREN",
-          `Un don de ${donation.amount} € a été confirmé.`,
-          "adminDonationAlert.html",
-          {
-            amount: donation.amount,
-            message: donation.message || "—",
-            status: "Validé",
-            donor:
-              donation.email ||
-              (donation.user_id ? `Utilisateur #${donation.user_id}` : "Anonyme"),
-            date: new Date().toLocaleString("fr-FR", {
-              timeZone: "Europe/Paris",
-              hour12: false,
-            }),
-          }
+        const { rows } = await pool.query(
+          "SELECT * FROM donations WHERE stripe_session_id = $1 LIMIT 1",
+          [session.id]
         );
+        const donation = rows[0];
 
-        
-        if (donorEmail) {
+        if (donation) {
+          const donorEmail = donation.email || session.customer_details?.email;
+          const donorName = session.customer_details?.name?.split(" ")[0] || "Cher·e donateur·rice";
+
+          
           await sendEmail(
-            donorEmail,
-            "Merci pour votre don à REVEREN 🎶",
-            `Merci pour votre don de ${donation.amount} € !`,
-            "donorThankYou.html",
+            process.env.ADMIN_EMAIL,
+            "Nouveau don reçu sur REVEREN",
+            `Un don de ${donation.amount} € a été confirmé.`,
+            "adminDonationAlert.html",
             {
-              firstname: donorName,
               amount: donation.amount,
-              siteUrl: process.env.CLIENT_URL,
+              message: donation.message || "—",
+              status: "Validé",
+              donor: donation.email || (donation.user_id ? `Utilisateur #${donation.user_id}` : "Anonyme"),
+              date: new Date().toLocaleString("fr-FR", { timeZone: "Europe/Paris" }),
+            }
+          );
+
+          
+          if (donorEmail) {
+            await sendEmail(
+              donorEmail,
+              "Merci pour votre don à REVEREN 🎶",
+              `Merci pour votre don de ${donation.amount} € !`,
+              "donorThankYou.html",
+              {
+                firstname: donorName,
+                amount: donation.amount,
+                siteUrl: process.env.CLIENT_URL,
+              }
+            );
+          }
+        }
+        break;
+      }
+
+      case "payment_intent.payment_failed": {
+        const intent = event.data.object;
+        const reason = intent.last_payment_error?.message || "Paiement échoué ou annulé.";
+
+        const { rows } = await pool.query(
+          "SELECT * FROM donations WHERE stripe_payment_intent = $1 LIMIT 1",
+          [intent.id]
+        );
+        const donation = rows[0];
+
+        if (donation) {
+          await updateDonationStatus(donation.stripe_session_id, "failed");
+
+          await sendEmail(
+            process.env.ADMIN_EMAIL,
+            "Échec d’un paiement sur REVEREN",
+            `Un don de ${donation.amount} € a échoué.`,
+            "adminDonationFailed.html",
+            {
+              amount: donation.amount,
+              donor: donation.email || (donation.user_id ? `Utilisateur #${donation.user_id}` : "Anonyme"),
+              message: donation.message || "—",
+              date: new Date().toLocaleString("fr-FR", { timeZone: "Europe/Paris" }),
+              reason,
             }
           );
         }
+        break;
       }
-    }
 
-    
-    if (event.type === "payment_intent.payment_failed") {
-      const intent = event.data.object;
-      const reason =
-        intent.last_payment_error?.message ||
-        "Raison inconnue (paiement échoué ou annulé).";
-
-      console.log(`Paiement échoué : ${reason}`);
-
-      
-      const { rows } = await pool.query(
-        "SELECT * FROM donations WHERE stripe_payment_intent = $1 LIMIT 1",
-        [intent.id]
-      );
-
-      const donation = rows[0];
-      if (donation) {
-        await updateDonationStatus(donation.stripe_session_id, "failed");
-
-       
-        await sendEmail(
-          process.env.ADMIN_EMAIL,
-          "⚠️ Échec d’un paiement sur REVEREN",
-          `Un don de ${donation.amount} € a échoué.`,
-          "adminDonationFailed.html",
-          {
-            amount: donation.amount,
-            donor:
-              donation.email ||
-              (donation.user_id ? `Utilisateur #${donation.user_id}` : "Anonyme"),
-            message: donation.message || "—",
-            date: new Date().toLocaleString("fr-FR", {
-              timeZone: "Europe/Paris",
-              hour12: false,
-            }),
-            reason,
-          }
-        );
-      }
+      default:
+        console.log(`ℹ️ Événement Stripe non géré : ${event.type}`);
     }
 
     res.json({ received: true });
@@ -288,5 +286,6 @@ export async function handleStripeWebhook(req, res, next) {
     next(error);
   }
 }
+
 
 

@@ -8,7 +8,6 @@ import compression from "compression";
 
 import { errorHandler } from "./middlewares/errorHandler.js";
 
-
 import userRoutes from "./routes/userRoutes.js";
 import articleRoutes from "./routes/articleRoutes.js";
 import concertRoutes from "./routes/concertRoutes.js";
@@ -57,17 +56,17 @@ app.use(
 );
 
 
-app.use(express.json({ limit: "10mb" }));
-app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser());
-app.use(morgan(process.env.NODE_ENV !== "production" ? "dev" : "combined"));
-
-
 app.use(
   "/api/donations/webhook",
   express.raw({ type: "application/json" }),
   donationRoutes
 );
+
+
+app.use(express.json({ limit: "10mb" }));
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+app.use(morgan(process.env.NODE_ENV !== "production" ? "dev" : "combined"));
 
 
 if (process.env.NODE_ENV !== "production") {
@@ -80,11 +79,10 @@ if (process.env.NODE_ENV !== "production") {
   });
 }
 
-
 app.use("/api/users", userRoutes);
 app.use("/api/articles", articleRoutes);
 app.use("/api/concerts", concertRoutes);
-app.use("/api/donations", donationRoutes);
+app.use("/api/donations", donationRoutes); 
 app.use("/api/messages", messageRoutes);
 app.use("/api/comments", commentRoutes);
 app.use("/api/musics", musicRoutes);
@@ -93,7 +91,6 @@ app.use("/api/musics", musicRoutes);
 app.use(errorHandler);
 
 export default app;
-
 
 
 
