@@ -1,4 +1,3 @@
-
 import React from "react";
 import { FaInstagram, FaYoutube, FaSpotify, FaLink } from "react-icons/fa";
 
@@ -11,8 +10,13 @@ export default function SocialLinks() {
   ];
 
   return (
-    <div className="flex flex-col items-center gap-4 mt-10">
-      <h3 className="text-2xl font-bold text-[#FFD700] mb-4">Réseaux & Liens</h3>
+    <div className="flex flex-col items-center gap-6 mt-10">
+      {/* Titre */}
+      <h3 className="text-2xl font-bold text-[#B3122D] drop-shadow-[0_0_6px_#B3122D80]">
+        Réseaux & Liens
+      </h3>
+
+      {/* Liens sociaux */}
       <div className="flex flex-wrap justify-center gap-6">
         {links.map((link) => (
           <a
@@ -20,10 +24,12 @@ export default function SocialLinks() {
             href={link.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2 px-4 py-2 rounded-full bg-[#111] text-[#FFD700] border border-[#FFD700] hover:bg-[#FFD700] hover:text-black transition-all duration-300 shadow-lg"
+            className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#0A0A0A] text-[#F2F2F2] border border-[#B3122D80] hover:border-[#B3122D] hover:text-[#F2F2F2] hover:bg-[#B3122D] hover:shadow-[0_0_20px_#B3122D60] transition-all duration-300 text-sm sm:text-base"
           >
-            {link.icon}
-            <span>{link.name}</span>
+            <span className="text-[#B3122D] group-hover:text-[#F2F2F2] transition-colors duration-300">
+              {link.icon}
+            </span>
+            <span className="font-medium">{link.name}</span>
           </a>
         ))}
       </div>

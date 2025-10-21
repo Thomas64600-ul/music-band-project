@@ -3,8 +3,14 @@
 @tailwind utilities;
 
 
-.no-scrollbar::-webkit-scrollbar { display: none; }
-.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
 
 * {
   transition: color 0.3s ease, background-color 0.3s ease, transform 0.2s ease;
@@ -13,6 +19,8 @@
 html {
   scroll-behavior: smooth;
 }
+
+
 @keyframes marquee {
   0% {
     transform: translateX(100%);
@@ -29,3 +37,36 @@ html {
 .animate-marquee:hover {
   animation-play-state: paused;
 }
+
+
+@keyframes neonPulse {
+  0% {
+    box-shadow: 0 0 0 #B3122D;
+  }
+  50% {
+    box-shadow: 0 0 18px #B3122D80, 0 0 28px #B3122D60;
+  }
+  100% {
+    box-shadow: 0 0 0 #B3122D;
+  }
+}
+
+
+.hover\:animate-neonPulse:hover {
+  animation: neonPulse 1.5s ease-in-out infinite;
+}
+
+
+@keyframes ambientGlow {
+  0%, 100% {
+    text-shadow: 0 0 8px #B3122D70, 0 0 16px #B3122D50;
+  }
+  50% {
+    text-shadow: 0 0 12px #B3122D90, 0 0 20px #B3122D70;
+  }
+}
+
+.animate-ambientGlow {
+  animation: ambientGlow 2.5s ease-in-out infinite;
+}
+

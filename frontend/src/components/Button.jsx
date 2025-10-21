@@ -1,3 +1,5 @@
+import React from "react";
+
 function cx(...args) {
   return args
     .flatMap((a) => {
@@ -29,13 +31,14 @@ export default function Button({
   href,
 }) {
   const base = cx(
-    "inline-flex items-center justify-center gap-2",
+    "inline-flex items-center justify-center gap-2 select-none",
     "rounded-xl font-semibold tracking-wide uppercase",
     "transition-all duration-300 ease-in-out",
-    "focus:outline-none focus-visible:ring-2 focus-visible:ring-[#FF2B6A80]",
-    "active:scale-[0.98]",
+    "focus:outline-none focus-visible:ring-2 focus-visible:ring-[#B3122D70]",
+    "active:scale-[0.97]",
     fullWidth && "w-full",
-    disabled && "opacity-50 pointer-events-none"
+    disabled && "opacity-50 pointer-events-none",
+    "relative overflow-hidden"
   );
 
   const sizes = {
@@ -46,17 +49,31 @@ export default function Button({
 
   const variants = {
     primary: cx(
-      "bg-[#FF2B6A] text-white border border-[#FF2B6A]",
-      "hover:bg-black hover:text-[#FF2B6A]",
-      "hover:shadow-neon"
+      "bg-[#B3122D] text-[#F2F2F2] border border-[#B3122D]",
+      "hover:bg-[#8C0E24] hover:shadow-[0_0_20px_#B3122D80]",
+      "active:bg-[#700A1C]",
+      "hover:animate-neonPulse"
     ),
+
     secondary: cx(
-      "bg-black text-[#FF2B6A] border border-[#FF2B6A]/70",
-      "hover:bg-[#FF2B6A] hover:text-black hover:shadow-neon"
+      "bg-black text-[#B3122D] border border-[#B3122D70]",
+      "hover:bg-[#B3122D] hover:text-[#F2F2F2] hover:shadow-[0_0_20px_#B3122D80]",
+      "active:bg-[#8C0E24]",
+      "hover:animate-neonPulse"
     ),
+
     outline: cx(
-      "bg-transparent text-[#FF2B6A] border border-[#FF2B6A]",
-      "hover:bg-black hover:shadow-neon"
+      "bg-transparent text-[#B3122D] border border-[#B3122D]",
+      "hover:bg-[#B3122D] hover:text-[#F2F2F2] hover:shadow-[0_0_20px_#B3122D80]",
+      "active:bg-[#8C0E24]",
+      "hover:animate-neonPulse"
+    ),
+
+    danger: cx(
+      "bg-[#8C0E24] text-[#F2F2F2] border border-[#8C0E24]",
+      "hover:bg-[#B3122D] hover:shadow-[0_0_25px_#B3122D90]",
+      "active:bg-[#700A1C]",
+      "hover:animate-neonPulse"
     ),
   }[variant];
 
@@ -84,5 +101,7 @@ export default function Button({
     </button>
   );
 }
+
+
 
 

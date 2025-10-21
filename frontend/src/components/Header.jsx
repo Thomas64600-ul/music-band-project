@@ -78,7 +78,8 @@ export default function Header({ logoSrc, links }) {
         </button>
 
         
-        <div className="flex justify-center items-center flex-1 sm:translate-x-[20px]">
+        <div className="flex justify-center items-center flex-1 sm:translate-x-[60px] md:translate-x-[80px]">
+
           <motion.img
             src={logoSrc}
             alt="Logo REVEREN"
