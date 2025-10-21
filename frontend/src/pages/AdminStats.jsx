@@ -82,7 +82,7 @@ export default function AdminStats() {
 
   if (loading)
     return (
-      <p className="text-center mt-10 text-gray-400">
+      <p className="text-center mt-10 text-gray-400 animate-pulse">
         Chargement des statistiques...
       </p>
     );
@@ -93,51 +93,45 @@ export default function AdminStats() {
     { name: "Utilisateurs", value: stats.users.filter((u) => u.roles === "buyer").length },
   ];
 
-  const COLORS = ["#FF1744", "#00E0FF", "#F2F2F2"];
+  const COLORS = ["#B3122D", "#FF4C4C", "#F2F2F2"];
 
   return (
-    <section className="min-h-screen bg-[#0A0A0A] text-[#F2F2F2] py-12 px-6 sm:px-12 flex flex-col items-center">
-      <div className="w-full max-w-5xl bg-[#111] border border-[#FF1744]/40 rounded-2xl shadow-lg p-10">
-        <h1 className="text-4xl font-bold text-center text-[#FF1744] mb-10">
+    <section className="min-h-screen bg-[#0A0A0A] text-[#F2F2F2] py-10 px-6 sm:px-12 flex flex-col items-center">
+      <div className="w-full max-w-5xl bg-[#111] border border-[#B3122D50] rounded-2xl shadow-[0_0_25px_#B3122D30] p-10 relative overflow-hidden">
+        
+        <div className="absolute -top-20 -right-20 w-80 h-80 bg-[#B3122D40] rounded-full blur-[150px] opacity-50 pointer-events-none"></div>
+
+        <h1 className="text-4xl font-extrabold text-center text-[#B3122D] drop-shadow-[0_0_15px_#B3122D80] mb-12">
           Statistiques globales
         </h1>
 
         
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 mb-12">
-          <div className="bg-[#151515] rounded-xl p-6 text-center border border-gray-700 hover:border-[#FF1744] transition">
-            <p className="text-gray-400">Utilisateurs</p>
-            <p className="text-3xl font-bold text-[#FF1744]">{stats.users.length}</p>
-          </div>
-
-          <div className="bg-[#151515] rounded-xl p-6 text-center border border-gray-700 hover:border-[#FF1744] transition">
-            <p className="text-gray-400">Articles</p>
-            <p className="text-3xl font-bold text-[#FF1744]">{stats.articles}</p>
-          </div>
-
-          <div className="bg-[#151515] rounded-xl p-6 text-center border border-gray-700 hover:border-[#FF1744] transition">
-            <p className="text-gray-400">Concerts</p>
-            <p className="text-3xl font-bold text-[#FF1744]">{stats.concerts}</p>
-          </div>
-
-          <div className="bg-[#151515] rounded-xl p-6 text-center border border-gray-700 hover:border-[#FF1744] transition">
-            <p className="text-gray-400">Musiques</p>
-            <p className="text-3xl font-bold text-[#FF1744]">{stats.musics}</p>
-          </div>
-
-          <div className="bg-[#151515] rounded-xl p-6 text-center border border-gray-700 hover:border-[#FF1744] transition">
-            <p className="text-gray-400">Total dons (€)</p>
-            <p className="text-3xl font-bold text-[#FF1744]">
-              {stats.donations.toFixed(2)}
-            </p>
-          </div>
+          {[
+            { label: "Utilisateurs", value: stats.users.length },
+            { label: "Articles", value: stats.articles },
+            { label: "Concerts", value: stats.concerts },
+            { label: "Musiques", value: stats.musics },
+            { label: "Total dons (€)", value: stats.donations.toFixed(2) },
+          ].map((stat, i) => (
+            <div
+              key={i}
+              className="bg-[#151515] rounded-xl p-6 text-center border border-[#B3122D50] shadow-[0_0_15px_#B3122D20] hover:shadow-[0_0_25px_#B3122D40] hover:scale-[1.03] transition-all duration-300"
+            >
+              <p className="text-gray-400 mb-2">{stat.label}</p>
+              <p className="text-3xl font-extrabold text-[#FF4C4C] tracking-wide">
+                {stat.value}
+              </p>
+            </div>
+          ))}
         </div>
 
         
-        <div className="bg-[#151515] rounded-xl p-6 border border-gray-700">
-          <h2 className="text-2xl font-semibold text-[#FF1744] mb-6 text-center">
+        <div className="bg-[#151515] rounded-2xl p-6 border border-[#B3122D50] shadow-[0_0_20px_#B3122D20]">
+          <h2 className="text-2xl font-semibold text-[#FF4C4C] mb-6 text-center">
             Répartition des rôles utilisateurs
           </h2>
-          <ResponsiveContainer width="100%" height={300}>
+          <ResponsiveContainer width="100%" height={320}>
             <PieChart>
               <Pie
                 data={roleData}
@@ -151,15 +145,27 @@ export default function AdminStats() {
                   <Cell key={`cell-${index}`} fill={COLORS[index]} />
                 ))}
               </Pie>
-              <Tooltip />
-              <Legend />
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: "#0A0A0A",
+                  border: "1px solid #B3122D",
+                  color: "#F2F2F2",
+                }}
+              />
+              <Legend
+                wrapperStyle={{ color: "#F2F2F2", fontSize: "0.9rem" }}
+              />
             </PieChart>
           </ResponsiveContainer>
         </div>
 
-       
+        
         <div className="mt-10 text-center">
-          <Button variant="secondary" onClick={() => navigate("/admin")}>
+          <Button
+            variant="secondary"
+            onClick={() => navigate("/admin")}
+            className="border border-[#B3122D] text-[#B3122D] hover:bg-[#B3122D] hover:text-white font-semibold px-8 py-2 rounded-xl shadow-[0_0_10px_#B3122D40] transition"
+          >
             ⏎ Retour Dashboard
           </Button>
         </div>
@@ -167,5 +173,6 @@ export default function AdminStats() {
     </section>
   );
 }
+
 
 
