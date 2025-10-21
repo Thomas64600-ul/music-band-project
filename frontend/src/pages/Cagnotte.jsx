@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import DonationCard from "../components/DonationCard";
 import { motion, AnimatePresence } from "framer-motion";
 import confetti from "canvas-confetti";
-import { post } from "../lib/api"; // ✅ ton utilitaire d’appel API (axios ou fetch)
+import { createStripeSession } from "../lib/api"; 
 
 export default function Cagnotte() {
   const goal = 5000;
@@ -10,10 +10,11 @@ export default function Cagnotte() {
   const [showModal, setShowModal] = useState(false);
   const [lastAmount, setLastAmount] = useState(null);
   const [customAmount, setCustomAmount] = useState("");
+  const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
 
- 
+  
   const percentage = Math.min((collected / goal) * 100, 100).toFixed(1);
 
  
@@ -21,7 +22,6 @@ export default function Cagnotte() {
     const duration = 1.5 * 1000;
     const end = Date.now() + duration;
     const colors = ["#B3122D", "#FFD700", "#FF4C4C"];
-
     (function frame() {
       confetti({
         particleCount: 4,
@@ -41,7 +41,7 @@ export default function Cagnotte() {
     })();
   };
 
- 
+
   const handleLocalDonation = (amount) => {
     setCollected((prev) => Math.min(prev + amount, goal));
     setLastAmount(amount);
@@ -51,22 +51,26 @@ export default function Cagnotte() {
 
   
   const handleStripeDonation = async (amount) => {
+    if (!amount || isNaN(amount)) return alert("Veuillez saisir un montant valide.");
+    if (!email) return alert("Veuillez saisir votre adresse email.");
+
     try {
       setLoading(true);
-      const response = await post("/donations/create-checkout-session", {
-        amount,
+      await createStripeSession({
+        amount: parseFloat(amount),
         message,
+        email,
+        user_id: localStorage.getItem("userId") || null,
       });
-      window.location.href = response.url; 
     } catch (error) {
-      console.error("Erreur de don :", error);
-      alert("Erreur lors de la création de la session Stripe.");
+      console.error("Erreur Stripe:", error);
+      alert("Erreur lors de la création du paiement.");
     } finally {
       setLoading(false);
     }
   };
 
-  
+ 
   useEffect(() => {
     if (showModal) {
       const timer = setTimeout(() => setShowModal(false), 3000);
@@ -74,7 +78,6 @@ export default function Cagnotte() {
     }
   }, [showModal]);
 
-  
   const donations = [
     { amount: 10, description: "Un grand merci sur nos réseaux" },
     { amount: 25, description: "Votre nom dans les remerciements de l’album" },
@@ -83,35 +86,32 @@ export default function Cagnotte() {
   ];
 
   return (
-   <section className="px-6 sm:px-12 py-24 md:py-28 bg-[#0A0A0A] text-center text-[#F2F2F2] relative overflow-hidden">
-  <div className="relative inline-block mb-12">
-  
-  <div className="absolute inset-0 bg-gradient-to-r from-[#B3122D]/0 via-[#B3122D]/40 to-[#B3122D]/0 blur-xl opacity-80 animate-pulse-slow"></div>
+    <section className="px-6 sm:px-12 py-24 md:py-28 bg-[#0A0A0A] text-center text-[#F2F2F2] relative overflow-hidden">
+      
+      <div className="relative inline-block mb-12">
+        <div className="absolute inset-0 bg-gradient-to-r from-[#B3122D]/0 via-[#B3122D]/40 to-[#B3122D]/0 blur-xl opacity-80 animate-pulse-slow"></div>
+        <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-48 h-[2px] bg-gradient-to-r from-transparent via-[#FFD1A1] to-transparent animate-glow-line"></div>
+        <h2 className="relative text-3xl md:text-4xl font-extrabold text-[#B3122D] drop-shadow-[0_0_10px_#B3122D80] tracking-wider">
+          Soutenez REVEREN
+        </h2>
+      </div>
 
-  
-  <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-48 h-[2px] bg-gradient-to-r from-transparent via-[#FFD1A1] to-transparent animate-glow-line"></div>
+      <p className="max-w-xl mx-auto text-gray-400 text-base md:text-lg mb-12">
+        Aidez-nous à financer notre prochain album et nos tournées !
+      </p>
 
-  <h2 className="relative text-3xl md:text-4xl font-extrabold text-[#B3122D] drop-shadow-[0_0_10px_#B3122D80] tracking-wider">
-    Soutenez REVEREN
-  </h2>
-</div>
-
-<p className="max-w-xl mx-auto text-gray-400 text-base md:text-lg mb-12">
-  Aidez-nous à financer notre prochain album et nos tournées !
-</p>
-
- 
-  <div className="max-w-md mx-auto mb-14">
-    <div className="bg-[#1A1A1A] rounded-full h-4 overflow-hidden shadow-inner">
-      <div
-        className="bg-[#B3122D] h-4 rounded-full transition-all duration-700 ease-out"
-        style={{ width: `${percentage}%` }}
-      ></div>
-    </div>
-    <p className="text-sm text-gray-400 mt-3 font-medium">
-      {collected.toLocaleString()} € collectés sur {goal.toLocaleString()} € ({percentage}%)
-    </p>
-  </div>
+     
+      <div className="max-w-md mx-auto mb-14">
+        <div className="bg-[#1A1A1A] rounded-full h-4 overflow-hidden shadow-inner">
+          <div
+            className="bg-[#B3122D] h-4 rounded-full transition-all duration-700 ease-out"
+            style={{ width: `${percentage}%` }}
+          ></div>
+        </div>
+        <p className="text-sm text-gray-400 mt-3 font-medium">
+          {collected.toLocaleString()} € collectés sur {goal.toLocaleString()} € ({percentage}%)
+        </p>
+      </div>
 
       
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
@@ -125,9 +125,17 @@ export default function Cagnotte() {
         ))}
       </div>
 
-      
+     
       <div className="max-w-md mx-auto bg-[#111] border border-[#B3122D]/60 rounded-2xl p-6 shadow-lg">
         <h3 className="text-[#FFD700] font-bold text-xl mb-4">Montant libre</h3>
+
+        <input
+          type="email"
+          placeholder="Votre adresse email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className="w-full p-3 mb-4 rounded-lg bg-[#0A0A0A] text-[#F2F2F2] border border-gray-700 focus:border-[#B3122D] outline-none text-center"
+        />
 
         <input
           type="number"
@@ -148,7 +156,7 @@ export default function Cagnotte() {
         />
 
         <button
-          onClick={() => handleStripeDonation(parseFloat(customAmount))}
+          onClick={() => handleStripeDonation(customAmount)}
           disabled={!customAmount || loading}
           className="bg-[#B3122D] hover:bg-black border border-[#B3122D] text-white font-semibold py-2 px-6 rounded-full transition-all duration-300 w-full disabled:opacity-50"
         >
@@ -156,7 +164,7 @@ export default function Cagnotte() {
         </button>
       </div>
 
-      
+     
       <AnimatePresence>
         {showModal && (
           <>
@@ -179,10 +187,8 @@ export default function Cagnotte() {
                 </h3>
                 <p className="text-gray-300">
                   Vous venez de contribuer à hauteur de{" "}
-                  <span className="text-[#FFD700] font-semibold">
-                    {lastAmount} €
-                  </span>{" "}
-                  à l’aventure REVEREN 🎶
+                  <span className="text-[#FFD700] font-semibold">{lastAmount} €</span>{" "}
+                  à l’aventure REVEREN 
                 </p>
                 <button
                   onClick={() => setShowModal(false)}

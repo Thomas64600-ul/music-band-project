@@ -90,3 +90,13 @@ html {
 .animate-glow-line {
   animation: glow-line 5s ease-in-out infinite;
 }
+
+@keyframes progressPulse {
+  0% { filter: brightness(1); }
+  50% { filter: brightness(1.5); }
+  100% { filter: brightness(1); }
+}
+
+.animate-progressPulse {
+  animation: progressPulse 1.2s ease-in-out infinite;
+}
