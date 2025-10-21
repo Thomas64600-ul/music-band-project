@@ -70,3 +70,23 @@ html {
   animation: ambientGlow 2.5s ease-in-out infinite;
 }
 
+
+
+@keyframes pulse-slow {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.05); }
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 4s ease-in-out infinite;
+}
+
+@keyframes glow-line {
+  0% { opacity: 0.4; width: 80px; }
+  50% { opacity: 1; width: 200px; }
+  100% { opacity: 0.4; width: 80px; }
+}
+
+.animate-glow-line {
+  animation: glow-line 5s ease-in-out infinite;
+}

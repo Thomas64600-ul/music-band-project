@@ -11,7 +11,6 @@ export default function Home() {
   return (
     <main className="bg-[#0A0A0A] text-[#F2F2F2] relative overflow-hidden">
       
-      
       <section className="relative h-[70vh] md:h-[90vh] overflow-hidden">
         <motion.img
           src={groupImage}
@@ -35,29 +34,39 @@ export default function Home() {
           "
         />
 
-        
+       
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#0A0A0A]/70 to-[#0A0A0A]"></div>
 
-       
+        
         <div className="absolute inset-0 bg-gradient-radial from-[#B3122D30] via-transparent to-transparent blur-3xl opacity-70"></div>
       </section>
 
-      
+     
       <section className="relative z-10 text-center max-w-3xl mx-auto px-6 py-16 md:py-20">
-        <motion.h1
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1 }}
-          className="text-5xl md:text-6xl font-extrabold text-[#B3122D] drop-shadow-[0_0_12px_#B3122D90] mb-6 animate-ambientGlow"
-        >
-          REVEREN
-        </motion.h1>
+        
+        <div className="relative inline-block mb-8">
+         
+          <div className="absolute inset-0 bg-gradient-to-r from-[#B3122D]/0 via-[#B3122D]/40 to-[#B3122D]/0 blur-xl opacity-80 animate-pulse-slow"></div>
 
+          
+          <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-48 h-[2px] bg-gradient-to-r from-transparent via-[#FFD1A1] to-transparent animate-glow-line"></div>
+
+          <motion.h1
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1 }}
+            className="relative text-5xl md:text-6xl font-extrabold text-[#B3122D] drop-shadow-[0_0_12px_#B3122D90] tracking-widest"
+          >
+            REVEREN
+          </motion.h1>
+        </div>
+
+      
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.4, duration: 1 }}
-          className="text-gray-300 leading-relaxed text-sm md:text-base mb-8"
+          className="text-gray-300 leading-relaxed text-sm md:text-base mb-10"
         >
           REVEREN, c’est la fusion brute du rock électrique et de la vibration électronique.  
           Un duo singulier composé de <strong className="text-[#B3122D]">Louis</strong>, guitariste à l’énergie débordante et aux solos envoûtants,  
@@ -88,6 +97,7 @@ export default function Home() {
     </main>
   );
 }
+
 
 
 
