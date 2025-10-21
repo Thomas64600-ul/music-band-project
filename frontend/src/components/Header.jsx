@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { FaBars, FaTimes, FaSun, FaMoon } from "react-icons/fa";
-import { User, LogOut, Shield } from "lucide-react";
+import { User, LogOut, Shield, LayoutDashboard } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 function LinkItem({ to, children, onClick, className = "" }) {
@@ -14,14 +14,10 @@ function LinkItem({ to, children, onClick, className = "" }) {
       className={({ isActive }) =>
         [
           "relative group inline-block transition-colors duration-300",
-          isActive
-            ? "text-[#B3122D]" 
-            : "text-[#F2F2F2]",
+          isActive ? "text-[#B3122D]" : "text-[#F2F2F2]",
           "hover:text-[#FF4C4C] focus-visible:text-[#FF4C4C]",
           'after:content-[""] after:absolute after:left-1/2 after:-translate-x-1/2 after:-bottom-1 after:h-[2px] after:bg-[#B3122D] after:transition-all after:duration-300',
-          isActive
-            ? "after:w-3/4 after:opacity-100"
-            : "after:w-0 after:opacity-60",
+          isActive ? "after:w-3/4 after:opacity-100" : "after:w-0 after:opacity-60",
           "group-hover:after:w-3/4 group-focus-visible:after:w-3/4",
           className,
         ].join(" ")
@@ -59,16 +55,14 @@ export default function Header({ logoSrc, links }) {
           : "bg-[#0A0A0A]"
       }`}
     >
-    
       {isAdmin && (
-  <div className="bg-[#B3122D] text-[#F2F2F2] text-center text-sm py-1 font-semibold tracking-wide border-b border-[#FFD700]/40 shadow-[0_0_12px_#B3122D80] animate-pulse">
-    Mode administrateur activé 
-  </div>
-)}
+        <div className="bg-[#B3122D] text-[#F2F2F2] text-center text-sm py-1 font-semibold tracking-wide border-b border-[#B3122D]/40 shadow-[0_0_12px_#B3122D80] animate-pulse">
+          Mode administrateur activé
+        </div>
+      )}
 
-      
       <div className="flex items-center justify-between px-4 sm:px-12 py-3 sm:py-5">
-     
+      
         <button
           onClick={toggleTheme}
           className="hidden sm:block text-[#B3122D] hover:text-[#FF4C4C] hover:scale-110 transition-transform duration-200"
@@ -79,14 +73,13 @@ export default function Header({ logoSrc, links }) {
 
         
         <div className="flex justify-center items-center flex-1 sm:translate-x-[60px] md:translate-x-[80px]">
-
           <motion.img
             src={logoSrc}
             alt="Logo REVEREN"
             animate={{
               boxShadow: [
                 "0 0 20px #B3122D90",
-                "0 0 35px #FFD70060",
+                "0 0 35px #FF4C4C60",
                 "0 0 20px #B3122D90",
               ],
             }}
@@ -97,23 +90,24 @@ export default function Header({ logoSrc, links }) {
             }}
             className={`object-contain transition-all duration-500 ${
               isScrolled ? "h-16 sm:h-[95px]" : "h-20 sm:h-[110px]"
-            } drop-shadow-[0_0_20px_#B3122D] hover:drop-shadow-[0_0_30px_#FFD700]`}
+            } drop-shadow-[0_0_20px_#B3122D] hover:drop-shadow-[0_0_30px_#FF4C4C]`}
           />
         </div>
 
-       
+        
         <div className="hidden sm:flex items-center gap-4 text-sm ml-auto">
           {user ? (
             <>
-              <span className="text-[#FFD700] flex items-center gap-2">
+              <span className="text-[#B3122D] flex items-center gap-2 font-semibold">
                 <User size={16} />
                 {user.firstname || user.email}
                 {isAdmin && (
-                  <span className="bg-[#FFD700] text-black text-xs px-2 py-1 rounded-md flex items-center gap-1">
+                  <span className="bg-[#B3122D] text-white text-xs px-2 py-1 rounded-md flex items-center gap-1">
                     <Shield size={12} /> Admin
                   </span>
                 )}
               </span>
+
               <button
                 onClick={logout}
                 className="text-[#B3122D] hover:text-[#FF4C4C] flex items-center gap-1"
@@ -123,17 +117,17 @@ export default function Header({ logoSrc, links }) {
             </>
           ) : (
             <>
-              <NavLink to="/register" className="hover:text-[#FFD700]">
+              <NavLink to="/register" className="hover:text-[#B3122D]">
                 Inscription
               </NavLink>
-              <NavLink to="/login" className="hover:text-[#FFD700]">
+              <NavLink to="/login" className="hover:text-[#B3122D]">
                 Connexion
               </NavLink>
             </>
           )}
         </div>
 
-       
+        
         <button
           onClick={toggleMenu}
           className="text-[#B3122D] hover:text-[#FF4C4C] hover:scale-110 transition-transform duration-200 sm:hidden"
@@ -143,7 +137,7 @@ export default function Header({ logoSrc, links }) {
         </button>
       </div>
 
-     
+      
       <div className="hidden sm:flex flex-col items-center">
         <div className="flex justify-center border-t border-[#B3122D]/60 py-2 bg-[#0A0A0A] relative w-full">
           <nav className="flex space-x-8 text-sm font-semibold">
@@ -152,9 +146,18 @@ export default function Header({ logoSrc, links }) {
                 {l.name}
               </LinkItem>
             ))}
+
+           
+            {isAdmin && (
+              <LinkItem
+                to="/admin"
+                className="text-[#B3122D] hover:text-[#FF4C4C]"
+              >
+                Dashboard
+              </LinkItem>
+            )}
           </nav>
 
-         
           <motion.div
             initial={{ opacity: 0.4 }}
             animate={{
@@ -175,7 +178,7 @@ export default function Header({ logoSrc, links }) {
         </div>
       </div>
 
-     
+      
       <AnimatePresence>
         {menuOpen && (
           <motion.nav
@@ -196,7 +199,17 @@ export default function Header({ logoSrc, links }) {
               </LinkItem>
             ))}
 
-            
+            {isAdmin && (
+              <LinkItem
+                to="/admin"
+                onClick={() => setMenuOpen(false)}
+                className="block w-full text-center py-3 text-[#B3122D] font-semibold"
+              >
+                <LayoutDashboard size={18} className="inline-block mr-2" />
+                Dashboard
+              </LinkItem>
+            )}
+
             <div className="flex justify-center mt-4">
               <button
                 onClick={toggleTheme}
@@ -207,16 +220,15 @@ export default function Header({ logoSrc, links }) {
               </button>
             </div>
 
-            
             <div className="flex flex-col items-center gap-3 mt-6 text-sm">
               {user ? (
                 <>
-                  <span className="text-[#FFD700] flex items-center gap-2">
+                  <span className="text-[#B3122D] flex items-center gap-2">
                     <User size={16} />
                     {user.firstname || user.email}
                   </span>
                   {isAdmin && (
-                    <span className="bg-[#FFD700] text-black text-xs px-2 py-1 rounded-md flex items-center gap-1">
+                    <span className="bg-[#B3122D] text-white text-xs px-2 py-1 rounded-md flex items-center gap-1">
                       <Shield size={12} /> Admin
                     </span>
                   )}
@@ -235,14 +247,14 @@ export default function Header({ logoSrc, links }) {
                   <NavLink
                     to="/register"
                     onClick={() => setMenuOpen(false)}
-                    className="hover:text-[#FFD700]"
+                    className="hover:text-[#B3122D]"
                   >
                     Inscription
                   </NavLink>
                   <NavLink
                     to="/login"
                     onClick={() => setMenuOpen(false)}
-                    className="hover:text-[#FFD700]"
+                    className="hover:text-[#B3122D]"
                   >
                     Connexion
                   </NavLink>
@@ -255,6 +267,8 @@ export default function Header({ logoSrc, links }) {
     </header>
   );
 }
+
+
 
 
 
