@@ -34,7 +34,7 @@ export default function Button({
     "inline-flex items-center justify-center gap-2 select-none",
     "rounded-xl font-semibold tracking-wide uppercase",
     "transition-all duration-300 ease-in-out",
-    "focus:outline-none focus-visible:ring-2 focus-visible:ring-[#B3122D70]",
+    "focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]/60",
     "active:scale-[0.97]",
     fullWidth && "w-full",
     disabled && "opacity-50 pointer-events-none",
@@ -47,32 +47,36 @@ export default function Button({
     lg: "text-lg px-6 py-3",
   }[size];
 
+  // 🟣 Thèmes dynamiques basés sur tes variables CSS
   const variants = {
     primary: cx(
-      "bg-[#B3122D] text-[#F2F2F2] border border-[#B3122D]",
-      "hover:bg-[#8C0E24] hover:shadow-[0_0_20px_#B3122D80]",
-      "active:bg-[#700A1C]",
+      "bg-[var(--accent)] text-[var(--bg)] border border-[var(--accent)]",
+      "hover:bg-[color-mix(in_oklab,var(--accent)_85%,var(--gold)_15%)]",
+      "hover:shadow-[0_0_20px_var(--accent)]",
+      "active:bg-[color-mix(in_oklab,var(--accent)_70%,black_20%)]",
       "hover:animate-neonPulse"
     ),
 
     secondary: cx(
-      "bg-black text-[#B3122D] border border-[#B3122D70]",
-      "hover:bg-[#B3122D] hover:text-[#F2F2F2] hover:shadow-[0_0_20px_#B3122D80]",
-      "active:bg-[#8C0E24]",
+      "bg-[var(--bg)] text-[var(--accent)] border border-[var(--accent)]/60",
+      "hover:bg-[var(--accent)] hover:text-[var(--bg)]",
+      "hover:shadow-[0_0_20px_var(--accent)]",
+      "active:bg-[color-mix(in_oklab,var(--accent)_80%,black_20%)]",
       "hover:animate-neonPulse"
     ),
 
     outline: cx(
-      "bg-transparent text-[#B3122D] border border-[#B3122D]",
-      "hover:bg-[#B3122D] hover:text-[#F2F2F2] hover:shadow-[0_0_20px_#B3122D80]",
-      "active:bg-[#8C0E24]",
+      "bg-transparent text-[var(--accent)] border border-[var(--accent)]",
+      "hover:bg-[var(--accent)] hover:text-[var(--bg)]",
+      "hover:shadow-[0_0_20px_var(--accent)]",
+      "active:bg-[color-mix(in_oklab,var(--accent)_80%,black_20%)]",
       "hover:animate-neonPulse"
     ),
 
     danger: cx(
-      "bg-[#8C0E24] text-[#F2F2F2] border border-[#8C0E24]",
-      "hover:bg-[#B3122D] hover:shadow-[0_0_25px_#B3122D90]",
-      "active:bg-[#700A1C]",
+      "bg-[color-mix(in_oklab,var(--accent)_80%,black_15%)] text-[var(--bg)] border border-[var(--accent)]",
+      "hover:bg-[var(--accent)] hover:shadow-[0_0_25px_var(--accent)]",
+      "active:bg-[color-mix(in_oklab,var(--accent)_60%,black_25%)]",
       "hover:animate-neonPulse"
     ),
   }[variant];
@@ -81,9 +85,9 @@ export default function Button({
 
   const Content = () => (
     <>
-      {iconLeft ? <span className="shrink-0">{iconLeft}</span> : null}
+      {iconLeft && <span className="shrink-0">{iconLeft}</span>}
       <span className="whitespace-nowrap">{children}</span>
-      {iconRight ? <span className="shrink-0">{iconRight}</span> : null}
+      {iconRight && <span className="shrink-0">{iconRight}</span>}
     </>
   );
 
@@ -101,6 +105,7 @@ export default function Button({
     </button>
   );
 }
+
 
 
 

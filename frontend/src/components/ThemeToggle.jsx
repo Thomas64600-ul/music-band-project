@@ -3,24 +3,39 @@ import { FaMoon, FaSun } from "react-icons/fa";
 
 export default function ThemeToggle() {
   const [darkMode, setDarkMode] = useState(() => {
-    return localStorage.getItem("theme") === "dark";
+    if (typeof window !== "undefined") {
+      // 🔹 Récupère le thème stocké, sinon détecte le thème système
+      const savedTheme = localStorage.getItem("theme");
+      if (savedTheme) return savedTheme === "dark";
+      return window.matchMedia("(prefers-color-scheme: dark)").matches;
+    }
+    return false;
   });
 
   useEffect(() => {
-    const theme = darkMode ? "dark" : "light";
-    document.documentElement.className = theme;
-    localStorage.setItem("theme", theme);
+    const htmlElement = document.querySelector("html"); // ✅ cible bien <html>
+
+    if (darkMode) {
+      htmlElement.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+    } else {
+      htmlElement.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+    }
   }, [darkMode]);
 
   return (
     <button
       onClick={() => setDarkMode(!darkMode)}
-      className="text-reveren-gold text-xl focus:outline-none transition hover:scale-110"
+      className="text-[var(--accent)] dark:text-[var(--gold)] text-xl focus:outline-none transition-transform duration-300 hover:scale-110"
       aria-label="Basculer le thème clair/sombre"
+      title={darkMode ? 'Passer en mode clair' : 'Passer en mode sombre'}
     >
       {darkMode ? <FaSun /> : <FaMoon />}
     </button>
   );
 }
+
+
 
 

@@ -26,13 +26,21 @@ export default function ContactForm() {
   return (
     <form
       onSubmit={onSubmit}
-      className="bg-[#0A0A0A] border border-[#B3122D80] rounded-2xl shadow-[0_0_25px_#B3122D40] p-6 md:p-10 w-full max-w-2xl mx-auto space-y-6 transition-all duration-300 hover:shadow-[0_0_35px_#B3122D60]"
+      className="
+        bg-[var(--surface)]
+        border border-[var(--border)]
+        rounded-2xl shadow-[0_0_25px_var(--accent)]
+        p-6 md:p-10 w-full max-w-2xl mx-auto space-y-6
+        transition-all duration-300
+        hover:shadow-[0_0_35px_var(--accent)]
+        hover:border-[var(--accent)]
+      "
     >
       
       <div>
         <label
           htmlFor="name"
-          className="block text-[#B3122D] mb-2 font-semibold tracking-wide"
+          className="block text-[var(--accent)] mb-2 font-semibold tracking-wide"
         >
           Nom
         </label>
@@ -42,7 +50,14 @@ export default function ContactForm() {
           onChange={onChange}
           type="text"
           placeholder="Votre nom"
-          className="w-full p-3 rounded-md bg-[#111] text-[#F2F2F2] border border-[#2C2C2C] focus:border-[#B3122D] outline-none transition-all duration-200"
+          className="
+            w-full p-3 rounded-md 
+            bg-[color-mix(in_oklab,var(--surface)_90%,black_10%)]
+            text-[var(--text)]
+            border border-[var(--border)]
+            focus:border-[var(--accent)]
+            outline-none transition-all duration-200
+          "
           required
         />
       </div>
@@ -51,7 +66,7 @@ export default function ContactForm() {
       <div>
         <label
           htmlFor="email"
-          className="block text-[#B3122D] mb-2 font-semibold tracking-wide"
+          className="block text-[var(--accent)] mb-2 font-semibold tracking-wide"
         >
           Email
         </label>
@@ -61,7 +76,14 @@ export default function ContactForm() {
           onChange={onChange}
           type="email"
           placeholder="vous@exemple.com"
-          className="w-full p-3 rounded-md bg-[#111] text-[#F2F2F2] border border-[#2C2C2C] focus:border-[#B3122D] outline-none transition-all duration-200"
+          className="
+            w-full p-3 rounded-md 
+            bg-[color-mix(in_oklab,var(--surface)_90%,black_10%)]
+            text-[var(--text)]
+            border border-[var(--border)]
+            focus:border-[var(--accent)]
+            outline-none transition-all duration-200
+          "
           required
         />
       </div>
@@ -70,7 +92,7 @@ export default function ContactForm() {
       <div>
         <label
           htmlFor="message"
-          className="block text-[#B3122D] mb-2 font-semibold tracking-wide"
+          className="block text-[var(--accent)] mb-2 font-semibold tracking-wide"
         >
           Message
         </label>
@@ -80,30 +102,44 @@ export default function ContactForm() {
           onChange={onChange}
           rows="5"
           placeholder="Votre message..."
-          className="w-full p-3 rounded-md bg-[#111] text-[#F2F2F2] border border-[#2C2C2C] focus:border-[#B3122D] outline-none transition-all duration-200"
+          className="
+            w-full p-3 rounded-md 
+            bg-[color-mix(in_oklab,var(--surface)_90%,black_10%)]
+            text-[var(--text)]
+            border border-[var(--border)]
+            focus:border-[var(--accent)]
+            outline-none transition-all duration-200
+          "
           required
         />
       </div>
 
-      
+     
       <div className="text-center">
         <Button
           variant="primary"
           type="submit"
-          disabled={status === 'loading'}
-          className="bg-[#B3122D] text-[#F2F2F2] font-semibold py-2 px-8 rounded-full hover:bg-[#8C0E24] hover:shadow-[0_0_15px_#B3122D80] transition-all duration-300 disabled:opacity-60"
+          disabled={status === "loading"}
+          className="
+            font-semibold py-2 px-8 rounded-full 
+            bg-[var(--accent)] text-[var(--bg)]
+            hover:bg-[color-mix(in_oklab,var(--accent)_85%,var(--gold)_15%)]
+            hover:shadow-[0_0_18px_var(--accent)]
+            disabled:opacity-60
+            transition-all duration-300
+          "
         >
           {status === "loading" ? "Envoi..." : "Envoyer"}
         </Button>
 
         {status === "success" && (
-          <p className="mt-3 text-[#00E676] font-medium">
-            Message envoyé !
+          <p className="mt-3 text-[var(--cyan)] font-medium animate-pulse">
+            Message envoyé avec succès 🎉
           </p>
         )}
         {status === "error" && (
-          <p className="mt-3 text-[#FF4C4C] font-medium">
-            Échec de l’envoi, réessayez.
+          <p className="mt-3 text-[color-mix(in_oklab,red_80%,var(--accent)_20%)] font-medium animate-pulse">
+            Échec de l’envoi. Réessayez.
           </p>
         )}
       </div>

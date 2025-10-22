@@ -63,10 +63,13 @@ export default function Player({
   return (
     <div
       className="
-        w-full max-w-md bg-gradient-to-b from-[#0B0F17] to-[#0A0A0A]
-        border border-[#B3122D80] rounded-2xl shadow-[0_0_20px_#B3122D30]
-        overflow-hidden flex flex-col items-center text-[#F2F2F2]
-        transition-transform duration-300 hover:scale-[1.015] hover:shadow-[0_0_25px_#B3122D60]
+        w-full max-w-md 
+        bg-gradient-to-b from-[color-mix(in_oklab,var(--surface)_95%,var(--bg)_5%)] to-[var(--bg)]
+        border border-[color-mix(in_oklab,var(--border)_90%,var(--accent)_10%)]
+        rounded-2xl shadow-[0_0_20px_color-mix(in_oklab,var(--accent)_25%,transparent)]
+        overflow-hidden flex flex-col items-center text-[var(--text)]
+        transition-transform duration-300 hover:scale-[1.015] 
+        hover:shadow-[0_0_25px_color-mix(in_oklab,var(--accent)_40%,transparent)]
       "
     >
      
@@ -75,11 +78,11 @@ export default function Player({
           <img
             src={cover}
             alt={title}
-            className="w-full h-48 object-cover border-b border-[#B3122D50]"
+            className="w-full h-48 object-cover border-b border-[var(--border)]"
           />
           {isPlaying && (
-            <div className="absolute inset-0 bg-[#B3122D50]/30 backdrop-blur-[2px] flex items-center justify-center animate-pulse">
-              <FaPlay size={40} className="text-[#FFD700]" />
+            <div className="absolute inset-0 bg-[color-mix(in_oklab,var(--accent)_40%,transparent)] backdrop-blur-[2px] flex items-center justify-center animate-pulse">
+              <FaPlay size={40} className="text-[var(--gold)]" />
             </div>
           )}
         </div>
@@ -87,29 +90,31 @@ export default function Player({
 
       
       <div className="p-4 text-center">
-        <h3 className="text-lg font-semibold text-[#FFD700] drop-shadow-[0_0_6px_#FFD70040]">
+        <h3 className="text-lg font-semibold text-[var(--gold)] drop-shadow-[0_0_6px_var(--gold)]">
           {title}
         </h3>
-        <p className="text-sm text-gray-400 italic">{artist}</p>
+        <p className="text-sm text-[var(--subtext)] italic">{artist}</p>
       </div>
 
       
       <div className="flex items-center justify-center gap-6 py-3">
+        
         <button
           onClick={togglePlay}
-          className={`relative text-[#B3122D] hover:text-[#FF4C4C] transition-all duration-300 ${
+          className={`relative text-[var(--accent)] hover:text-[color-mix(in_oklab,var(--accent)_80%,var(--gold)_20%)] transition-all duration-300 ${
             isPlaying ? "scale-110" : "hover:scale-110"
           }`}
         >
           {isPlaying ? <FaPause size={28} /> : <FaPlay size={28} />}
           {isPlaying && (
-            <span className="absolute inset-0 rounded-full bg-[#B3122D40] blur-md animate-pulse"></span>
+            <span className="absolute inset-0 rounded-full bg-[color-mix(in_oklab,var(--accent)_35%,transparent)] blur-md animate-pulse"></span>
           )}
         </button>
 
+       
         <button
           onClick={toggleMute}
-          className="text-gray-400 hover:text-[#FFD700] transition-colors duration-300"
+          className="text-[var(--subtext)] hover:text-[var(--gold)] transition-colors duration-300"
         >
           {isMuted ? <FaVolumeMute size={20} /> : <FaVolumeUp size={20} />}
         </button>
@@ -121,16 +126,18 @@ export default function Player({
           step="0.01"
           value={volume}
           onChange={handleVolume}
-          className="w-20 accent-[#B3122D] cursor-pointer"
+          className="w-20 accent-[var(--accent)] cursor-pointer"
         />
       </div>
 
-     
-      <div className="w-full bg-[#1E1E1E] h-1 rounded-full mb-4 relative overflow-hidden">
+      
+      <div className="w-full bg-[var(--border)] h-1 rounded-full mb-4 relative overflow-hidden">
         <div
-          className={`absolute top-0 left-0 h-1 bg-gradient-to-r from-[#B3122D] to-[#FFD700] rounded-full transition-all duration-300 ${
-            isPlaying ? "animate-progressPulse" : ""
-          }`}
+          className={`absolute top-0 left-0 h-1 
+            bg-gradient-to-r from-[var(--accent)] to-[var(--gold)] 
+            rounded-full transition-all duration-300 ${
+              isPlaying ? "animate-progressPulse" : ""
+            }`}
           style={{ width: `${progress}%` }}
         ></div>
       </div>
@@ -139,4 +146,5 @@ export default function Player({
     </div>
   );
 }
+
 

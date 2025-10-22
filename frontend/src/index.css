@@ -3,6 +3,72 @@
 @tailwind utilities;
 
 
+
+
+:root {
+  --bg: #F9F9F9;
+  --surface: #FFFFFF;
+  --text: #1A1A1A;
+  --subtext: #5A5A5A;
+  --accent: #C2183C;
+  --gold: #B8860B;
+  --cyan: #0088A9;
+  --border: #E0E0E0;
+}
+
+
+.dark {
+  --bg: #0A0A0A;
+  --surface: #111111;
+  --text: #F2F2F2;
+  --subtext: #B3B3B3;
+  --accent: #B3122D;
+  --gold: #FFD700;
+  --cyan: #00E0FF;
+  --border: #2A2A2A;
+}
+
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+
+a, button {
+  transition: color 0.3s ease, background-color 0.3s ease, transform 0.2s ease;
+}
+
+.border-theme {
+  border-color: var(--border);
+}
+
+.bg-surface {
+  background-color: var(--surface);
+}
+
+.text-accent {
+  color: var(--accent);
+}
+
+.text-gold {
+  color: var(--gold);
+}
+
+.text-cyan {
+  color: var(--cyan);
+}
+
+
+.bg-halo {
+  background: radial-gradient(circle, var(--accent)20 0%, transparent 70%);
+  filter: blur(120px);
+  opacity: 0.4;
+}
+
+
+
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
@@ -10,7 +76,6 @@
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
-
 
 * {
   transition: color 0.3s ease, background-color 0.3s ease, transform 0.2s ease;
@@ -41,16 +106,15 @@ html {
 
 @keyframes neonPulse {
   0% {
-    box-shadow: 0 0 0 #B3122D;
+    box-shadow: 0 0 0 var(--accent);
   }
   50% {
-    box-shadow: 0 0 18px #B3122D80, 0 0 28px #B3122D60;
+    box-shadow: 0 0 18px var(--accent)80, 0 0 28px var(--accent)60;
   }
   100% {
-    box-shadow: 0 0 0 #B3122D;
+    box-shadow: 0 0 0 var(--accent);
   }
 }
-
 
 .hover\:animate-neonPulse:hover {
   animation: neonPulse 1.5s ease-in-out infinite;
@@ -59,17 +123,16 @@ html {
 
 @keyframes ambientGlow {
   0%, 100% {
-    text-shadow: 0 0 8px #B3122D70, 0 0 16px #B3122D50;
+    text-shadow: 0 0 8px var(--accent)70, 0 0 16px var(--accent)50;
   }
   50% {
-    text-shadow: 0 0 12px #B3122D90, 0 0 20px #B3122D70;
+    text-shadow: 0 0 12px var(--accent)90, 0 0 20px var(--accent)70;
   }
 }
 
 .animate-ambientGlow {
   animation: ambientGlow 2.5s ease-in-out infinite;
 }
-
 
 
 @keyframes pulse-slow {
@@ -81,6 +144,7 @@ html {
   animation: pulse-slow 4s ease-in-out infinite;
 }
 
+
 @keyframes glow-line {
   0% { opacity: 0.4; width: 80px; }
   50% { opacity: 1; width: 200px; }
@@ -89,7 +153,16 @@ html {
 
 .animate-glow-line {
   animation: glow-line 5s ease-in-out infinite;
+  background: linear-gradient(
+    to right,
+    transparent,
+    var(--gold),
+    transparent
+  );
+  height: 2px;
+  border-radius: 2px;
 }
+
 
 @keyframes progressPulse {
   0% { filter: brightness(1); }
@@ -100,3 +173,4 @@ html {
 .animate-progressPulse {
   animation: progressPulse 1.2s ease-in-out infinite;
 }
+

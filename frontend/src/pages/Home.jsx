@@ -9,9 +9,11 @@ export default function Home() {
   }, []);
 
   return (
-    <main className="bg-[#0A0A0A] text-[#F2F2F2] relative overflow-hidden">
+    <main className="bg-[var(--bg)] text-[var(--text)] relative overflow-hidden transition-colors duration-500">
       
+     
       <section className="relative h-[70vh] md:h-[90vh] overflow-hidden">
+       
         <motion.img
           src={groupImage}
           alt="Groupe REVEREN"
@@ -25,52 +27,51 @@ export default function Home() {
           }}
           className="
             absolute inset-0 w-full h-full object-cover
-            object-[50%_35%]
-            sm:object-[50%_30%]
-            md:object-[50%_22%]
-            lg:object-[50%_15%]
-            xl:object-[50%_12%]
+            object-[50%_30%]
             contrast-125 brightness-[0.85]
+            dark:brightness-[0.8] dark:contrast-110
           "
         />
 
-       
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#0A0A0A]/70 to-[#0A0A0A]"></div>
-
         
-        <div className="absolute inset-0 bg-gradient-radial from-[#B3122D30] via-transparent to-transparent blur-3xl opacity-70"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[var(--bg)]/60 to-[var(--bg)]"></div>
+
+       
+        <div className="absolute inset-0 bg-[radial-gradient(circle,var(--accent)_15%,transparent_70%)] blur-[140px] opacity-40"></div>
       </section>
 
-     
+      
       <section className="relative z-10 text-center max-w-3xl mx-auto px-6 py-16 md:py-20">
         
-        <div className="relative inline-block mb-8">
-         
-          <div className="absolute inset-0 bg-gradient-to-r from-[#B3122D]/0 via-[#B3122D]/40 to-[#B3122D]/0 blur-xl opacity-80 animate-pulse-slow"></div>
+        
+        <div className="relative inline-block mb-10">
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[var(--accent)]/30 to-transparent blur-xl opacity-80 animate-pulse-slow"></div>
 
-          
-          <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-48 h-[2px] bg-gradient-to-r from-transparent via-[#FFD1A1] to-transparent animate-glow-line"></div>
+        
+          <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-48 h-[2px] bg-gradient-to-r from-transparent via-[var(--gold)] to-transparent animate-glow-line"></div>
 
           <motion.h1
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1 }}
-            className="relative text-5xl md:text-6xl font-extrabold text-[#B3122D] drop-shadow-[0_0_12px_#B3122D90] tracking-widest"
+            className="relative text-5xl md:text-6xl font-extrabold text-[var(--accent)] drop-shadow-[0_0_12px_var(--accent)] tracking-widest"
           >
             REVEREN
           </motion.h1>
         </div>
 
-      
+       
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.4, duration: 1 }}
-          className="text-gray-300 leading-relaxed text-sm md:text-base mb-10"
+          className="text-[var(--subtext)] leading-relaxed text-sm md:text-base mb-10"
         >
-          REVEREN, c’est la fusion brute du rock électrique et de la vibration électronique.  
-          Un duo singulier composé de <strong className="text-[#B3122D]">Louis</strong>, guitariste à l’énergie débordante et aux solos envoûtants,  
-          et de <strong className="text-[#B3122D]">Antoine</strong>, architecte du son numérique, maître des machines et des rythmes électro.  
+          <strong className="text-[var(--accent)]">REVEREN</strong>, c’est la fusion brute du rock électrique et de la vibration électronique.  
+          Un duo singulier composé de{" "}
+          <strong className="text-[var(--accent)]">Louis</strong>, guitariste à l’énergie débordante et aux solos envoûtants,  
+          et de{" "}
+          <strong className="text-[var(--accent)]">Antoine</strong>, architecte du son numérique, maître des machines et des rythmes électro.  
           Ensemble, ils repoussent les frontières du genre pour créer une expérience scénique intense,  
           où la guitare vibre au rythme des synthés et où chaque note résonne comme une onde lumineuse.
         </motion.p>
@@ -85,15 +86,19 @@ export default function Home() {
             variant="primary"
             as="a"
             href="/music"
-            className="text-lg md:text-base px-10 py-4 md:px-8 md:py-3 rounded-xl shadow-md hover:shadow-[0_0_20px_#B3122D90] active:scale-95 transition-all"
+            className="
+              text-lg md:text-base px-10 py-4 md:px-8 md:py-3 rounded-xl
+              shadow-md hover:shadow-[0_0_25px_var(--accent)]
+              active:scale-95 transition-all duration-300
+            "
           >
             ÉCOUTER MAINTENANT
           </Button>
         </motion.div>
       </section>
 
-      
-      <div className="absolute top-[40%] left-1/2 -translate-x-1/2 w-[60vw] h-[60vw] bg-[#B3122D40] rounded-full blur-[150px] opacity-40 -z-10"></div>
+     
+      <div className="absolute top-[40%] left-1/2 -translate-x-1/2 w-[60vw] h-[60vw] bg-[var(--accent)]/30 rounded-full blur-[150px] opacity-40 -z-10"></div>
     </main>
   );
 }

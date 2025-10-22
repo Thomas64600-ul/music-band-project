@@ -5,10 +5,10 @@ export default function ConcertCard({ city, date, location, image, ticketLink })
   return (
     <article
       className="
-        relative rounded-2xl overflow-hidden bg-[#0B0F17]
-        border border-transparent hover:border-[#B3122D]
+        relative rounded-2xl overflow-hidden bg-surface
+        border border-border hover:border-accent
         transition-all duration-500 flex flex-col
-        hover:shadow-[0_0_25px_#B3122D50]
+        hover:shadow-[0_0_25px_var(--accent)]
         sm:max-w-none w-full
       "
     >
@@ -25,10 +25,13 @@ export default function ConcertCard({ city, date, location, image, ticketLink })
           draggable="false"
         />
 
-        
+       
         <div
           className="
-            absolute inset-0 bg-gradient-to-t from-[#0B0F17dd] via-[#00000066] to-transparent
+            absolute inset-0 bg-gradient-to-t 
+            from-[color-mix(in_oklab,var(--bg)_90%,black_10%)] 
+            via-[color-mix(in_oklab,var(--bg)_50%,transparent)] 
+            to-transparent
             opacity-80 sm:opacity-0 sm:group-hover:opacity-100
             transition-opacity duration-500
           "
@@ -37,14 +40,17 @@ export default function ConcertCard({ city, date, location, image, ticketLink })
         
         <div
           className="
-            absolute inset-0 bg-gradient-to-tr from-transparent via-[#B3122D33] to-transparent
+            absolute inset-0 bg-gradient-to-tr 
+            from-transparent 
+            via-[color-mix(in_oklab,var(--accent)_30%,transparent)] 
+            to-transparent
             opacity-40 sm:opacity-0 sm:group-hover:opacity-100
             blur-[3px] transition-opacity duration-700
           "
         ></div>
 
-        
-        <div className="absolute top-3 left-3 bg-[#B3122D] text-white font-semibold text-xs px-3 py-1 rounded shadow-md">
+       
+        <div className="absolute top-3 left-3 bg-accent text-bg font-semibold text-xs px-3 py-1 rounded shadow-md">
           {date}
         </div>
       </div>
@@ -53,16 +59,29 @@ export default function ConcertCard({ city, date, location, image, ticketLink })
       <div className="flex flex-col flex-grow p-5 sm:p-6 text-center sm:text-left">
         <h3
           className="
-            text-lg sm:text-xl font-bold text-[#FFD700]
-            mb-1 sm:group-hover:text-[#FFB300] transition-colors
+            text-lg sm:text-xl font-bold text-gold
+            mb-1 sm:group-hover:text-[color-mix(in_oklab,var(--gold)_80%,var(--accent)_20%)]
+            transition-colors duration-300
           "
         >
           {city}
         </h3>
-        <p className="text-gray-300 text-sm mb-4">{location}</p>
+        <p className="text-subtext text-sm mb-4">{location}</p>
 
+        
         <div className="flex justify-center sm:justify-start">
-          <Button variant="primary" as="a" href={ticketLink} target="_blank">
+          <Button
+            variant="primary"
+            as="a"
+            href={ticketLink}
+            target="_blank"
+            className="
+              bg-accent text-bg font-semibold px-5 py-2 rounded-lg
+              hover:bg-[color-mix(in_oklab,var(--accent)_85%,var(--gold)_15%)]
+              hover:shadow-[0_0_20px_var(--accent)]
+              transition-all duration-300
+            "
+          >
             Réserver
           </Button>
         </div>
@@ -70,4 +89,5 @@ export default function ConcertCard({ city, date, location, image, ticketLink })
     </article>
   );
 }
+
 

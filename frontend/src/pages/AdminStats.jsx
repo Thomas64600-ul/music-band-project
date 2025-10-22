@@ -96,17 +96,18 @@ export default function AdminStats() {
   const COLORS = ["#B3122D", "#FF4C4C", "#F2F2F2"];
 
   return (
-    <section className="min-h-screen bg-[#0A0A0A] text-[#F2F2F2] py-10 px-6 sm:px-12 flex flex-col items-center">
-      <div className="w-full max-w-5xl bg-[#111] border border-[#B3122D50] rounded-2xl shadow-[0_0_25px_#B3122D30] p-10 relative overflow-hidden">
-        
+    <section className="min-h-screen bg-[#0A0A0A] text-[#F2F2F2] py-8 sm:py-10 px-4 sm:px-12 flex flex-col items-center">
+      <div className="w-full max-w-5xl bg-[#111] border border-[#B3122D50] rounded-2xl shadow-[0_0_25px_#B3122D30] p-6 sm:p-10 relative overflow-hidden">
+        {/* Halo lumineux */}
         <div className="absolute -top-20 -right-20 w-80 h-80 bg-[#B3122D40] rounded-full blur-[150px] opacity-50 pointer-events-none"></div>
 
-        <h1 className="text-4xl font-extrabold text-center text-[#B3122D] drop-shadow-[0_0_15px_#B3122D80] mb-12">
+        {/* Titre */}
+        <h1 className="text-3xl sm:text-4xl font-extrabold text-center text-[#B3122D] drop-shadow-[0_0_15px_#B3122D80] mb-8 sm:mb-12">
           Statistiques globales
         </h1>
 
-        
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 mb-12">
+        {/* --- Statistiques principales --- */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6 mb-10 sm:mb-12">
           {[
             { label: "Utilisateurs", value: stats.users.length },
             { label: "Articles", value: stats.articles },
@@ -116,55 +117,62 @@ export default function AdminStats() {
           ].map((stat, i) => (
             <div
               key={i}
-              className="bg-[#151515] rounded-xl p-6 text-center border border-[#B3122D50] shadow-[0_0_15px_#B3122D20] hover:shadow-[0_0_25px_#B3122D40] hover:scale-[1.03] transition-all duration-300"
+              className="bg-[#151515] rounded-xl p-3 sm:p-6 text-center border border-[#B3122D50] shadow-[0_0_10px_#B3122D20] hover:shadow-[0_0_20px_#B3122D40] hover:scale-[1.02] transition-all duration-300"
             >
-              <p className="text-gray-400 mb-2">{stat.label}</p>
-              <p className="text-3xl font-extrabold text-[#FF4C4C] tracking-wide">
+              <p className="text-gray-400 text-sm sm:text-base mb-1 sm:mb-2">{stat.label}</p>
+              <p className="text-2xl sm:text-3xl font-extrabold text-[#FF4C4C] tracking-wide">
                 {stat.value}
               </p>
             </div>
           ))}
         </div>
 
-        
-        <div className="bg-[#151515] rounded-2xl p-6 border border-[#B3122D50] shadow-[0_0_20px_#B3122D20]">
-          <h2 className="text-2xl font-semibold text-[#FF4C4C] mb-6 text-center">
+       
+        <div className="bg-[#151515] rounded-2xl p-4 sm:p-6 border border-[#B3122D50] shadow-[0_0_20px_#B3122D20]">
+          <h2 className="text-xl sm:text-2xl font-semibold text-[#FF4C4C] mb-4 sm:mb-6 text-center">
             Répartition des rôles utilisateurs
           </h2>
-          <ResponsiveContainer width="100%" height={320}>
-            <PieChart>
-              <Pie
-                data={roleData}
-                cx="50%"
-                cy="50%"
-                outerRadius={100}
-                dataKey="value"
-                label
-              >
-                {roleData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index]} />
-                ))}
-              </Pie>
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: "#0A0A0A",
-                  border: "1px solid #B3122D",
-                  color: "#F2F2F2",
-                }}
-              />
-              <Legend
-                wrapperStyle={{ color: "#F2F2F2", fontSize: "0.9rem" }}
-              />
-            </PieChart>
-          </ResponsiveContainer>
+          <div className="w-full h-[250px] sm:h-[320px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie
+                  data={roleData}
+                  cx="50%"
+                  cy="50%"
+                  outerRadius={80}
+                  sm={{ outerRadius: 100 }}
+                  dataKey="value"
+                  label
+                >
+                  {roleData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={COLORS[index]} />
+                  ))}
+                </Pie>
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: "#0A0A0A",
+                    border: "1px solid #B3122D",
+                    color: "#F2F2F2",
+                    fontSize: "0.8rem",
+                  }}
+                />
+                <Legend
+                  wrapperStyle={{
+                    color: "#F2F2F2",
+                    fontSize: "0.8rem",
+                  }}
+                />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
         </div>
 
-        
-        <div className="mt-10 text-center">
+      
+        <div className="mt-8 sm:mt-10 text-center">
           <Button
             variant="secondary"
             onClick={() => navigate("/admin")}
-            className="border border-[#B3122D] text-[#B3122D] hover:bg-[#B3122D] hover:text-white font-semibold px-8 py-2 rounded-xl shadow-[0_0_10px_#B3122D40] transition"
+            className="border border-[#B3122D] text-[#B3122D] hover:bg-[#B3122D] hover:text-white font-semibold px-6 py-2 rounded-xl shadow-[0_0_8px_#B3122D40] transition text-sm sm:text-base"
           >
             ⏎ Retour Dashboard
           </Button>

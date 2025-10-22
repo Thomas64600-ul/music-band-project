@@ -15,7 +15,7 @@ export default function Music() {
       try {
         const response = await get("/musics");
         console.log("Réponse API /musics :", response);
-        setMusics(response.data || []); 
+        setMusics(response.data || []);
       } catch (error) {
         console.error("Erreur de chargement des musiques :", error);
       } finally {
@@ -31,27 +31,50 @@ export default function Music() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.8 }}
-      className="min-h-screen bg-[#0A0A0A] text-[#F2F2F2] flex flex-col items-center justify-start pt-28 pb-16 px-6 relative overflow-hidden"
+      className="
+        min-h-screen 
+        bg-[var(--bg)] text-[var(--text)]
+        flex flex-col items-center justify-start 
+        pt-24 sm:pt-28 pb-16 px-6 
+        relative overflow-hidden
+        transition-colors duration-500
+      "
     >
       
-      <div className="absolute top-[20%] left-1/2 -translate-x-1/2 w-[60vw] h-[60vw] bg-[#B3122D40] rounded-full blur-[150px] opacity-40 -z-10"></div>
+      <div className="absolute top-[25%] left-1/2 -translate-x-1/2 w-[60vw] h-[60vw] bg-[var(--accent)]/35 rounded-full blur-[150px] opacity-40 -z-10"></div>
 
-     
-      <section className="text-center max-w-2xl mb-10 relative">
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#B3122D30] to-transparent blur-md"></div>
-        <h1 className="text-4xl md:text-5xl font-extrabold text-[#B3122D] mb-4 drop-shadow-[0_0_12px_#B3122D80]">
-          MUSIQUE
-        </h1>
-        <p className="text-gray-300 leading-relaxed">
+      
+      <section className="text-center max-w-2xl mb-12 relative">
+       
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[var(--accent)]/30 to-transparent blur-md"></div>
+
+        <div className="relative inline-block mb-12 text-center">
+         
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[var(--accent)]/40 to-transparent blur-md"></div>
+          
+          
+          <h1 className="relative text-4xl md:text-5xl font-extrabold text-[var(--accent)] drop-shadow-[0_0_12px_var(--accent)] tracking-wide">
+            Musique
+          </h1>
+
+          
+          <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-40 h-[2px] bg-gradient-to-r from-transparent via-[var(--gold)] to-transparent animate-glow-line"></div>
+        </div>
+
+        
+        <p className="relative text-[var(--subtext)] leading-relaxed mt-8">
           Plongez dans l’univers de{" "}
-          <strong className="text-[#B3122D]">REVEREN</strong> : un son électro-rock vibrant où la guitare
-          et les synthés s’entrelacent pour une expérience sonore unique.
+          <strong className="text-[var(--accent)]">REVEREN</strong> :
+          un son électro-rock vibrant où la guitare et les synthés s’entrelacent
+          pour une expérience sonore unique.
         </p>
       </section>
 
       
       {loading ? (
-        <p className="text-gray-400 mt-10 animate-pulse">Chargement des morceaux...</p>
+        <p className="text-[var(--subtext)] mt-10 animate-pulse">
+          Chargement des morceaux...
+        </p>
       ) : musics.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 w-full max-w-6xl">
           {musics.map((music) => (
@@ -60,7 +83,15 @@ export default function Music() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4 }}
-              className="bg-[#0B0F17] border border-[#B3122D60] rounded-2xl shadow-md p-5 flex flex-col items-center hover:shadow-[0_0_25px_#B3122D50] transition-all duration-300"
+              className="
+                bg-[var(--surface)]
+                border border-[var(--border)]
+                rounded-2xl shadow-md 
+                p-5 flex flex-col items-center 
+                hover:border-[var(--accent)]
+                hover:shadow-[0_0_25px_var(--accent)]
+                transition-all duration-300
+              "
             >
               <Player
                 src={music.url}
@@ -72,17 +103,21 @@ export default function Music() {
           ))}
         </div>
       ) : (
-        <p className="text-gray-400 mt-10 italic">
-          Aucun morceau n’est encore publié. Restez à l’écoute — REVEREN prépare du lourd 🔥
+        <p className="text-[var(--subtext)] mt-10 italic">
+          Aucun morceau n’est encore publié.  
+          Restez à l’écoute — REVEREN prépare du lourd 🔥
         </p>
       )}
 
-      
+     
       <section className="text-center max-w-xl mt-16">
-        <h2 className="text-2xl font-semibold mb-3 text-[#FFD700] tracking-wide">
-          Nouvel EP – <span className="text-[#B3122D] italic">Electric Sunrise</span>
+        <h2 className="text-2xl font-semibold mb-3 text-[var(--gold)] tracking-wide">
+          Nouvel EP –{" "}
+          <span className="text-[var(--accent)] italic">
+            Electric Sunrise
+          </span>
         </h2>
-        <p className="text-gray-400 mb-6">
+        <p className="text-[var(--subtext)] mb-6">
           Découvrez le nouveau titre de REVEREN, un mélange explosif de riffs électro et d’énergie live.
         </p>
         <Button variant="primary" as="a" href="https://spotify.com">
@@ -92,4 +127,6 @@ export default function Music() {
     </motion.main>
   );
 }
+
+
 

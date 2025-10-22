@@ -8,11 +8,12 @@ export default function Concerts() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
+
     (async () => {
       try {
         const data = await get("/concerts");
 
-        
         const concertList = Array.isArray(data)
           ? data
           : Array.isArray(data.data)
@@ -32,33 +33,58 @@ export default function Concerts() {
     })();
   }, []);
 
+  
   if (loading)
-    return <p className="text-center text-gray-400 mt-10">Chargement...</p>;
-
-  if (!concerts.length)
     return (
-      <p className="text-center text-gray-400 mt-10">
-        Aucun concert trouvé.
+      <p className="text-center text-[var(--subtext)] mt-10 animate-pulse">
+        Chargement des concerts...
       </p>
     );
 
+  
+  if (!concerts.length)
+    return (
+      <section className="bg-[var(--bg)] text-center py-24 text-[var(--text)] transition-colors duration-500">
+        <h1 className="text-3xl font-bold text-[var(--accent)] mb-4 drop-shadow-[0_0_10px_var(--accent)]">
+          Aucun concert à venir
+        </h1>
+        <p className="text-[var(--subtext)] max-w-md mx-auto">
+          Le groupe prépare de nouvelles dates.  
+          Restez connectés pour ne rien manquer 🎸
+        </p>
+      </section>
+    );
+
+  
   return (
     <motion.section
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.8 }}
-      className="px-6 sm:px-12 py-16 bg-[#0A0A0A] text-[#F2F2F2] relative overflow-hidden"
+      className="
+        bg-[var(--bg)] text-[var(--text)]
+        flex flex-col items-center
+        pt-24 sm:pt-28 pb-16 px-6
+        relative overflow-hidden
+        transition-colors duration-500
+      "
     >
      
-      <div className="absolute top-[25%] left-1/2 -translate-x-1/2 w-[60vw] h-[60vw] bg-[#B3122D30] rounded-full blur-[120px] opacity-40 -z-10"></div>
+      <div className="absolute top-[30%] left-1/2 -translate-x-1/2 w-[60vw] h-[60vw] bg-[var(--accent)]/35 rounded-full blur-[150px] opacity-40 -z-10"></div>
 
      
-      <h2 className="text-3xl md:text-4xl font-extrabold text-center text-[#FFD700] mb-12 drop-shadow-[0_0_15px_#FFD70060]">
-        Prochains concerts
-      </h2>
+      <div className="relative inline-block mb-12 text-center">
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[var(--accent)]/40 to-transparent blur-md"></div>
+
+        <h1 className="relative text-4xl md:text-5xl font-extrabold text-[var(--accent)] drop-shadow-[0_0_12px_var(--accent)] tracking-wide">
+          Prochains concerts
+        </h1>
+
+        <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-40 h-[2px] bg-gradient-to-r from-transparent via-[var(--gold)] to-transparent animate-glow-line"></div>
+      </div>
 
      
-      <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-3 relative z-10">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 w-full max-w-6xl relative z-10">
         {concerts.map((c, index) => (
           <motion.div
             key={c.id}
@@ -67,7 +93,7 @@ export default function Concerts() {
             transition={{ duration: 0.5, delay: index * 0.1 }}
             whileHover={{
               scale: 1.03,
-              boxShadow: "0 0 25px rgba(179, 18, 45, 0.5)",
+              boxShadow: "0 0 25px var(--accent)",
             }}
             className="transition-all"
           >
@@ -92,4 +118,6 @@ export default function Concerts() {
     </motion.section>
   );
 }
+
+
 

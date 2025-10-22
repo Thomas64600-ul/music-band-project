@@ -5,10 +5,10 @@ export default function ArticleCard({ title, excerpt, image, date, link }) {
   return (
     <article
       className="
-        bg-[#0A0A0A] rounded-2xl shadow-lg overflow-hidden 
-        border border-[#B3122D40] hover:border-[#B3122D]
+        bg-surface rounded-2xl shadow-lg overflow-hidden 
+        border border-border hover:border-accent
         transition-all duration-300 flex flex-col
-        hover:shadow-[0_0_25px_#B3122D60]
+        hover:shadow-[0_0_25px_var(--accent)]
         sm:max-w-none w-full
       "
     >
@@ -27,7 +27,7 @@ export default function ArticleCard({ title, excerpt, image, date, link }) {
         
         <div
           className="
-            absolute inset-0 bg-gradient-to-t from-[#B3122D33] to-transparent
+            absolute inset-0 bg-gradient-to-t from-[color-mix(in_oklab,var(--accent)_25%,transparent)] to-transparent
             opacity-80 sm:opacity-0 sm:group-hover:opacity-100
             transition-opacity duration-500
           "
@@ -35,30 +35,31 @@ export default function ArticleCard({ title, excerpt, image, date, link }) {
 
         <div
           className="
-            absolute inset-0 bg-gradient-to-tr from-transparent via-[#B3122D22] to-transparent
+            absolute inset-0 bg-gradient-to-tr from-transparent via-[color-mix(in_oklab,var(--accent)_15%,transparent)] to-transparent
             opacity-60 sm:opacity-0 sm:group-hover:opacity-100 
             blur-[2px] transition-opacity duration-700
           "
         ></div>
 
-        
-        <div className="absolute top-3 left-3 bg-[#B3122D] text-[#F2F2F2] text-xs font-bold px-3 py-1 rounded-md shadow-md">
+       
+        <div className="absolute top-3 left-3 bg-accent text-bg text-xs font-bold px-3 py-1 rounded-md shadow-md">
           {date}
         </div>
       </div>
 
-      
+     
       <div className="flex flex-col flex-grow p-5 sm:p-6">
         <h3
           className="
-            text-base sm:text-lg font-bold text-[#B3122D] mb-2 leading-snug 
-            sm:group-hover:text-[#E01E37] transition-colors duration-300
+            text-base sm:text-lg font-bold text-accent mb-2 leading-snug 
+            sm:group-hover:text-[color-mix(in_oklab,var(--accent)_85%,var(--gold)_15%)] 
+            transition-colors duration-300
           "
         >
           {title}
         </h3>
 
-        <p className="text-gray-400 text-sm flex-grow leading-relaxed">
+        <p className="text-subtext text-sm flex-grow leading-relaxed">
           {excerpt}
         </p>
 
@@ -68,7 +69,12 @@ export default function ArticleCard({ title, excerpt, image, date, link }) {
             variant="outline"
             as="a"
             href={link}
-            className="border-[#B3122D] text-[#B3122D] hover:bg-[#B3122D] hover:text-[#F2F2F2] hover:shadow-[0_0_15px_#B3122D80]"
+            className="
+              border-accent text-accent 
+              hover:bg-accent hover:text-bg 
+              hover:shadow-[0_0_15px_var(--accent)]
+              transition-all
+            "
           >
             Lire plus
           </Button>
@@ -77,6 +83,7 @@ export default function ArticleCard({ title, excerpt, image, date, link }) {
     </article>
   );
 }
+
 
 
 
