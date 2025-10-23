@@ -19,11 +19,13 @@ import musicRoutes from "./routes/musicRoutes.js";
 dotenv.config();
 const app = express();
 
+
 app.set("trust proxy", 1);
 app.disable("x-powered-by");
-
-
 app.use(compression());
+app.use(morgan(process.env.NODE_ENV !== "production" ? "dev" : "combined"));
+
+
 app.use(
   helmet({
     contentSecurityPolicy: {
@@ -56,17 +58,25 @@ app.use(
 );
 
 
+app.use(express.json({ limit: "10mb" }));
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+
+
+app.use("/api/users", userRoutes);
+app.use("/api/articles", articleRoutes);
+app.use("/api/concerts", concertRoutes);
+app.use("/api/comments", commentRoutes);
+app.use("/api/musics", musicRoutes);
+app.use("/api/messages", messageRoutes);
+app.use("/api/donations", donationRoutes);
+
+
 app.use(
   "/api/donations/webhook",
   express.raw({ type: "application/json" }),
   donationRoutes
 );
-
-
-app.use(express.json({ limit: "10mb" }));
-app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser());
-app.use(morgan(process.env.NODE_ENV !== "production" ? "dev" : "combined"));
 
 
 if (process.env.NODE_ENV !== "production") {
@@ -78,14 +88,6 @@ if (process.env.NODE_ENV !== "production") {
     res.json({ cookies: req.cookies || {} });
   });
 }
-
-app.use("/api/users", userRoutes);
-app.use("/api/articles", articleRoutes);
-app.use("/api/concerts", concertRoutes);
-app.use("/api/donations", donationRoutes); 
-app.use("/api/messages", messageRoutes);
-app.use("/api/comments", commentRoutes);
-app.use("/api/musics", musicRoutes);
 
 
 app.use(errorHandler);
