@@ -69,13 +69,12 @@ export default function Header({ logoSrc, links }) {
   return (
     <header
       className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 border-b border-[var(--border)] ${
-  isScrolled
-    ? darkMode
-      ? "bg-[color-mix(in_oklab,var(--bg)_90%,black_10%)] shadow-[0_2px_25px_color-mix(in_oklab,var(--accent)_30%,transparent)] backdrop-blur-md"
-      : "bg-white shadow-[0_2px_20px_rgba(0,0,0,0.05)]" 
-    : "bg-[var(--bg)]"
-}`}
-
+        isScrolled
+          ? darkMode
+            ? "bg-[color-mix(in_oklab,var(--bg)_90%,black_10%)] shadow-[0_2px_25px_color-mix(in_oklab,var(--accent)_30%,transparent)] backdrop-blur-md"
+            : "bg-white shadow-[0_2px_20px_rgba(0,0,0,0.05)]"
+          : "bg-[var(--bg)]"
+      }`}
     >
       
       {isAdmin && (
@@ -85,7 +84,7 @@ export default function Header({ logoSrc, links }) {
       )}
 
       
-      <div className="flex items-center justify-between px-4 sm:px-12 py-3 sm:py-5">
+      <div className="flex items-center justify-between px-4 sm:px-12 py-3 sm:py-5 relative">
        
         <button
           onClick={toggleTheme}
@@ -96,7 +95,7 @@ export default function Header({ logoSrc, links }) {
         </button>
 
         
-        <div className="flex justify-center items-center flex-1 sm:translate-x-[60px] md:translate-x-[80px]">
+        <div className="flex justify-center items-center flex-1 sm:translate-x-[60px] md:translate-x-[80px] relative z-0">
           <motion.img
             src={logoSrc}
             alt="Logo REVEREN"
@@ -112,14 +111,14 @@ export default function Header({ logoSrc, links }) {
               repeat: Infinity,
               repeatType: "mirror",
             }}
-            className={`object-contain transition-all duration-500 ${
+            className={`object-contain transition-all duration-500 pointer-events-none ${
               isScrolled ? "h-16 sm:h-[95px]" : "h-20 sm:h-[110px]"
             } drop-shadow-[0_0_20px_var(--accent)] hover:drop-shadow-[0_0_30px_var(--gold)]`}
           />
         </div>
 
         
-        <div className="hidden sm:flex items-center gap-4 text-sm ml-auto">
+        <div className="hidden sm:flex items-center gap-4 text-sm ml-auto relative z-10">
           {user ? (
             <>
               <span className="text-[var(--accent)] flex items-center gap-2 font-semibold">
@@ -143,13 +142,13 @@ export default function Header({ logoSrc, links }) {
             <>
               <NavLink
                 to="/register"
-                className="text-[#1A1A1A] dark:text-[#F2F2F2] hover:text-[var(--accent)] transition-colors"
+                className="relative z-20 text-[#1A1A1A] dark:text-[#F2F2F2] hover:text-[var(--accent)] transition-colors"
               >
                 Inscription
               </NavLink>
               <NavLink
                 to="/login"
-                className="text-[#1A1A1A] dark:text-[#F2F2F2] hover:text-[var(--accent)] transition-colors"
+                className="relative z-20 text-[#1A1A1A] dark:text-[#F2F2F2] hover:text-[var(--accent)] transition-colors"
               >
                 Connexion
               </NavLink>
@@ -160,7 +159,7 @@ export default function Header({ logoSrc, links }) {
         
         <button
           onClick={toggleMenu}
-          className="text-[var(--accent)] hover:text-[color-mix(in_oklab,var(--accent)_80%,var(--gold)_20%)] hover:scale-110 transition-transform duration-200 sm:hidden"
+          className="text-[var(--accent)] hover:text-[color-mix(in_oklab,var(--accent)_80%,var(--gold)_20%)] hover:scale-110 transition-transform duration-200 sm:hidden z-20"
           aria-label={menuOpen ? "Fermer le menu" : "Ouvrir le menu"}
         >
           {menuOpen ? <FaTimes size={22} /> : <FaBars size={22} />}
@@ -186,6 +185,7 @@ export default function Header({ logoSrc, links }) {
             )}
           </nav>
 
+          {/* Ligne lumineuse */}
           <motion.div
             initial={{ opacity: 0.4 }}
             animate={{
@@ -214,7 +214,7 @@ export default function Header({ logoSrc, links }) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.3 }}
-            className="sm:hidden flex flex-col items-center py-4 border-t border-[var(--border)] bg-[var(--bg)]"
+            className="sm:hidden flex flex-col items-center py-4 border-t border-[var(--border)] bg-[var(--bg)] relative z-50"
           >
             {links.map((l) => (
               <LinkItem
@@ -249,7 +249,7 @@ export default function Header({ logoSrc, links }) {
               </button>
             </div>
 
-            
+           
             <div className="flex flex-col items-center gap-3 mt-6 text-sm">
               {user ? (
                 <>
@@ -277,14 +277,14 @@ export default function Header({ logoSrc, links }) {
                   <NavLink
                     to="/register"
                     onClick={() => setMenuOpen(false)}
-                    className="text-[#1A1A1A] dark:text-[#F2F2F2] hover:text-[var(--accent)] transition-colors"
+                    className="text-[#1A1A1A] dark:text-[#F2F2F2] hover:text-[var(--accent)] transition-colors z-50"
                   >
                     Inscription
                   </NavLink>
                   <NavLink
                     to="/login"
                     onClick={() => setMenuOpen(false)}
-                    className="text-[#1A1A1A] dark:text-[#F2F2F2] hover:text-[var(--accent)] transition-colors"
+                    className="text-[#1A1A1A] dark:text-[#F2F2F2] hover:text-[var(--accent)] transition-colors z-50"
                   >
                     Connexion
                   </NavLink>

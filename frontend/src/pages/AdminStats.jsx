@@ -11,6 +11,7 @@ import {
   Legend,
 } from "recharts";
 import Button from "../components/Button";
+import { motion } from "framer-motion";
 
 export default function AdminStats() {
   const [stats, setStats] = useState({
@@ -82,7 +83,7 @@ export default function AdminStats() {
 
   if (loading)
     return (
-      <p className="text-center mt-10 text-gray-400 animate-pulse">
+      <p className="text-center mt-10 text-[var(--subtext)] animate-pulse">
         Chargement des statistiques...
       </p>
     );
@@ -93,20 +94,37 @@ export default function AdminStats() {
     { name: "Utilisateurs", value: stats.users.filter((u) => u.roles === "buyer").length },
   ];
 
-  const COLORS = ["#B3122D", "#FF4C4C", "#F2F2F2"];
+  const COLORS = ["#B3122D", "#FF4C4C", "#FFD700"];
 
   return (
-    <section className="min-h-screen bg-[#0A0A0A] text-[#F2F2F2] py-8 sm:py-10 px-4 sm:px-12 flex flex-col items-center">
-      <div className="w-full max-w-5xl bg-[#111] border border-[#B3122D50] rounded-2xl shadow-[0_0_25px_#B3122D30] p-6 sm:p-10 relative overflow-hidden">
-        {/* Halo lumineux */}
-        <div className="absolute -top-20 -right-20 w-80 h-80 bg-[#B3122D40] rounded-full blur-[150px] opacity-50 pointer-events-none"></div>
+    <motion.section
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.8 }}
+      className="
+        min-h-screen py-8 sm:py-10 px-4 sm:px-12 
+        flex flex-col items-center
+        bg-[var(--bg)] text-[var(--text)]
+        transition-colors duration-700 ease-in-out
+      "
+    >
+      <div
+        className="
+          w-full max-w-5xl relative overflow-hidden
+          bg-[var(--bg-secondary)] border border-[var(--accent)]/40
+          rounded-2xl shadow-[0_0_25px_var(--accent)]/30
+          p-6 sm:p-10
+        "
+      >
+        
+        <div className="absolute -top-20 -right-20 w-80 h-80 bg-[var(--accent)]/30 rounded-full blur-[150px] opacity-50 pointer-events-none"></div>
 
-        {/* Titre */}
-        <h1 className="text-3xl sm:text-4xl font-extrabold text-center text-[#B3122D] drop-shadow-[0_0_15px_#B3122D80] mb-8 sm:mb-12">
+       
+        <h1 className="text-3xl sm:text-4xl font-extrabold text-center text-[var(--accent)] drop-shadow-[0_0_15px_var(--accent)] mb-8 sm:mb-12">
           Statistiques globales
         </h1>
 
-        {/* --- Statistiques principales --- */}
+       
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6 mb-10 sm:mb-12">
           {[
             { label: "Utilisateurs", value: stats.users.length },
@@ -117,19 +135,33 @@ export default function AdminStats() {
           ].map((stat, i) => (
             <div
               key={i}
-              className="bg-[#151515] rounded-xl p-3 sm:p-6 text-center border border-[#B3122D50] shadow-[0_0_10px_#B3122D20] hover:shadow-[0_0_20px_#B3122D40] hover:scale-[1.02] transition-all duration-300"
+              className="
+                bg-[var(--bg)] rounded-xl p-3 sm:p-6 text-center
+                border border-[var(--accent)]/40
+                shadow-[0_0_10px_var(--accent)]/20
+                hover:shadow-[0_0_20px_var(--accent)]/40
+                hover:scale-[1.02] transition-all duration-300
+              "
             >
-              <p className="text-gray-400 text-sm sm:text-base mb-1 sm:mb-2">{stat.label}</p>
-              <p className="text-2xl sm:text-3xl font-extrabold text-[#FF4C4C] tracking-wide">
+              <p className="text-[var(--subtext)] text-sm sm:text-base mb-1 sm:mb-2">
+                {stat.label}
+              </p>
+              <p className="text-2xl sm:text-3xl font-extrabold text-[var(--accent)] tracking-wide">
                 {stat.value}
               </p>
             </div>
           ))}
         </div>
 
-       
-        <div className="bg-[#151515] rounded-2xl p-4 sm:p-6 border border-[#B3122D50] shadow-[0_0_20px_#B3122D20]">
-          <h2 className="text-xl sm:text-2xl font-semibold text-[#FF4C4C] mb-4 sm:mb-6 text-center">
+        
+        <div
+          className="
+            bg-[var(--bg)] rounded-2xl p-4 sm:p-6
+            border border-[var(--accent)]/40
+            shadow-[0_0_20px_var(--accent)]/20
+          "
+        >
+          <h2 className="text-xl sm:text-2xl font-semibold text-[var(--accent)] mb-4 sm:mb-6 text-center">
             Répartition des rôles utilisateurs
           </h2>
           <div className="w-full h-[250px] sm:h-[320px]">
@@ -150,15 +182,15 @@ export default function AdminStats() {
                 </Pie>
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: "#0A0A0A",
-                    border: "1px solid #B3122D",
-                    color: "#F2F2F2",
+                    backgroundColor: "var(--bg)",
+                    border: "1px solid var(--accent)",
+                    color: "var(--text)",
                     fontSize: "0.8rem",
                   }}
                 />
                 <Legend
                   wrapperStyle={{
-                    color: "#F2F2F2",
+                    color: "var(--text)",
                     fontSize: "0.8rem",
                   }}
                 />
@@ -167,20 +199,25 @@ export default function AdminStats() {
           </div>
         </div>
 
-      
+        
         <div className="mt-8 sm:mt-10 text-center">
           <Button
-            variant="secondary"
             onClick={() => navigate("/admin")}
-            className="border border-[#B3122D] text-[#B3122D] hover:bg-[#B3122D] hover:text-white font-semibold px-6 py-2 rounded-xl shadow-[0_0_8px_#B3122D40] transition text-sm sm:text-base"
+            className="
+              border border-[var(--accent)] text-[var(--accent)]
+              hover:bg-[var(--accent)] hover:text-[var(--bg)]
+              font-semibold px-6 py-2 rounded-xl
+              shadow-[0_0_8px_var(--accent)]/40 transition text-sm sm:text-base
+            "
           >
             ⏎ Retour Dashboard
           </Button>
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 }
+
 
 
 
