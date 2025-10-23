@@ -14,15 +14,24 @@ export async function createComment(req, res, next) {
       return res.status(400).json({ error: "Champs manquants." });
     }
 
-    
+   
+    const normalizedType = target_type.toLowerCase().replace(/s$/, "");
+
     const allowedTypes = ["article", "concert", "music"];
-    if (!allowedTypes.includes(target_type)) {
+    if (!allowedTypes.includes(normalizedType)) {
       return res.status(400).json({ error: "Type de contenu invalide." });
     }
 
-    const newComment = await addComment(user_id, target_type, target_id, content);
+    const newComment = await addComment(
+      user_id,
+      normalizedType,
+      target_id,
+      content
+    );
+
     res.status(201).json(newComment);
   } catch (error) {
+    console.error("Erreur création commentaire :", error);
     next(error);
   }
 }
@@ -30,15 +39,25 @@ export async function createComment(req, res, next) {
 
 export async function fetchComments(req, res, next) {
   try {
+    console.log("Params reçus :", req.params);
     const { targetType, targetId } = req.params;
+
+    if (!targetType || !targetId) {
+      return res.status(400).json({ error: "Paramètres manquants." });
+    }
+
+    
+    const normalizedType = targetType.toLowerCase().replace(/s$/, "");
+
     const allowedTypes = ["article", "concert", "music"];
-    if (!allowedTypes.includes(targetType)) {
+    if (!allowedTypes.includes(normalizedType)) {
       return res.status(400).json({ error: "Type de contenu invalide." });
     }
 
-    const comments = await getComments(targetType, targetId);
+    const comments = await getComments(normalizedType, targetId);
     res.json(comments);
   } catch (error) {
+    console.error("Erreur récupération commentaires :", error);
     next(error);
   }
 }
@@ -52,11 +71,15 @@ export async function removeComment(req, res, next) {
 
     const success = await deleteComment(commentId, user_id, role);
     if (!success) {
-      return res.status(403).json({ error: "Non autorisé à supprimer ce commentaire." });
+      return res
+        .status(403)
+        .json({ error: "Non autorisé à supprimer ce commentaire." });
     }
 
     res.json({ message: "Commentaire supprimé avec succès." });
   } catch (error) {
+    console.error("Erreur suppression commentaire :", error);
     next(error);
   }
 }
+
