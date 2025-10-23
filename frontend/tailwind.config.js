@@ -1,13 +1,13 @@
 export default {
-  darkMode: 'class',
+  darkMode: "class",
   content: [
     "./index.html",
     "./src/**/*.{js,jsx,ts,tsx}",
   ],
   theme: {
     extend: {
+      // 🎨 Palette globale
       colors: {
-      
         primary: "#FF2B6A",
         primaryGlow: "#FF5C8D",
         primaryDark: "#A01438",
@@ -15,7 +15,7 @@ export default {
         light: "#F2F2F2",
         accent: "#FF2B6A",
 
-        
+        // 🎵 Palette REVEREN (de référence)
         reveren: {
           dark: {
             bg: "#0A0A0A",
@@ -38,24 +38,19 @@ export default {
             border: "#E0E0E0",
           },
         },
-      },
-      theme: {
-  extend: {
-    colors: {
-      bg: "var(--bg)",
-      surface: "var(--surface)",
-      text: "var(--text)",
-      subtext: "var(--subtext)",
-      accent: "var(--accent)",
-      gold: "var(--gold)",
-      cyan: "var(--cyan)",
-      border: "var(--border)",
-    },
-    
-  },
-},
 
-     
+        // ⚙️ Couleurs dynamiques liées aux variables CSS
+        bg: "var(--bg)",
+        surface: "var(--surface)",
+        text: "var(--text)",
+        subtext: "var(--subtext)",
+        accent: "var(--accent)",
+        gold: "var(--gold)",
+        cyan: "var(--cyan)",
+        border: "var(--border)",
+      },
+
+      // ✨ Animations
       keyframes: {
         fadeIn: {
           "0%": { opacity: 0, transform: "translateY(-10px)" },
@@ -76,24 +71,21 @@ export default {
         "glow-line": "glow-line 2s ease-in-out infinite",
       },
 
+      // 🧭 Transitions, polices, effets
       transitionTimingFunction: {
         "in-out-smooth": "cubic-bezier(0.25, 0.1, 0.25, 1)",
       },
-
       fontFamily: {
         sans: ["Inter", "system-ui", "sans-serif"],
       },
-
-     
       boxShadow: {
-        'reveren-glow': "0 0 25px rgba(179, 18, 45, 0.5)",
-        'gold-glow': "0 0 20px rgba(255, 215, 0, 0.4)",
+        "reveren-glow": "0 0 25px rgba(179, 18, 45, 0.5)",
+        "gold-glow": "0 0 20px rgba(255, 215, 0, 0.4)",
       },
     },
   },
   plugins: [],
 };
-
 
 
 

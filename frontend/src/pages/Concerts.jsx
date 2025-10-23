@@ -1,11 +1,14 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import ConcertCard from "../components/ConcertCard";
+import CommentSection from "../components/CommentSection";
+import { useAuth } from "../context/AuthContext";
 import { get } from "../lib/api";
 
 export default function Concerts() {
   const [concerts, setConcerts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { user } = useAuth();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -57,22 +60,29 @@ export default function Concerts() {
 
   
   return (
-    <motion.section
+    <motion.main
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.8 }}
       className="
         bg-[var(--bg)] text-[var(--text)]
         flex flex-col items-center
-        pt-24 sm:pt-28 pb-16 px-6
+        pt-24 sm:pt-28 pb-32 px-6
         relative overflow-hidden
         transition-colors duration-500
       "
     >
-     
-      <div className="absolute top-[30%] left-1/2 -translate-x-1/2 w-[60vw] h-[60vw] bg-[var(--accent)]/35 rounded-full blur-[150px] opacity-40 -z-10"></div>
+      
+      <div
+        className="
+          absolute top-[30%] left-1/2 -translate-x-1/2 
+          w-[60vw] h-[60vw]
+          bg-[var(--accent)]/35 rounded-full blur-[150px] opacity-40 
+          -z-10
+        "
+      ></div>
 
-     
+      
       <div className="relative inline-block mb-12 text-center">
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[var(--accent)]/40 to-transparent blur-md"></div>
 
@@ -115,9 +125,29 @@ export default function Concerts() {
           </motion.div>
         ))}
       </div>
-    </motion.section>
+
+      
+      <section
+        className="
+          w-full max-w-4xl mt-20 mb-28 px-6
+          relative z-10
+        "
+      >
+        <CommentSection type="concert" relatedId={0} user={user} />
+      </section>
+
+      
+      <div
+        className="
+          absolute bottom-0 left-0 w-full h-[120px]
+          bg-gradient-to-b from-transparent to-[var(--bg)]
+          pointer-events-none
+        "
+      ></div>
+    </motion.main>
   );
 }
+
 
 
 

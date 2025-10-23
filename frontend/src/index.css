@@ -3,8 +3,6 @@
 @tailwind utilities;
 
 
-
-
 :root {
   --bg: #F9F9F9;
   --surface: #FFFFFF;
@@ -15,7 +13,6 @@
   --cyan: #0088A9;
   --border: #E0E0E0;
 }
-
 
 .dark {
   --bg: #0A0A0A;
@@ -29,14 +26,51 @@
 }
 
 
-body {
-  background-color: var(--bg);
-  color: var(--text);
-  transition: background-color 0.4s ease, color 0.4s ease;
+@layer base {
+  html,
+  body,
+  #root {
+    background-color: var(--bg) !important;
+    color: var(--text);
+    transition: background-color 0.7s ease-in-out, color 0.7s ease-in-out;
+    margin: 0;
+    padding: 0;
+    border: none;
+    min-height: 100%;
+  }
+
+  body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  main {
+    flex-grow: 1;
+    position: relative;
+    z-index: 1;
+    background-color: var(--bg);
+    color: var(--text);
+    transition: background-color 0.7s ease-in-out, color 0.7s ease-in-out;
+    margin-top: -1px; 
+  }
+}
+main {
+  margin-bottom: 0;
+  padding-bottom: 0 !important;
+}
+
+footer {
+  margin-top: 0;
+  position: relative;
+  z-index: 10;
 }
 
 
-a, button {
+
+
+a,
+button {
   transition: color 0.3s ease, background-color 0.3s ease, transform 0.2s ease;
 }
 
@@ -60,13 +94,11 @@ a, button {
   color: var(--cyan);
 }
 
-
 .bg-halo {
-  background: radial-gradient(circle, var(--accent)20 0%, transparent 70%);
+  background: radial-gradient(circle, var(--accent) 20%, transparent 70%);
   filter: blur(120px);
   opacity: 0.4;
 }
-
 
 
 .no-scrollbar::-webkit-scrollbar {
@@ -87,39 +119,24 @@ html {
 
 
 @keyframes marquee {
-  0% {
-    transform: translateX(100%);
-  }
-  100% {
-    transform: translateX(-100%);
-  }
+  0% { transform: translateX(100%); }
+  100% { transform: translateX(-100%); }
 }
-
 .animate-marquee {
   animation: marquee 25s linear infinite;
 }
-
 .animate-marquee:hover {
   animation-play-state: paused;
 }
 
-
 @keyframes neonPulse {
-  0% {
-    box-shadow: 0 0 0 var(--accent);
-  }
-  50% {
-    box-shadow: 0 0 18px var(--accent)80, 0 0 28px var(--accent)60;
-  }
-  100% {
-    box-shadow: 0 0 0 var(--accent);
-  }
+  0% { box-shadow: 0 0 0 var(--accent); }
+  50% { box-shadow: 0 0 18px var(--accent)80, 0 0 28px var(--accent)60; }
+  100% { box-shadow: 0 0 0 var(--accent); }
 }
-
 .hover\:animate-neonPulse:hover {
   animation: neonPulse 1.5s ease-in-out infinite;
 }
-
 
 @keyframes ambientGlow {
   0%, 100% {
@@ -129,47 +146,35 @@ html {
     text-shadow: 0 0 12px var(--accent)90, 0 0 20px var(--accent)70;
   }
 }
-
 .animate-ambientGlow {
   animation: ambientGlow 2.5s ease-in-out infinite;
 }
-
 
 @keyframes pulse-slow {
   0%, 100% { opacity: 0.6; transform: scale(1); }
   50% { opacity: 1; transform: scale(1.05); }
 }
-
 .animate-pulse-slow {
   animation: pulse-slow 4s ease-in-out infinite;
 }
-
 
 @keyframes glow-line {
   0% { opacity: 0.4; width: 80px; }
   50% { opacity: 1; width: 200px; }
   100% { opacity: 0.4; width: 80px; }
 }
-
 .animate-glow-line {
   animation: glow-line 5s ease-in-out infinite;
-  background: linear-gradient(
-    to right,
-    transparent,
-    var(--gold),
-    transparent
-  );
+  background: linear-gradient(to right, transparent, var(--gold), transparent);
   height: 2px;
   border-radius: 2px;
 }
-
 
 @keyframes progressPulse {
   0% { filter: brightness(1); }
   50% { filter: brightness(1.5); }
   100% { filter: brightness(1); }
 }
-
 .animate-progressPulse {
   animation: progressPulse 1.2s ease-in-out infinite;
 }
