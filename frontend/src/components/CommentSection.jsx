@@ -9,19 +9,22 @@ export default function CommentSection({ type, relatedId, user }) {
   const [error, setError] = useState(null);
 
   
+  const normalizedType = type?.toLowerCase().replace(/s$/, "");
+
+ 
   useEffect(() => {
     (async () => {
       try {
-        const data = await get(`/comments/${type}/${relatedId}`);
+        const data = await get(`/comments/${normalizedType}/${relatedId}`);
         setComments(Array.isArray(data) ? data : []);
       } catch (e) {
-        console.error(e);
+        console.error("Erreur chargement commentaires :", e);
         setError("Impossible de charger les commentaires.");
       } finally {
         setLoading(false);
       }
     })();
-  }, [type, relatedId]);
+  }, [normalizedType, relatedId]);
 
   
   async function handleSubmit(e) {
@@ -30,10 +33,9 @@ export default function CommentSection({ type, relatedId, user }) {
 
     try {
       const body = {
-        user_id: user?.id,
+        target_type: normalizedType, 
+        target_id: relatedId,
         content: newComment,
-        related_type: type,
-        related_id: relatedId,
       };
 
       const response = await post("/comments", body);
@@ -46,6 +48,7 @@ export default function CommentSection({ type, relatedId, user }) {
     }
   }
 
+ 
   if (loading)
     return (
       <p className="text-[var(--subtext)] text-sm animate-pulse">
@@ -53,6 +56,7 @@ export default function CommentSection({ type, relatedId, user }) {
       </p>
     );
 
+ 
   return (
     <motion.section
       initial={{ opacity: 0, y: 10 }}
@@ -68,12 +72,10 @@ export default function CommentSection({ type, relatedId, user }) {
         transition-all duration-700 ease-in-out
       "
     >
-      
       <h3 className="text-lg font-semibold text-[var(--accent)] mb-4 tracking-wide">
         Commentaires ({comments.length})
       </h3>
 
-      
       <div className="flex flex-col gap-4 mb-6 max-h-[350px] overflow-y-auto no-scrollbar">
         {comments.length === 0 ? (
           <p className="text-[var(--subtext)] text-sm italic">
@@ -97,7 +99,7 @@ export default function CommentSection({ type, relatedId, user }) {
               <p className="text-xs text-[var(--subtext)] mt-2">
                 Par{" "}
                 <span className="text-[var(--accent)] font-medium">
-                  {comment.username || "Utilisateur"}
+                  {comment.firstname || "Utilisateur"}
                 </span>{" "}
                 —{" "}
                 {comment.created_at
@@ -147,13 +149,9 @@ export default function CommentSection({ type, relatedId, user }) {
         </p>
       )}
 
-    
       {error && (
-        <p className="text-[var(--accent)] text-sm mt-3 italic">
-          {error}
-        </p>
+        <p className="text-[var(--accent)] text-sm mt-3 italic">{error}</p>
       )}
     </motion.section>
   );
 }
-

@@ -30,7 +30,6 @@ export default function Articles() {
     })();
   }, []);
 
-  
   if (loading)
     return (
       <p className="text-center text-[var(--subtext)] mt-20 animate-pulse">
@@ -38,7 +37,6 @@ export default function Articles() {
       </p>
     );
 
-  
   if (!articles.length)
     return (
       <section className="bg-[var(--bg)] text-center py-24 text-[var(--text)] transition-colors duration-700 ease-in-out">
@@ -52,12 +50,11 @@ export default function Articles() {
 
         
         <div className="max-w-4xl mx-auto mt-16 px-6">
-          <CommentSection type="blog" relatedId={0} user={user} />
+          <CommentSection type="article" relatedId={1} user={user} />
         </div>
       </section>
     );
 
-  
   return (
     <motion.main
       initial={{ opacity: 0 }}
@@ -72,7 +69,7 @@ export default function Articles() {
         overflow-hidden
       "
     >
-    
+      
       <div
         className="
           absolute top-[35%] left-1/2 -translate-x-1/2 
@@ -112,16 +109,16 @@ export default function Articles() {
               }
               link={`/blog/${a.id}`}
             />
+
+            
+            <div className="mt-6">
+              <CommentSection type="article" relatedId={a.id} user={user} />
+            </div>
           </motion.div>
         ))}
       </section>
 
      
-      <section className="w-full max-w-4xl mb-10">
-        <CommentSection type="blog" relatedId={0} user={user} />
-      </section>
-
-      
       <div
         className="
           absolute bottom-0 left-1/2 -translate-x-1/2 

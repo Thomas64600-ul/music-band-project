@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
-import Player from "../components/Player";
-import Button from "../components/Button";
-import CommentSection from "../components/CommentSection";
-import { useAuth } from "../context/AuthContext";
+import { useEffect, useState } from "react";
 import { get } from "../lib/api";
+import Player from "../components/Player";
+import CommentSection from "../components/CommentSection";
+import Button from "../components/Button";
+import { useAuth } from "../context/AuthContext";
 import { motion } from "framer-motion";
 
 export default function Music() {
@@ -13,21 +13,46 @@ export default function Music() {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-
-    const fetchMusics = async () => {
+    (async () => {
       try {
         const response = await get("/musics");
-        console.log("Réponse API /musics :", response);
-        setMusics(response.data || []);
-      } catch (error) {
-        console.error("Erreur de chargement des musiques :", error);
+        const musicList = Array.isArray(response?.data)
+          ? response.data
+          : Array.isArray(response)
+          ? response
+          : [];
+        setMusics(musicList);
+      } catch (e) {
+        console.error("Erreur chargement musiques :", e);
+        setMusics([]);
       } finally {
         setLoading(false);
       }
-    };
-
-    fetchMusics();
+    })();
   }, []);
+
+  if (loading)
+    return (
+      <p className="text-center text-[var(--subtext)] mt-20 animate-pulse">
+        Chargement des morceaux...
+      </p>
+    );
+
+  if (!musics.length)
+    return (
+      <section className="bg-[var(--bg)] text-center py-24 text-[var(--text)] transition-colors duration-700 ease-in-out">
+        <h1 className="text-3xl font-bold text-[var(--accent)] mb-4 drop-shadow-[0_0_10px_var(--accent)]">
+          Aucune musique publiée
+        </h1>
+        <p className="text-[var(--subtext)] max-w-md mx-auto">
+          Restez à l’écoute — <span className="text-[var(--accent)]">REVEREN</span> prépare du lourd 🔥
+        </p>
+
+        <div className="max-w-4xl mx-auto mt-16 px-6">
+          <CommentSection type="music" relatedId={0} user={user} />
+        </div>
+      </section>
+    );
 
   return (
     <motion.main
@@ -35,120 +60,112 @@ export default function Music() {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.8 }}
       className="
-        min-h-screen 
+        relative flex flex-col items-center 
         bg-[var(--bg)] text-[var(--text)]
-        flex flex-col items-center justify-start 
-        pt-24 sm:pt-28 pb-32 px-6 
-        relative overflow-hidden
-        transition-colors duration-500
+        pt-28 pb-16 px-6
+        min-h-screen
+        transition-colors duration-700 ease-in-out
+        overflow-hidden
       "
     >
-     
+      {/* 💡 Effet lumineux fond radial */}
       <div
         className="
-          absolute top-[25%] left-1/2 -translate-x-1/2 
-          w-[60vw] h-[60vw] 
-          bg-[var(--accent)]/35 rounded-full blur-[150px] opacity-40 
-          -z-10
+          absolute top-[35%] left-1/2 -translate-x-1/2 
+          w-[70vw] h-[70vw]
+          bg-[radial-gradient(circle,var(--accent)_10%,transparent_70%)]
+          opacity-25 blur-[140px] -z-10 pointer-events-none
         "
       ></div>
 
-      
-      <section className="text-center max-w-2xl mb-12 relative">
+      {/* 🎵 Titre principal */}
+      <div className="relative inline-block mb-12 text-center">
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[var(--accent)]/30 to-transparent blur-md"></div>
+        <h1 className="relative text-4xl md:text-5xl font-extrabold text-[var(--accent)] drop-shadow-[0_0_12px_var(--accent)] tracking-wide">
+          Musiques
+        </h1>
+        <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-40 h-[2px] bg-gradient-to-r from-transparent via-[var(--gold)] to-transparent animate-glow-line"></div>
+      </div>
 
-        <div className="relative inline-block mb-12 text-center">
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[var(--accent)]/40 to-transparent blur-md"></div>
-
-          <h1 className="relative text-4xl md:text-5xl font-extrabold text-[var(--accent)] drop-shadow-[0_0_12px_var(--accent)] tracking-wide">
-            Musique
-          </h1>
-
-          <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-40 h-[2px] bg-gradient-to-r from-transparent via-[var(--gold)] to-transparent animate-glow-line"></div>
-        </div>
-
-        <p className="relative text-[var(--subtext)] leading-relaxed mt-8">
-          Plongez dans l’univers de{" "}
-          <strong className="text-[var(--accent)]">REVEREN</strong> :
-          un son électro-rock vibrant où la guitare et les synthés s’entrelacent
-          pour une expérience sonore unique.
-        </p>
-      </section>
-
-      
-      {loading ? (
-        <p className="text-[var(--subtext)] mt-10 animate-pulse">
-          Chargement des morceaux...
-        </p>
-      ) : musics.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 w-full max-w-6xl">
-          {musics.map((music) => (
-            <motion.div
-              key={music.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4 }}
+      {/* 🎧 Liste des morceaux */}
+      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 w-full max-w-6xl mb-20">
+        {musics.map((m) => (
+          <motion.div
+            key={m.id}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            className="flex flex-col items-center"
+          >
+            {/* Player */}
+            <div
               className="
-                bg-[var(--surface)]
-                border border-[var(--border)]
-                rounded-2xl shadow-md 
-                p-5 flex flex-col items-center 
-                hover:border-[var(--accent)]
-                hover:shadow-[0_0_25px_var(--accent)]
+                bg-[color-mix(in_oklab,var(--bg)_92%,black_8%)]
+                border border-[color-mix(in_oklab,var(--accent)_25%,black_70%)]/40
+                rounded-2xl shadow-md p-5 w-full
+                hover:border-[var(--accent)]/60 hover:shadow-[0_0_18px_var(--accent)]/30
                 transition-all duration-300
               "
             >
               <Player
-                src={music.url}
-                title={music.title}
-                artist={music.artist || 'REVEREN'}
-                cover={music.cover_url}
+                src={m.url}
+                title={m.title}
+                artist={m.artist || 'REVEREN'}
+                cover={m.cover_url}
               />
-            </motion.div>
-          ))}
-        </div>
-      ) : (
-        <p className="text-[var(--subtext)] mt-10 italic">
-          Aucun morceau n’est encore publié.  
-          Restez à l’écoute — REVEREN prépare du lourd 
-        </p>
-      )}
+            </div>
 
-      
-      <section className="text-center max-w-xl mt-16">
+            {/* 💬 Commentaires sous la musique */}
+            <div className="mt-6 w-full">
+              <CommentSection type="music" relatedId={m.id} user={user} />
+            </div>
+          </motion.div>
+        ))}
+      </section>
+
+      {/* 🎸 Bloc promotion EP */}
+      <section className="text-center max-w-xl mt-16 mb-32">
         <h2 className="text-2xl font-semibold mb-3 text-[var(--gold)] tracking-wide">
           Nouvel EP –{" "}
           <span className="text-[var(--accent)] italic">Electric Sunrise</span>
         </h2>
         <p className="text-[var(--subtext)] mb-6">
-          Découvrez le nouveau titre de REVEREN, un mélange explosif de riffs électro et d’énergie live.
+          Découvrez le nouveau titre de{" "}
+          <span className="text-[var(--accent)] font-semibold">REVEREN</span>,
+          un mélange explosif de riffs électro et d’énergie live.
         </p>
-        <Button variant="primary" as="a" href="https://spotify.com">
+        <Button
+          variant="primary"
+          as="a"
+          href="https://spotify.com"
+          className="
+            mt-2 px-6 py-3 rounded-md 
+            bg-[var(--accent)] text-white font-semibold 
+            hover:bg-[var(--gold)] hover:text-[var(--bg)]
+            hover:shadow-[0_0_25px_var(--gold)] 
+            transition-all duration-300 ease-in-out
+            active:scale-95
+          "
+        >
           ÉCOUTER SUR SPOTIFY
         </Button>
       </section>
 
-       
-      <section
-        className="
-          w-full max-w-4xl mt-20 mb-28 px-6
-          relative z-10
-        "
-      >
-        <CommentSection type="music" relatedId={0} user={user} />
-      </section>
-
-      
+      {/* 🌌 Glow bas */}
       <div
         className="
-          absolute bottom-0 left-0 w-full h-[120px]
-          bg-gradient-to-b from-transparent to-[var(--bg)]
-          pointer-events-none
+          absolute bottom-0 left-1/2 -translate-x-1/2 
+          w-[45vw] h-[45vw]
+          bg-[radial-gradient(circle_at_center,var(--accent)_0%,transparent_70%)]
+          opacity-20 blur-[120px] -z-10 pointer-events-none
         "
       ></div>
     </motion.main>
   );
 }
+
+
 
 
 

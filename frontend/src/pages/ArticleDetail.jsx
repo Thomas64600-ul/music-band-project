@@ -4,14 +4,14 @@ import { get } from "../lib/api";
 import Loader from "../components/Loader";
 import Button from "../components/Button";
 import CommentSection from "../components/CommentSection";
-import { useAuth } from "../context/AuthContext"; // ← si tu as un contexte utilisateur
+import { useAuth } from "../context/AuthContext";
 
 export default function ArticleDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [article, setArticle] = useState(null);
   const [status, setStatus] = useState("loading");
-  const { user } = useAuth(); // récupère l'utilisateur connecté (si dispo)
+  const { user } = useAuth();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -43,13 +43,26 @@ export default function ArticleDetail() {
     );
 
   return (
-    <main className="bg-[var(--bg)] text-[var(--text)] min-h-screen flex flex-col items-center pt-24 pb-20 px-6 relative overflow-hidden transition-colors duration-700 ease-in-out">
-      
+    <main
+      className="
+        bg-[var(--bg)] text-[var(--text)]
+        min-h-screen flex flex-col items-center
+        pt-32 pb-28 px-6 relative overflow-hidden
+        transition-colors duration-700 ease-in-out
+      "
+    >
       {/* Halo décoratif */}
-      <div className="absolute top-[30%] left-1/2 -translate-x-1/2 w-[60vw] h-[60vw] bg-[var(--accent)]/25 rounded-full blur-[150px] opacity-40 -z-10"></div>
+      <div
+        className="
+          absolute top-[30%] left-1/2 -translate-x-1/2 
+          w-[70vw] h-[70vw]
+          bg-[radial-gradient(circle,var(--accent)_10%,transparent_70%)]
+          opacity-25 blur-[140px] -z-10 pointer-events-none
+        "
+      ></div>
 
       {/* === TITRE === */}
-      <h1 className="text-4xl md:text-5xl font-extrabold text-[var(--accent)] mb-6 drop-shadow-[0_0_12px_var(--accent)] text-center max-w-3xl">
+      <h1 className="text-4xl md:text-5xl font-extrabold text-[var(--accent)] mb-6 drop-shadow-[0_0_12px_var(--accent)] text-center max-w-3xl leading-tight">
         {article.title}
       </h1>
 
@@ -72,14 +85,22 @@ export default function ArticleDetail() {
         <img
           src={article.image_url}
           alt={article.title}
-          className="rounded-2xl mb-10 border border-[var(--accent)]/40 shadow-[0_0_25px_var(--accent)]/30 mx-auto w-full max-w-3xl object-cover"
+          className="
+            rounded-2xl mb-10 border border-[var(--accent)]/40 
+            shadow-[0_0_25px_var(--accent)]/30 mx-auto w-full max-w-3xl 
+            object-cover
+          "
           loading="lazy"
         />
       )}
 
       {/* === CONTENU === */}
       <article
-        className="prose prose-invert max-w-3xl leading-relaxed text-[var(--text)] prose-p:mb-4 prose-h2:text-[var(--gold)] prose-strong:text-[var(--accent)] text-justify"
+        className="
+          prose prose-invert max-w-3xl leading-relaxed text-[var(--text)]
+          prose-p:mb-4 prose-h2:text-[var(--gold)] prose-strong:text-[var(--accent)]
+          text-justify
+        "
         dangerouslySetInnerHTML={{ __html: article.content }}
       />
 
@@ -89,16 +110,30 @@ export default function ArticleDetail() {
       </div>
 
       {/* === BOUTON RETOUR === */}
-      <div className="mt-12">
+      <div className="mt-20 mb-6">
         <Button
           variant="secondary"
           onClick={() => navigate("/blog")}
-          className="text-base px-6 py-3"
+          className="
+            text-base px-6 py-3 
+            hover:shadow-[0_0_15px_var(--accent)] transition-all duration-300
+          "
         >
           ← Retour au blog
         </Button>
       </div>
+
+      {/* Glow bas pour cohérence */}
+      <div
+        className="
+          absolute bottom-0 left-1/2 -translate-x-1/2 
+          w-[50vw] h-[50vw]
+          bg-[radial-gradient(circle,var(--accent)_0%,transparent_70%)]
+          opacity-20 blur-[140px] -z-10 pointer-events-none
+        "
+      ></div>
     </main>
   );
 }
+
 

@@ -69,21 +69,24 @@ export default function Header({ logoSrc, links }) {
   return (
     <header
       className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 border-b border-[var(--border)] ${
-        isScrolled
-          ? "bg-[color-mix(in_oklab,var(--bg)_90%,black_10%)] shadow-[0_2px_25px_color-mix(in_oklab,var(--accent)_30%,transparent)] backdrop-blur-md"
-          : "bg-[var(--bg)]"
-      }`}
+  isScrolled
+    ? darkMode
+      ? "bg-[color-mix(in_oklab,var(--bg)_90%,black_10%)] shadow-[0_2px_25px_color-mix(in_oklab,var(--accent)_30%,transparent)] backdrop-blur-md"
+      : "bg-white shadow-[0_2px_20px_rgba(0,0,0,0.05)]" 
+    : "bg-[var(--bg)]"
+}`}
+
     >
-     
+      
       {isAdmin && (
         <div className="bg-[var(--accent)] text-[var(--bg)] text-center text-sm py-1 font-semibold tracking-wide border-b border-[color-mix(in_oklab,var(--accent)_80%,black_20%)] shadow-[0_0_12px_var(--accent)] animate-pulse">
           Mode administrateur activé
         </div>
       )}
 
-     
+      
       <div className="flex items-center justify-between px-4 sm:px-12 py-3 sm:py-5">
-        
+       
         <button
           onClick={toggleTheme}
           className="hidden sm:block text-[var(--accent)] hover:text-[color-mix(in_oklab,var(--accent)_80%,var(--gold)_20%)] hover:scale-110 transition-transform duration-200"
@@ -138,10 +141,16 @@ export default function Header({ logoSrc, links }) {
             </>
           ) : (
             <>
-              <NavLink to="/register" className="hover:text-[var(--accent)]">
+              <NavLink
+                to="/register"
+                className="text-[#1A1A1A] dark:text-[#F2F2F2] hover:text-[var(--accent)] transition-colors"
+              >
                 Inscription
               </NavLink>
-              <NavLink to="/login" className="hover:text-[var(--accent)]">
+              <NavLink
+                to="/login"
+                className="text-[#1A1A1A] dark:text-[#F2F2F2] hover:text-[var(--accent)] transition-colors"
+              >
                 Connexion
               </NavLink>
             </>
@@ -158,7 +167,7 @@ export default function Header({ logoSrc, links }) {
         </button>
       </div>
 
-     
+      
       <div className="hidden sm:flex flex-col items-center">
         <div className="flex justify-center border-t border-[var(--border)] py-2 bg-[var(--bg)] relative w-full">
           <nav className="flex space-x-8 text-sm font-semibold">
@@ -167,7 +176,6 @@ export default function Header({ logoSrc, links }) {
                 {l.name}
               </LinkItem>
             ))}
-
             {isAdmin && (
               <LinkItem
                 to="/admin"
@@ -241,7 +249,7 @@ export default function Header({ logoSrc, links }) {
               </button>
             </div>
 
-           
+            
             <div className="flex flex-col items-center gap-3 mt-6 text-sm">
               {user ? (
                 <>
@@ -269,14 +277,14 @@ export default function Header({ logoSrc, links }) {
                   <NavLink
                     to="/register"
                     onClick={() => setMenuOpen(false)}
-                    className="hover:text-[var(--accent)]"
+                    className="text-[#1A1A1A] dark:text-[#F2F2F2] hover:text-[var(--accent)] transition-colors"
                   >
                     Inscription
                   </NavLink>
                   <NavLink
                     to="/login"
                     onClick={() => setMenuOpen(false)}
-                    className="hover:text-[var(--accent)]"
+                    className="text-[#1A1A1A] dark:text-[#F2F2F2] hover:text-[var(--accent)] transition-colors"
                   >
                     Connexion
                   </NavLink>
@@ -289,6 +297,7 @@ export default function Header({ logoSrc, links }) {
     </header>
   );
 }
+
 
 
 
