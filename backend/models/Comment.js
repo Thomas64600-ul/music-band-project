@@ -2,15 +2,37 @@ import pool from "../config/db.js";
 
 
 async function addComment(user_id, target_type, target_id, content) {
+  
   const result = await pool.query(
     `
     INSERT INTO comments (user_id, target_type, target_id, content, created_at)
     VALUES ($1, $2, $3, $4, NOW())
-    RETURNING *
+    RETURNING id, user_id, target_type, target_id, content, created_at, updated_at
     `,
     [user_id, target_type, target_id, content]
   );
-  return result.rows[0];
+
+  const newComment = result.rows[0];
+
+  
+  const userResult = await pool.query(
+    `
+    SELECT firstname, lastname, image_url
+    FROM users
+    WHERE id = $1
+    `,
+    [user_id]
+  );
+
+  const userData = userResult.rows[0] || {};
+
+  
+  return {
+    ...newComment,
+    firstname: userData.firstname || null,
+    lastname: userData.lastname || null,
+    image_url: userData.image_url || null,
+  };
 }
 
 
