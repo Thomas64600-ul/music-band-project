@@ -46,7 +46,7 @@ app.use(
 
 const allowedOrigins = [
   "http://localhost:5173",
-  "https://music-band-project-frontend.onrender.com",
+  "https://music-band-project-five.vercel.app",
   process.env.CLIENT_URL,
 ].filter(Boolean);
 
