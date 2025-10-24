@@ -47,7 +47,7 @@ export async function register(req, res, next) {
     const expiresAt = new Date(Date.now() + 60 * 60 * 1000);
     await saveEmailToken(newUser.id, emailToken, expiresAt);
 
-    const verifyUrl = `${process.env.CLIENT_URL}/verify-email/${emailToken}`;
+    const verifyUrl = `${process.env.CLIENT_URL}/verify-email/${verificationToken}`;
 
     await sendEmail(
       email,
