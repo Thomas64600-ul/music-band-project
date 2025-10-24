@@ -359,19 +359,7 @@ export async function logout(req, res, next) {
 }
 
 
-export {
-  register,
-  verifyEmail,
-  login,
-  logout,
-  me,
-  forgotPassword,
-  resetPassword,
-  fetchUsers,
-  fetchUserById,
-  editUser,
-  removeUser,
-};
+
 
 
 
