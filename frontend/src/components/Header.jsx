@@ -97,7 +97,7 @@ export default function Header({ logoSrc, links }) {
        
         <div className="flex justify-center items-center flex-1 sm:translate-x-[60px] md:translate-x-[80px] relative z-0">
           <motion.img
-            src={logoSrc}
+            src="/logo.png"
             alt="Logo REVEREN"
             animate={{
               boxShadow: [
