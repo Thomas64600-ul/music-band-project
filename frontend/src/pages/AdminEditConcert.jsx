@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { get, post, put } from "../lib/api";
 import { useAuth } from "../context/AuthContext";
 import Button from "../components/Button";
+import { motion } from "framer-motion";
 
 export default function AdminEditConcert() {
   const { id } = useParams();
@@ -102,24 +103,39 @@ export default function AdminEditConcert() {
 
   if (loading)
     return (
-      <p className="text-center mt-10 text-gray-400">
+      <p className="text-center mt-10 text-[var(--subtext)] animate-pulse">
         Chargement du concert...
       </p>
     );
 
   return (
-    <section className="min-h-screen bg-[#0A0A0A] text-[#F2F2F2] flex justify-center py-12 px-6 sm:px-12">
+    <motion.section
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.6 }}
+      className="
+        min-h-screen flex justify-center items-start
+        bg-[var(--bg)] text-[var(--text)]
+        py-12 px-6 sm:px-12 transition-colors duration-700
+      "
+    >
       <form
         onSubmit={onSubmit}
-        className="bg-[#111] border border-[#FF2B6A40] rounded-2xl shadow-lg p-8 w-full max-w-2xl"
         encType="multipart/form-data"
+        className="
+          w-full max-w-2xl bg-[var(--bg-secondary)]
+          border border-[var(--accent)]/40 rounded-2xl
+          shadow-[0_0_25px_var(--accent)]/30
+          p-8 sm:p-10 transition-all duration-700
+        "
       >
-        <h1 className="text-3xl font-bold text-center text-[#FF2B6A] mb-6">
+        <h1 className="text-3xl font-extrabold text-center text-[var(--accent)] mb-8 drop-shadow-[0_0_10px_var(--accent)]">
           {id === "new" ? "Créer un concert" : "Modifier le concert"}
         </h1>
 
+       
         <div className="mb-5">
-          <label htmlFor="title" className="block text-[#FF2B6A] mb-2 font-semibold">
+          <label htmlFor="title" className="block text-[var(--accent)] mb-2 font-semibold">
             Ville / Titre
           </label>
           <input
@@ -128,12 +144,17 @@ export default function AdminEditConcert() {
             value={form.title}
             onChange={onChange}
             required
-            className="w-full p-3 bg-[#222] text-[#F2F2F2] border border-gray-700 rounded-md focus:border-[#FF2B6A] outline-none"
+            className="
+              w-full p-3 rounded-md border border-[var(--accent)]/40
+              bg-[var(--bg)] text-[var(--text)]
+              focus:border-[var(--accent)] outline-none transition
+            "
           />
         </div>
 
+       
         <div className="mb-5">
-          <label htmlFor="date" className="block text-[#FF2B6A] mb-2 font-semibold">
+          <label htmlFor="date" className="block text-[var(--accent)] mb-2 font-semibold">
             Date
           </label>
           <input
@@ -142,12 +163,17 @@ export default function AdminEditConcert() {
             value={form.date}
             onChange={onChange}
             required
-            className="w-full p-3 bg-[#222] text-[#F2F2F2] border border-gray-700 rounded-md focus:border-[#FF2B6A] outline-none"
+            className="
+              w-full p-3 rounded-md border border-[var(--accent)]/40
+              bg-[var(--bg)] text-[var(--text)]
+              focus:border-[var(--accent)] outline-none transition
+            "
           />
         </div>
 
+       
         <div className="mb-5">
-          <label htmlFor="location" className="block text-[#FF2B6A] mb-2 font-semibold">
+          <label htmlFor="location" className="block text-[var(--accent)] mb-2 font-semibold">
             Lieu
           </label>
           <input
@@ -156,12 +182,17 @@ export default function AdminEditConcert() {
             value={form.location}
             onChange={onChange}
             required
-            className="w-full p-3 bg-[#222] text-[#F2F2F2] border border-gray-700 rounded-md focus:border-[#FF2B6A] outline-none"
+            className="
+              w-full p-3 rounded-md border border-[var(--accent)]/40
+              bg-[var(--bg)] text-[var(--text)]
+              focus:border-[var(--accent)] outline-none transition
+            "
           />
         </div>
 
+        
         <div className="mb-5">
-          <label htmlFor="ticket_url" className="block text-[#FF2B6A] mb-2 font-semibold">
+          <label htmlFor="ticket_url" className="block text-[var(--accent)] mb-2 font-semibold">
             Lien de billetterie
           </label>
           <input
@@ -170,12 +201,17 @@ export default function AdminEditConcert() {
             value={form.ticket_url}
             onChange={onChange}
             placeholder="https://billetterie.com"
-            className="w-full p-3 bg-[#222] text-[#F2F2F2] border border-gray-700 rounded-md focus:border-[#FF2B6A] outline-none"
+            className="
+              w-full p-3 rounded-md border border-[var(--accent)]/40
+              bg-[var(--bg)] text-[var(--text)]
+              focus:border-[var(--accent)] outline-none transition
+            "
           />
         </div>
 
+       
         <div className="mb-5">
-          <label htmlFor="image" className="block text-[#FF2B6A] mb-2 font-semibold">
+          <label htmlFor="image" className="block text-[var(--accent)] mb-2 font-semibold">
             Image (upload local)
           </label>
           <input
@@ -183,19 +219,29 @@ export default function AdminEditConcert() {
             type="file"
             accept="image/*"
             onChange={onFileChange}
-            className="w-full text-[#F2F2F2]"
+            className="w-full text-[var(--text)]"
           />
           {preview && (
             <img
               src={preview}
               alt="Aperçu"
-              className="mt-3 rounded-lg max-h-48 mx-auto shadow-neon"
+              className="mt-3 rounded-lg max-h-48 mx-auto border border-[var(--accent)]/40 shadow-[0_0_15px_var(--accent)]/30"
             />
           )}
         </div>
 
-        <div className="text-center">
-          <Button variant="primary" type="submit" disabled={status === "loading"}>
+       
+        <div className="text-center mt-8">
+          <Button
+            variant="primary"
+            type="submit"
+            disabled={status === "loading"}
+            className="
+              bg-[var(--accent)] hover:bg-[var(--gold)] hover:text-[var(--bg)]
+              text-white font-semibold px-8 py-3 rounded-xl
+              shadow-[0_0_12px_var(--accent)]/40 transition
+            "
+          >
             {status === "loading"
               ? "Enregistrement..."
               : id === "new"
@@ -204,13 +250,13 @@ export default function AdminEditConcert() {
           </Button>
 
           {status === "success" && (
-            <p className="mt-3 text-green-400">Concert enregistré avec succès</p>
+            <p className="mt-3 text-green-500">Concert enregistré avec succès</p>
           )}
           {status === "error" && (
-            <p className="mt-3 text-red-400">Erreur lors de l’enregistrement</p>
+            <p className="mt-3 text-red-500">Erreur lors de l’enregistrement</p>
           )}
         </div>
       </form>
-    </section>
+    </motion.section>
   );
 }

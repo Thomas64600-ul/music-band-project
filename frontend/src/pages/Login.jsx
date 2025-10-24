@@ -44,12 +44,12 @@ export default function Login() {
           hover:shadow-[0_0_20px_var(--accent)]/20
         "
       >
-        {/* Titre */}
+       
         <h1 className="text-3xl font-bold text-center text-[var(--accent)] mb-8 drop-shadow-[0_0_8px_var(--accent)]">
           Connexion
         </h1>
 
-        {/* Email */}
+       
         <div className="mb-5">
           <label
             htmlFor="email"
@@ -73,7 +73,7 @@ export default function Login() {
           />
         </div>
 
-        {/* Mot de passe */}
+        
         <div className="mb-8">
           <label
             htmlFor="password"
@@ -97,7 +97,7 @@ export default function Login() {
           />
         </div>
 
-        {/* Bouton + Message */}
+       
         <div className="text-center">
           <Button
             variant="primary"

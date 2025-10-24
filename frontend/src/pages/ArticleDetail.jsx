@@ -51,7 +51,7 @@ export default function ArticleDetail() {
         transition-colors duration-700 ease-in-out
       "
     >
-      {/* Halo décoratif */}
+      
       <div
         className="
           absolute top-[30%] left-1/2 -translate-x-1/2 
@@ -61,12 +61,12 @@ export default function ArticleDetail() {
         "
       ></div>
 
-      {/* === TITRE === */}
+      
       <h1 className="text-4xl md:text-5xl font-extrabold text-[var(--accent)] mb-6 drop-shadow-[0_0_12px_var(--accent)] text-center max-w-3xl leading-tight">
         {article.title}
       </h1>
 
-      {/* === MÉTADONNÉES === */}
+      
       <p className="text-[var(--subtext)] text-sm text-center mb-10">
         Publié le{" "}
         <span className="text-[var(--gold)] font-medium">
@@ -80,7 +80,7 @@ export default function ArticleDetail() {
         </span>
       </p>
 
-      {/* === IMAGE === */}
+      
       {article.image_url && (
         <img
           src={article.image_url}
@@ -94,7 +94,7 @@ export default function ArticleDetail() {
         />
       )}
 
-      {/* === CONTENU === */}
+      
       <article
         className="
           prose prose-invert max-w-3xl leading-relaxed text-[var(--text)]
@@ -104,12 +104,12 @@ export default function ArticleDetail() {
         dangerouslySetInnerHTML={{ __html: article.content }}
       />
 
-      {/* === SECTION COMMENTAIRES === */}
+     
       <div className="w-full max-w-3xl mt-16">
         <CommentSection type="article" relatedId={article.id} user={user} />
       </div>
 
-      {/* === BOUTON RETOUR === */}
+     
       <div className="mt-20 mb-6">
         <Button
           variant="secondary"
@@ -123,7 +123,7 @@ export default function ArticleDetail() {
         </Button>
       </div>
 
-      {/* Glow bas pour cohérence */}
+     
       <div
         className="
           absolute bottom-0 left-1/2 -translate-x-1/2 

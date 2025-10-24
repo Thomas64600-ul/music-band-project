@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { get, post, put } from "../lib/api";
 import { useNavigate, useParams } from "react-router-dom";
 import Button from "../components/Button";
+import { motion } from "framer-motion";
 
 export default function AdminEditMusic() {
   const { id } = useParams();
@@ -22,7 +23,7 @@ export default function AdminEditMusic() {
 
   const isEditMode = Boolean(id);
 
-  
+
   useEffect(() => {
     if (isEditMode) {
       (async () => {
@@ -97,20 +98,37 @@ export default function AdminEditMusic() {
 
   if (loading)
     return (
-      <p className="text-center mt-10 text-gray-400">
+      <p className="text-center mt-10 text-[var(--subtext)] animate-pulse">
         Chargement de la musique...
       </p>
     );
 
+  
   return (
-    <section className="min-h-screen bg-[#0A0A0A] text-[#F2F2F2] py-12 px-6 sm:px-12">
-      <div className="max-w-2xl mx-auto bg-[#111] p-8 rounded-2xl border border-[#FF1744]/30 shadow-lg">
-        <h1 className="text-3xl font-bold text-[#FF1744] mb-6 text-center">
+    <motion.section
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.6 }}
+      className="
+        min-h-screen flex justify-center items-start
+        bg-[var(--bg)] text-[var(--text)]
+        py-12 px-6 sm:px-12 transition-colors duration-700
+      "
+    >
+      <div
+        className="
+          w-full max-w-2xl bg-[var(--bg-secondary)]
+          border border-[var(--accent)]/40 rounded-2xl
+          shadow-[0_0_25px_var(--accent)]/30
+          p-8 sm:p-10 transition-all duration-700
+        "
+      >
+        <h1 className="text-3xl font-extrabold text-center text-[var(--accent)] mb-8 drop-shadow-[0_0_10px_var(--accent)]">
           {isEditMode ? "Modifier la musique" : "Ajouter une musique"}
         </h1>
 
         {errorMsg && (
-          <p className="text-red-400 bg-red-950/40 p-3 rounded mb-4">
+          <p className="text-[var(--accent)]/90 bg-[var(--accent)]/10 p-3 rounded mb-4 text-center">
             {errorMsg}
           </p>
         )}
@@ -122,32 +140,44 @@ export default function AdminEditMusic() {
         >
           
           <div>
-            <label className="block mb-2 font-semibold">Titre *</label>
+            <label className="block mb-2 text-[var(--accent)] font-semibold">
+              Titre *
+            </label>
             <input
               type="text"
               name="title"
               value={formData.title}
               onChange={handleChange}
               required
-              className="w-full p-3 rounded bg-[#1a1a1a] border border-gray-700 text-[#F2F2F2] focus:border-[#FF1744] focus:outline-none"
+              className="
+                w-full p-3 rounded-md border border-[var(--accent)]/40
+                bg-[var(--bg)] text-[var(--text)]
+                focus:border-[var(--accent)] outline-none transition
+              "
             />
           </div>
 
           
           <div>
-            <label className="block mb-2 font-semibold">Artiste</label>
+            <label className="block mb-2 text-[var(--accent)] font-semibold">
+              Artiste
+            </label>
             <input
               type="text"
               name="artist"
               value={formData.artist}
               onChange={handleChange}
-              className="w-full p-3 rounded bg-[#1a1a1a] border border-gray-700 text-[#F2F2F2] focus:border-[#FF1744] focus:outline-none"
+              className="
+                w-full p-3 rounded-md border border-[var(--accent)]/40
+                bg-[var(--bg)] text-[var(--text)]
+                focus:border-[var(--accent)] outline-none transition
+              "
             />
           </div>
 
           
           <div>
-            <label className="block mb-2 font-semibold">
+            <label className="block mb-2 text-[var(--accent)] font-semibold">
               Lien audio (SoundCloud / Spotify / Cloudinary) *
             </label>
             <input
@@ -156,13 +186,17 @@ export default function AdminEditMusic() {
               value={formData.url}
               onChange={handleChange}
               required
-              className="w-full p-3 rounded bg-[#1a1a1a] border border-gray-700 text-[#F2F2F2] focus:border-[#FF1744] focus:outline-none"
+              className="
+                w-full p-3 rounded-md border border-[var(--accent)]/40
+                bg-[var(--bg)] text-[var(--text)]
+                focus:border-[var(--accent)] outline-none transition
+              "
             />
           </div>
 
          
           <div>
-            <label className="block mb-2 font-semibold">
+            <label className="block mb-2 text-[var(--accent)] font-semibold">
               Pochette de la musique
             </label>
             <input
@@ -170,43 +204,57 @@ export default function AdminEditMusic() {
               name="cover"
               accept="image/*"
               onChange={handleChange}
-              className="block w-full text-gray-300 bg-[#1a1a1a] border border-gray-700 p-2 rounded cursor-pointer"
+              className="
+                block w-full text-[var(--text)]
+                border border-[var(--accent)]/40 rounded-md p-2
+                bg-[var(--bg)] cursor-pointer
+              "
             />
 
-            {preview && (
-              <div className="mt-4">
-                <p className="text-sm text-gray-400 mb-2">Aperçu :</p>
+            {(preview || music?.cover_url) && (
+              <div className="mt-4 text-center">
+                <p className="text-sm text-[var(--subtext)] mb-2">
+                  Aperçu :
+                </p>
                 <img
-                  src={preview}
+                  src={preview || music?.cover_url}
                   alt="Prévisualisation"
-                  className="w-full max-w-sm rounded-lg border border-gray-700"
-                />
-              </div>
-            )}
-
-            {!preview && music?.cover_url && (
-              <div className="mt-4">
-                <p className="text-sm text-gray-400 mb-2">Pochette actuelle :</p>
-                <img
-                  src={music.cover_url}
-                  alt={music.title}
-                  className="w-full max-w-sm rounded-lg border border-gray-700"
+                  className="
+                    w-full max-w-sm mx-auto rounded-lg
+                    border border-[var(--accent)]/40
+                    shadow-[0_0_15px_var(--accent)]/30
+                  "
                 />
               </div>
             )}
           </div>
 
-          
-          <div className="flex justify-between mt-6">
+       
+          <div className="flex justify-between mt-8">
             <Button
               type="button"
               variant="secondary"
               onClick={() => navigate("/admin/musics")}
+              className="
+                border border-[var(--accent)] text-[var(--accent)]
+                hover:bg-[var(--accent)] hover:text-[var(--bg)]
+                px-6 py-2 rounded-xl transition
+              "
             >
               ← Retour
             </Button>
 
-            <Button type="submit" variant="primary" disabled={saving}>
+            <Button
+              type="submit"
+              variant="primary"
+              disabled={saving}
+              className="
+                bg-[var(--accent)] hover:bg-[var(--gold)]
+                text-white hover:text-[var(--bg)]
+                px-6 py-2 rounded-xl font-semibold
+                shadow-[0_0_12px_var(--accent)]/40 transition
+              "
+            >
               {saving
                 ? "Enregistrement..."
                 : isEditMode
@@ -216,7 +264,7 @@ export default function AdminEditMusic() {
           </div>
         </form>
       </div>
-    </section>
+    </motion.section>
   );
 }
 

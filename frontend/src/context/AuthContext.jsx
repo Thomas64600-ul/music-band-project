@@ -7,21 +7,15 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  
+ 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      setLoading(false);
-      return;
-    }
-
     (async () => {
       try {
         const data = await get("/users/me");
-        setUser(data.user || null);
+       
+        setUser(data?.data || null);
       } catch (error) {
-        console.error("Erreur /users/me :", error);
-        localStorage.removeItem("token");
+        console.warn("⚠️ Aucun utilisateur connecté :", error?.response?.status);
         setUser(null);
       } finally {
         setLoading(false);
@@ -29,13 +23,10 @@ export function AuthProvider({ children }) {
     })();
   }, []);
 
-  
+ 
   async function register(payload) {
     const data = await post("/users/register", payload);
-    if (data.token) {
-      localStorage.setItem("token", data.token);
-      setUser(data.user || null);
-    }
+   
     return data;
   }
 
@@ -43,31 +34,28 @@ export function AuthProvider({ children }) {
   async function login(payload) {
     try {
       const data = await post("/users/login", payload);
-      if (data.token) {
-        localStorage.setItem("token", data.token);
-      }
-
+      
       const me = await get("/users/me");
-      setUser(me.user || null);
-      return data;
+      setUser(me?.data || null);
+      return me?.data;
     } catch (error) {
       console.error("Erreur de connexion :", error);
       throw error;
     }
   }
 
-
+  
   async function logout() {
-    localStorage.removeItem("token");
-    setUser(null);
     try {
       await post("/users/logout");
-    } catch {
-      /* pas bloquant */
+    } catch (e) {
+      console.warn("Erreur de déconnexion :", e);
+    } finally {
+      setUser(null);
     }
   }
 
- 
+  
   const isAdmin =
     user?.role === "admin" || user?.roles === "admin" || user?.is_admin === true;
 
@@ -81,14 +69,28 @@ export function AuthProvider({ children }) {
   };
 
   if (loading) {
-    return <div className="text-center text-[#FFD700] py-10">Chargement...</div>;
+    return (
+      <div className="text-center text-[#FFD700] py-10">
+        Chargement de la session...
+      </div>
+    );
   }
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={value}>
+      {children}
+      {user && (
+        <div className="fixed bottom-3 right-3 text-sm bg-[#B3122D] text-white px-4 py-2 rounded-lg shadow-lg">
+          Connecté : {user.firstname} {user.lastname} ({user.role})
+        </div>
+      )}
+    </AuthContext.Provider>
+  );
 }
 
 export function useAuth() {
   return useContext(AuthContext);
 }
+
 
 

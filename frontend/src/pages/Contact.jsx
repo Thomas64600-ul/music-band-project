@@ -17,7 +17,7 @@ export default function Contact() {
         transition-colors duration-700 relative overflow-hidden
       "
     >
-      {/* Halo doux */}
+    
       <div
         className="
           absolute inset-0 pointer-events-none -z-10
@@ -27,7 +27,7 @@ export default function Contact() {
         "
       ></div>
 
-      {/* Titre principal */}
+    
       <div className="relative inline-block mb-12 text-center">
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#B3122D33] to-transparent blur-md"></div>
         <h1 className="relative text-4xl md:text-5xl font-extrabold text-[#B3122D] drop-shadow-[0_0_10px_#B3122D40] tracking-wide">
@@ -36,13 +36,13 @@ export default function Contact() {
         <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-40 h-[2px] bg-gradient-to-r from-transparent via-[#B3122D] to-transparent animate-glow-line"></div>
       </div>
 
-      {/* Texte d’introduction */}
+    
       <p className="text-gray-600 dark:text-gray-400 max-w-xl mb-10 leading-relaxed">
         Une question, une collaboration ou juste un mot pour le groupe ?<br />
         Envoyez-nous un message ou suivez-nous sur nos réseaux.
       </p>
 
-      {/* Formulaire */}
+     
       <div
         className="
           w-full max-w-2xl mb-14 rounded-2xl shadow-lg 
@@ -54,10 +54,10 @@ export default function Contact() {
         <ContactForm />
       </div>
 
-      {/* Réseaux sociaux */}
+      
       <SocialLinks />
 
-      {/* Halo d’arrière-plan bas */}
+      
       <div
         className="
           absolute bottom-0 left-1/2 -translate-x-1/2 

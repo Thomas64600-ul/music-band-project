@@ -36,11 +36,12 @@ export default function Header({ logoSrc, links }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const { user, isAdmin, logout } = useAuth();
 
-  
   const [darkMode, setDarkMode] = useState(() => {
     if (typeof window !== "undefined") {
       const saved = localStorage.getItem("theme");
-      return saved ? saved === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches;
+      return saved
+        ? saved === "dark"
+        : window.matchMedia("(prefers-color-scheme: dark)").matches;
     }
     return false;
   });
@@ -59,7 +60,6 @@ export default function Header({ logoSrc, links }) {
   const toggleTheme = () => setDarkMode((v) => !v);
   const toggleMenu = () => setMenuOpen((v) => !v);
 
-  
   useEffect(() => {
     const onScroll = () => setIsScrolled(window.scrollY > 20);
     window.addEventListener("scroll", onScroll);
@@ -83,9 +83,9 @@ export default function Header({ logoSrc, links }) {
         </div>
       )}
 
-      
+    
       <div className="flex items-center justify-between px-4 sm:px-12 py-3 sm:py-5 relative">
-       
+      
         <button
           onClick={toggleTheme}
           className="hidden sm:block text-[var(--accent)] hover:text-[color-mix(in_oklab,var(--accent)_80%,var(--gold)_20%)] hover:scale-110 transition-transform duration-200"
@@ -94,7 +94,7 @@ export default function Header({ logoSrc, links }) {
           {darkMode ? <FaSun size={22} /> : <FaMoon size={22} />}
         </button>
 
-        
+       
         <div className="flex justify-center items-center flex-1 sm:translate-x-[60px] md:translate-x-[80px] relative z-0">
           <motion.img
             src={logoSrc}
@@ -117,7 +117,7 @@ export default function Header({ logoSrc, links }) {
           />
         </div>
 
-        
+       
         <div className="hidden sm:flex items-center gap-4 text-sm ml-auto relative z-10">
           {user ? (
             <>
@@ -130,7 +130,6 @@ export default function Header({ logoSrc, links }) {
                   </span>
                 )}
               </span>
-
               <button
                 onClick={logout}
                 className="text-[var(--accent)] hover:text-[color-mix(in_oklab,var(--accent)_80%,var(--gold)_20%)] flex items-center gap-1"
@@ -156,7 +155,7 @@ export default function Header({ logoSrc, links }) {
           )}
         </div>
 
-        
+       
         <button
           onClick={toggleMenu}
           className="text-[var(--accent)] hover:text-[color-mix(in_oklab,var(--accent)_80%,var(--gold)_20%)] hover:scale-110 transition-transform duration-200 sm:hidden z-20"
@@ -185,7 +184,7 @@ export default function Header({ logoSrc, links }) {
             )}
           </nav>
 
-          {/* Ligne lumineuse */}
+          
           <motion.div
             initial={{ opacity: 0.4 }}
             animate={{
@@ -226,7 +225,6 @@ export default function Header({ logoSrc, links }) {
                 {l.name}
               </LinkItem>
             ))}
-
             {isAdmin && (
               <LinkItem
                 to="/admin"
@@ -237,8 +235,6 @@ export default function Header({ logoSrc, links }) {
                 Dashboard
               </LinkItem>
             )}
-
-            
             <div className="flex justify-center mt-4">
               <button
                 onClick={toggleTheme}
@@ -248,8 +244,6 @@ export default function Header({ logoSrc, links }) {
                 {darkMode ? <FaSun size={22} /> : <FaMoon size={22} />}
               </button>
             </div>
-
-           
             <div className="flex flex-col items-center gap-3 mt-6 text-sm">
               {user ? (
                 <>
@@ -297,6 +291,8 @@ export default function Header({ logoSrc, links }) {
     </header>
   );
 }
+
+
 
 
 

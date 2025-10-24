@@ -13,6 +13,7 @@ import Cagnotte from "./pages/Cagnotte";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import NotFound from "./pages/NotFound";
+import VerifyEmail from "./pages/VerifyEmail"; 
 
 
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -33,7 +34,10 @@ export default function App() {
   console.log("🌍 API URL =", import.meta.env.VITE_API_URL);
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#0A0A0A] text-[#F2F2F2]">
+    <div
+      className="min-h-screen flex flex-col transition-colors duration-500 
+      bg-[var(--bg)] text-[var(--text)]"
+    >
       
       <Header
         logoSrc="/src/assets/logo.png"
@@ -47,10 +51,10 @@ export default function App() {
         ]}
       />
 
-      
+     
       <main className="flex-grow pt-20 md:pt-28 pb-16 md:pb-18">
         <Routes>
-          
+         
           <Route path="/" element={<Home />} />
           <Route path="/music" element={<Music />} />
           <Route path="/concerts" element={<Concerts />} />
@@ -61,7 +65,10 @@ export default function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
 
-          
+        
+          <Route path="/verify-email/:token" element={<VerifyEmail />} />
+
+         
           <Route
             path="/admin"
             element={
@@ -73,7 +80,6 @@ export default function App() {
             }
           />
 
-         
           <Route
             path="/admin/articles"
             element={
@@ -105,7 +111,6 @@ export default function App() {
             }
           />
 
-          
           <Route
             path="/admin/concerts"
             element={
@@ -137,7 +142,6 @@ export default function App() {
             }
           />
 
-         
           <Route
             path="/admin/musics"
             element={
@@ -169,7 +173,6 @@ export default function App() {
             }
           />
 
-         
           <Route
             path="/admin/messages"
             element={
@@ -211,12 +214,12 @@ export default function App() {
             }
           />
 
-          
+        
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
 
-     
+      
       <Footer
         siteTitle="REVEREN"
         socials={[
@@ -228,6 +231,7 @@ export default function App() {
     </div>
   );
 }
+
 
 
 
