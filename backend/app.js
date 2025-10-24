@@ -5,7 +5,6 @@ import cors from "cors";
 import morgan from "morgan";
 import helmet from "helmet";
 import compression from "compression";
-
 import { errorHandler } from "./middlewares/errorHandler.js";
 
 import userRoutes from "./routes/userRoutes.js";
@@ -20,7 +19,7 @@ dotenv.config();
 const app = express();
 
 
-app.set("trust proxy", 1);
+app.set("trust proxy", 1); 
 app.disable("x-powered-by");
 app.use(compression());
 app.use(morgan(process.env.NODE_ENV !== "production" ? "dev" : "combined"));
@@ -28,6 +27,7 @@ app.use(morgan(process.env.NODE_ENV !== "production" ? "dev" : "combined"));
 
 app.use(
   helmet({
+    crossOriginResourcePolicy: false, 
     contentSecurityPolicy: {
       useDefaults: true,
       directives: {
@@ -44,13 +44,22 @@ app.use(
 );
 
 
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://music-band-project-frontend.onrender.com",
+  process.env.CLIENT_URL,
+].filter(Boolean);
+
 app.use(
   cors({
-    origin: [
-      "http://localhost:5173",
-      process.env.CLIENT_URL,
-      "https://music-band-project-frontend.onrender.com",
-    ].filter(Boolean),
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        console.warn("CORS refusé pour :", origin);
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
@@ -83,6 +92,7 @@ if (process.env.NODE_ENV !== "production") {
   const { default: testRoute } = await import("./routes/testRoute.js");
   app.use("/api", testRoute);
 
+  
   app.get("/api/debug/cookies", (req, res) => {
     console.log("Cookies reçus :", req.cookies);
     res.json({ cookies: req.cookies || {} });
@@ -93,6 +103,7 @@ if (process.env.NODE_ENV !== "production") {
 app.use(errorHandler);
 
 export default app;
+
 
 
 
