@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vérifie ton adresse e-mail</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #0A0A0A;
+      color: #F2F2F2;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 600px;
+      margin: 40px auto;
+      background: #111;
+      border: 1px solid rgba(255, 43, 106, 0.3);
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(255, 43, 106, 0.2);
+      overflow: hidden;
+    }
+    .header {
+      text-align: center;
+      padding: 30px 20px 10px;
+      background: linear-gradient(180deg, #B3122D 0%, #0A0A0A 90%);
+    }
+    .logo {
+      font-family: 'Georgia', serif;
+      font-size: 28px;
+      font-weight: bold;
+      color: #FFD700;
+      text-shadow: 0 0 12px #FF1744, 0 0 20px #FFD700;
+      letter-spacing: 2px;
+    }
+    h2 {
+      text-align: center;
+      color: #FF1744;
+      margin-top: 20px;
+      font-size: 22px;
+    }
+    p {
+      text-align: center;
+      color: #ccc;
+      font-size: 15px;
+      line-height: 1.6;
+      margin: 15px 30px;
+    }
+    .btn {
+      display: block;
+      width: fit-content;
+      margin: 25px auto;
+      padding: 12px 28px;
+      background: linear-gradient(90deg, #B3122D, #FF1744);
+      color: #FFF;
+      font-weight: bold;
+      text-decoration: none;
+      border-radius: 8px;
+      box-shadow: 0 0 18px rgba(255, 23, 68, 0.4);
+      transition: all 0.25s ease-in-out;
+    }
+    .btn:hover {
+      box-shadow: 0 0 25px rgba(255, 215, 0, 0.6);
+      background: linear-gradient(90deg, #FF1744, #FFD700);
+      color: #111;
+    }
+    footer {
+      text-align: center;
+      padding: 20px;
+      font-size: 12px;
+      color: #777;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .highlight {
+      color: #FFD700;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="logo">REVEREN</div>
+    </div>
+
+    <h2>Vérifie ton adresse e-mail 🎵</h2>
+    <p>Bonjour <span class="highlight">{{firstname}}</span>,<br>
+    Merci de t’être inscrit sur <strong>Music Band</strong> !<br>
+    Clique sur le bouton ci-dessous pour activer ton compte :</p>
+
+    <a href="{{verifyUrl}}" class="btn">✔️ Vérifier mon compte</a>
+
+    <p>Ce lien expirera dans 1 heure pour des raisons de sécurité.<br>
+    Si tu n’es pas à l’origine de cette inscription, tu peux ignorer ce message.</p>
+
+    <footer>
+      © 2025 REVEREN — Fast Turtle Records<br>
+      <span style="color:#FF1744;">musicband.com</span>
+    </footer>
+  </div>
+</body>
+</html>

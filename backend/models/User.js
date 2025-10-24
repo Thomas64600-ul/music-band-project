@@ -4,9 +4,9 @@ import pool from "../config/db.js";
 async function createUser(firstname, lastname, email, hashedPassword, role = "user", image_url = null) {
   const result = await pool.query(
     `
-    INSERT INTO users (firstname, lastname, email, hashed_password, role, image_url, created_at)
-    VALUES ($1, $2, $3, $4, $5, $6, NOW())
-    RETURNING id, firstname, lastname, email, role, image_url, created_at
+    INSERT INTO users (firstname, lastname, email, hashed_password, role, image_url, is_verified, created_at)
+    VALUES ($1, $2, $3, $4, $5, $6, false, NOW())
+    RETURNING id, firstname, lastname, email, role, image_url, is_verified, created_at
     `,
     [firstname, lastname, email, hashedPassword, role, image_url]
   );
@@ -18,7 +18,7 @@ async function createUser(firstname, lastname, email, hashedPassword, role = "us
 async function getAllUsers() {
   const result = await pool.query(
     `
-    SELECT id, firstname, lastname, email, role, image_url, created_at, updated_at
+    SELECT id, firstname, lastname, email, role, image_url, is_verified, created_at, updated_at
     FROM users
     ORDER BY created_at DESC
     `
@@ -30,7 +30,7 @@ async function getAllUsers() {
 async function getUserById(id) {
   const result = await pool.query(
     `
-    SELECT id, firstname, lastname, email, role, image_url, created_at, updated_at
+    SELECT id, firstname, lastname, email, role, image_url, is_verified, created_at, updated_at
     FROM users
     WHERE id = $1
     `,
@@ -43,8 +43,8 @@ async function getUserById(id) {
 async function getUserByEmail(email) {
   const result = await pool.query(
     `
-    SELECT id, firstname, lastname, email, hashed_password, role, image_url, created_at,
-           reset_token, reset_token_expires_at
+    SELECT id, firstname, lastname, email, hashed_password, role, image_url, is_verified,
+           reset_token, reset_token_expires_at, email_token, email_token_expires_at
     FROM users
     WHERE email = $1
     `,
@@ -54,20 +54,21 @@ async function getUserByEmail(email) {
 }
 
 
-async function updateUser(id, firstname, lastname, email, role, image_url = null) {
+async function updateUser(id, firstname, lastname, email, role, image_url = null, is_verified = null) {
   const result = await pool.query(
     `
     UPDATE users
-    SET firstname = $1,
-        lastname = $2,
-        email = $3,
-        role = $4,
-        image_url = $5,
+    SET firstname = COALESCE($1, firstname),
+        lastname = COALESCE($2, lastname),
+        email = COALESCE($3, email),
+        role = COALESCE($4, role),
+        image_url = COALESCE($5, image_url),
+        is_verified = COALESCE($6, is_verified),
         updated_at = NOW()
-    WHERE id = $6
-    RETURNING id, firstname, lastname, email, role, image_url, updated_at
+    WHERE id = $7
+    RETURNING id, firstname, lastname, email, role, image_url, is_verified, updated_at
     `,
-    [firstname, lastname, email, role, image_url, id]
+    [firstname, lastname, email, role, image_url, is_verified, id]
   );
 
   return result.rows[0] || null;
@@ -78,6 +79,7 @@ async function deleteUser(id) {
   const result = await pool.query(`DELETE FROM users WHERE id = $1`, [id]);
   return result.rowCount > 0;
 }
+
 
 
 async function saveResetToken(userId, token, expiry) {
@@ -126,6 +128,36 @@ async function updateUserPassword(userId, newHashedPassword) {
 }
 
 
+
+async function saveEmailToken(userId, token, expiresAt) {
+  const result = await pool.query(
+    `
+    UPDATE users
+    SET email_token = $1,
+        email_token_expires_at = $2,
+        updated_at = NOW()
+    WHERE id = $3
+    RETURNING id, email, email_token, email_token_expires_at
+    `,
+    [token, expiresAt, userId]
+  );
+  return result.rows[0] || null;
+}
+
+
+async function getUserByEmailToken(token) {
+  const result = await pool.query(
+    `
+    SELECT id, firstname, lastname, email, role, image_url, is_verified
+    FROM users
+    WHERE email_token = $1 AND email_token_expires_at > NOW()
+    `,
+    [token]
+  );
+  return result.rows[0];
+}
+
+
 export {
   createUser,
   getAllUsers,
@@ -135,6 +167,8 @@ export {
   deleteUser,
   saveResetToken,
   getUserByResetToken,
-  updateUserPassword
+  updateUserPassword,
+  saveEmailToken,
+  getUserByEmailToken
 };
 
