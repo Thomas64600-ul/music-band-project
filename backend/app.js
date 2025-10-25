@@ -45,10 +45,12 @@ app.use(
 
 
 const allowedOrigins = [
-  "http://localhost:5173", 
-  "https://music-band-project-five.vercel.app", 
-  process.env.CLIENT_URL, 
+  "http://localhost:5173",
+  "https://music-band-project-five.vercel.app",
+  "https://music-band-project-7ck7tvh2i-thomas-projects-6c01465d.vercel.app",
+  process.env.CLIENT_URL,
 ].filter(Boolean);
+
 
 app.use(
   cors({
