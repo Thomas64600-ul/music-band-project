@@ -45,15 +45,18 @@ app.use(
 
 
 const allowedOrigins = [
-  "http://localhost:5173",
-  "https://music-band-project-five.vercel.app",
-  process.env.CLIENT_URL,
+  "http://localhost:5173", 
+  "https://music-band-project-five.vercel.app", 
+  process.env.CLIENT_URL, 
 ].filter(Boolean);
 
 app.use(
   cors({
     origin: function (origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
+      
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
         console.warn("CORS refusé pour :", origin);
@@ -65,6 +68,9 @@ app.use(
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
+
+console.log("CORS activé pour :", allowedOrigins);
+
 
 
 app.use(express.json({ limit: "10mb" }));
