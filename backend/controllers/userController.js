@@ -44,10 +44,11 @@ export async function register(req, res, next) {
     const newUser = await createUser(firstname, lastname, email, hashed, role, imageUrl);
 
     const emailToken = crypto.randomBytes(32).toString("hex");
-    const expiresAt = new Date(Date.now() + 60 * 60 * 1000);
-    await saveEmailToken(newUser.id, emailToken, expiresAt);
+const expiresAt = new Date(Date.now() + 60 * 60 * 1000);
+await saveEmailToken(newUser.id, emailToken, expiresAt);
 
-    const verifyUrl = `${process.env.CLIENT_URL}/verify-email/${verificationToken}`;
+const verifyUrl = `${process.env.CLIENT_URL}/verify-email/${emailToken}`;
+
 
     await sendEmail(
       email,
