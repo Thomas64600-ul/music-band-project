@@ -44,15 +44,14 @@ export async function register(req, res, next) {
     const newUser = await createUser(firstname, lastname, email, hashed, role, imageUrl);
 
     const emailToken = crypto.randomBytes(32).toString("hex");
-const expiresAt = new Date(Date.now() + 60 * 60 * 1000);
-await saveEmailToken(newUser.id, emailToken, expiresAt);
+    const expiresAt = new Date(Date.now() + 60 * 60 * 1000);
+    await saveEmailToken(newUser.id, emailToken, expiresAt);
 
-const verifyUrl = `${process.env.CLIENT_URL}/verify-email/${emailToken}`;
-
+    const verifyUrl = `${process.env.CLIENT_URL}/verify-email/${emailToken}`;
 
     await sendEmail(
       email,
-      "Vérifie ton adresse e-mail 🎵",
+      "Vérifie ton adresse e-mail",
       `Bienvenue ${firstname}, clique sur ce lien pour activer ton compte : ${verifyUrl}`,
       "verifyEmail.html",
       { firstname, verifyUrl }
@@ -60,7 +59,7 @@ const verifyUrl = `${process.env.CLIENT_URL}/verify-email/${emailToken}`;
 
     await sendEmail(
       process.env.ADMIN_EMAIL,
-      "👋 Nouvel utilisateur inscrit sur Music Band",
+      "Nouvel utilisateur inscrit sur Music Band",
       `Nouvel utilisateur : ${firstname} ${lastname} (${email})`,
       "adminNewUserAlert.html",
       {
@@ -73,7 +72,7 @@ const verifyUrl = `${process.env.CLIENT_URL}/verify-email/${emailToken}`;
 
     res.status(201).json({
       success: true,
-      message: "Utilisateur créé avec succès. Vérifie ton e-mail pour activer ton compte.",
+      message: "Utilisateur créé. Vérifie ton e-mail pour activer ton compte.",
       data: {
         id: newUser.id,
         firstname,
@@ -128,7 +127,9 @@ export async function login(req, res, next) {
     const { email, password } = req.validatedBody;
     const user = await getUserByEmail(email);
 
-    if (!user) return res.status(404).json({ success: false, error: "Utilisateur non trouvé." });
+    if (!user)
+      return res.status(404).json({ success: false, error: "Utilisateur non trouvé." });
+
     if (!user.is_verified)
       return res.status(403).json({
         success: false,
@@ -143,12 +144,13 @@ export async function login(req, res, next) {
 
     
     res.cookie("token", token, {
-      httpOnly: true,
-      secure: true, 
-      sameSite: "none", 
-      maxAge: 60 * 60 * 1000,
-      path: "/", 
-    });
+  httpOnly: true,
+  secure: process.env.NODE_ENV === "production",
+  sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax", 
+  maxAge: 60 * 60 * 1000,
+  path: "/", 
+});
+
 
     res.status(200).json({
       success: true,
@@ -162,6 +164,21 @@ export async function login(req, res, next) {
         image_url: user.image_url,
       },
     });
+  } catch (error) {
+    next(error);
+  }
+}
+
+
+export async function logout(req, res, next) {
+  try {
+    res.clearCookie("token", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "None",
+      path: "/",
+    });
+    res.status(200).json({ success: true, message: "Déconnexion réussie." });
   } catch (error) {
     next(error);
   }
@@ -213,7 +230,6 @@ export async function forgotPassword(req, res, next) {
     next(error);
   }
 }
-
 
 export async function resetPassword(req, res, next) {
   try {
@@ -301,20 +317,6 @@ export async function removeUser(req, res, next) {
   }
 }
 
-
-export async function logout(req, res, next) {
-  try {
-    res.clearCookie("token", {
-      httpOnly: true,
-      secure: true,
-      sameSite: "none",
-      path: "/",
-    });
-    res.status(200).json({ success: true, message: "Déconnexion réussie." });
-  } catch (error) {
-    next(error);
-  }
-}
 
 
 
