@@ -11,15 +11,17 @@ export default function AdminUsers() {
   const { isAdmin } = useAuth();
   const navigate = useNavigate();
 
+  
   useEffect(() => {
     if (!isAdmin) navigate("/login");
   }, [isAdmin, navigate]);
 
+  
   useEffect(() => {
     (async () => {
       try {
-        const data = await get("/users");
-        setUsers(Array.isArray(data) ? data : data.users || []);
+        const res = await get("/users");
+        setUsers(Array.isArray(res.data) ? res.data : []);
       } catch (e) {
         console.error("Erreur lors du chargement des utilisateurs :", e);
         setUsers([]);
@@ -29,6 +31,7 @@ export default function AdminUsers() {
     })();
   }, []);
 
+  
   async function handleDelete(id) {
     if (!window.confirm("Supprimer cet utilisateur ?")) return;
     try {
@@ -40,12 +43,14 @@ export default function AdminUsers() {
     }
   }
 
+  
   async function handleRoleChange(id, newRole) {
     try {
-      await put(`/users/${id}`, { roles: newRole });
+      const res = await put(`/users/${id}`, { role: newRole });
       setUsers((prev) =>
-        prev.map((u) => (u.id === id ? { ...u, roles: newRole } : u))
+        prev.map((u) => (u.id === id ? { ...u, role: newRole } : u))
       );
+      console.log("Rôle mis à jour :", res);
     } catch (e) {
       console.error("Erreur modification rôle :", e);
       alert("Impossible de modifier le rôle");
@@ -70,7 +75,6 @@ export default function AdminUsers() {
         transition-colors duration-700 ease-in-out
       "
     >
-      
       <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-10 text-center sm:text-left">
         <h1 className="text-3xl font-extrabold text-[var(--accent)] drop-shadow-[0_0_10px_var(--accent)]">
           Gestion des utilisateurs
@@ -89,14 +93,13 @@ export default function AdminUsers() {
         </Button>
       </div>
 
-    
       {users.length === 0 ? (
         <p className="text-[var(--subtext)] text-center italic">
           Aucun utilisateur enregistré.
         </p>
       ) : (
         <>
-          
+         
           <div className="grid gap-6 sm:hidden">
             {users.map((u) => (
               <div
@@ -112,18 +115,18 @@ export default function AdminUsers() {
                   {u.firstname} {u.lastname}
                 </h3>
                 <p className="text-sm text-[var(--subtext)] mb-2">
-                  📧 {u.email}
+                  {u.email}
                 </p>
 
                 <p className="text-sm text-[var(--subtext)] mb-2">
-                  🎭 Rôle :{" "}
+                  Rôle :{" "}
                   <span className="text-[var(--accent)] font-semibold">
-                    {u.roles || "—"}
+                    {u.role || "—"}
                   </span>
                 </p>
 
                 <p className="text-sm mb-4">
-                  ✅ Vérification :{" "}
+                  Vérification :{" "}
                   <span
                     className={
                       u.is_verified ? "text-green-500" : "text-[var(--accent)]"
@@ -135,7 +138,7 @@ export default function AdminUsers() {
 
                 <div className="flex flex-wrap justify-center gap-3">
                   <select
-                    value={u.roles}
+                    value={u.role}
                     onChange={(e) => handleRoleChange(u.id, e.target.value)}
                     className="
                       bg-[var(--bg)] border border-[var(--accent)]/50
@@ -198,7 +201,7 @@ export default function AdminUsers() {
                     </td>
                     <td className="py-3 px-4">
                       <select
-                        value={u.roles}
+                        value={u.role}
                         onChange={(e) => handleRoleChange(u.id, e.target.value)}
                         className="
                           bg-[var(--bg)] border border-[var(--accent)]/50 
@@ -244,5 +247,6 @@ export default function AdminUsers() {
     </motion.section>
   );
 }
+
 
 

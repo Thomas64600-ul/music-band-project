@@ -10,26 +10,44 @@ const api = axios.create({
   withCredentials: true, 
   headers: {
     "Content-Type": "application/json",
+    Accept: "application/json",
   },
 });
 
 
-api.interceptors.request.use((config) => {
-  
-  return config;
-});
+api.interceptors.request.use(
+  (config) => {
+    
+    if (import.meta.env.DEV) {
+      console.log(`➡️ ${config.method?.toUpperCase()} ${config.url}`);
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 
 
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
-      console.warn("Session expirée ou non autorisée");
-      
+    if (error.response) {
+      const { status } = error.response;
+
+      if (status === 401) {
+        console.warn("Session expirée ou non autorisée.");
+     
+      } else if (status >= 500) {
+        console.error("Erreur serveur :", error.response.data);
+      }
+    } else {
+      console.error("Erreur réseau :", error.message);
     }
+
     return Promise.reject(error);
   }
 );
+
+
 
 
 export const get = async (url, config = {}) => {
@@ -37,15 +55,18 @@ export const get = async (url, config = {}) => {
   return data;
 };
 
+
 export const post = async (url, body, config = {}) => {
   const { data } = await api.post(url, body, { ...config, withCredentials: true });
   return data;
 };
 
+
 export const put = async (url, body, config = {}) => {
   const { data } = await api.put(url, body, { ...config, withCredentials: true });
   return data;
 };
+
 
 export const del = async (url, config = {}) => {
   const { data } = await api.delete(url, { ...config, withCredentials: true });
@@ -74,7 +95,6 @@ export async function createStripeSession({ amount, message, email, user_id }) {
 }
 
 export default api;
-
 
 
 
