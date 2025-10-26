@@ -17,17 +17,18 @@ export async function addMessage(req, res, next) {
 
     const newMessage = await createMessage(name, email, message);
 
-   
+    
     try {
       await sendEmail(
         process.env.ADMIN_EMAIL,
-        "Nouveau message du site Music Band",
+        "🎸 Nouveau message du site Music Band",
         `Message reçu de ${name} (${email}) : ${message}`,
         "adminNotification.html",
         { name, email, message }
       );
+      console.log("Email admin envoyé avec succès");
     } catch (mailError) {
-      console.warn(" Échec d’envoi de l’email admin :", mailError.message);
+      console.warn("Échec d’envoi de l’email admin :", mailError.message);
     }
 
     
@@ -39,15 +40,12 @@ export async function addMessage(req, res, next) {
         "userConfirmation.html",
         { name, message }
       );
+      console.log("Email confirmation envoyé à l’utilisateur");
     } catch (mailError) {
       console.warn("Échec d’envoi de l’email utilisateur :", mailError.message);
     }
 
-    res.status(201).json({
-      success: true,
-      message: "Message enregistré avec succès.",
-      data: newMessage
-    });
+    res.status(201).json(newMessage);
   } catch (error) {
     next(error);
   }
@@ -57,7 +55,7 @@ export async function addMessage(req, res, next) {
 export async function fetchMessages(req, res, next) {
   try {
     const messages = await getAllMessages();
-    res.json({ success: true, count: messages.length, data: messages });
+    res.json(messages); 
   } catch (error) {
     next(error);
   }
@@ -67,7 +65,7 @@ export async function fetchMessages(req, res, next) {
 export async function fetchUnreadMessages(req, res, next) {
   try {
     const messages = await getUnreadMessages();
-    res.json({ success: true, count: messages.length, data: messages });
+    res.json(messages); 
   } catch (error) {
     next(error);
   }
@@ -80,7 +78,7 @@ export async function fetchMessageById(req, res, next) {
     if (!message) {
       return res.status(404).json({ error: "Message non trouvé." });
     }
-    res.json({ success: true, data: message });
+    res.json(message);
   } catch (error) {
     next(error);
   }
@@ -95,7 +93,7 @@ export async function fetchMessagesByEmail(req, res, next) {
     }
 
     const messages = await getMessagesByEmail(email);
-    res.json({ success: true, count: messages.length, data: messages });
+    res.json(messages);
   } catch (error) {
     next(error);
   }
@@ -108,12 +106,9 @@ export async function readMessage(req, res, next) {
     if (!success) {
       return res.status(404).json({ error: "Message non trouvé." });
     }
+
     const updatedMessage = await getMessageById(req.params.id);
-    res.json({
-      success: true,
-      message: "Message marqué comme lu.",
-      data: updatedMessage
-    });
+    res.json(updatedMessage);
   } catch (error) {
     next(error);
   }
@@ -126,8 +121,9 @@ export async function removeMessage(req, res, next) {
     if (!success) {
       return res.status(404).json({ error: "Message non trouvé." });
     }
-    res.json({ success: true, message: "Message supprimé avec succès." });
+    res.json({ message: "Message supprimé avec succès." });
   } catch (error) {
     next(error);
   }
 }
+

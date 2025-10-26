@@ -4,13 +4,12 @@ import pool from "../config/db.js";
 async function createMessage(name, email, message) {
   const result = await pool.query(
     `
-    INSERT INTO messages (name, email, message, status, created_at)
-    VALUES ($1, $2, $3, 'unread', NOW())
-    RETURNING id, name, email, message, status, created_at
+    INSERT INTO messages (name, email, message, status, created_at, updated_at)
+    VALUES ($1, $2, $3, 'unread', NOW(), NOW())
+    RETURNING id, name, email, message, status, created_at, updated_at
     `,
     [name, email, message]
   );
-
   return result.rows[0];
 }
 
@@ -73,7 +72,7 @@ async function markMessageAsRead(id) {
     UPDATE messages
     SET status = 'read', updated_at = NOW()
     WHERE id = $1
-    RETURNING *
+    RETURNING id, name, email, message, status, created_at, updated_at
     `,
     [id]
   );
@@ -82,7 +81,10 @@ async function markMessageAsRead(id) {
 
 
 async function deleteMessage(id) {
-  const result = await pool.query(`DELETE FROM messages WHERE id = $1`, [id]);
+  const result = await pool.query(
+    `DELETE FROM messages WHERE id = $1`,
+    [id]
+  );
   return result.rowCount > 0;
 }
 
