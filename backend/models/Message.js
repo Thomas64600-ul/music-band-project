@@ -17,7 +17,15 @@ async function createMessage(name, email, message) {
 async function getAllMessages() {
   const result = await pool.query(
     `
-    SELECT id, name, email, message, status, created_at, updated_at
+    SELECT 
+      id, 
+      name, 
+      email, 
+      message, 
+      status,
+      (status = 'read') AS is_read,
+      created_at, 
+      updated_at
     FROM messages
     ORDER BY created_at DESC
     `
@@ -26,10 +34,19 @@ async function getAllMessages() {
 }
 
 
+
 async function getMessageById(id) {
   const result = await pool.query(
     `
-    SELECT id, name, email, message, status, created_at, updated_at
+    SELECT 
+      id, 
+      name, 
+      email, 
+      message, 
+      status, 
+      (status = 'read') AS is_read,
+      created_at, 
+      updated_at
     FROM messages
     WHERE id = $1
     `,
@@ -37,6 +54,7 @@ async function getMessageById(id) {
   );
   return result.rows[0];
 }
+
 
 
 async function getMessagesByEmail(email) {
@@ -56,7 +74,15 @@ async function getMessagesByEmail(email) {
 async function getUnreadMessages() {
   const result = await pool.query(
     `
-    SELECT id, name, email, message, status, created_at, updated_at
+    SELECT 
+      id, 
+      name, 
+      email, 
+      message, 
+      status, 
+      (status = 'read') AS is_read,
+      created_at, 
+      updated_at
     FROM messages
     WHERE status = 'unread'
     ORDER BY created_at DESC
