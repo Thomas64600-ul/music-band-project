@@ -23,22 +23,23 @@ import {
 } from "../schemas/userSchema.js";
 
 import { protect } from "../middlewares/authMiddleware.js";
-import { authorizeRoles } from "../middlewares/roleMiddleware.js";
 import upload from "../middlewares/uploadMiddleware.js";
 import {
   loginLimiter,
   registerLimiter,
   resetPasswordLimiter,
 } from "../middlewares/rateLimiter.js";
+import { protectAdminRoute } from "../middlewares/protectAdminRoute.js"; // ✅ nouveau middleware combiné
 
 const router = express.Router();
 
-
 router.post("/register", registerLimiter, validate(registerSchema), register);
-router.get("/verify/:token", verifyEmail);
-router.post("/login", loginLimiter, validate(loginSchema), login);
-router.post("/logout", protect, logout);
 
+router.get("/verify/:token", verifyEmail);
+
+router.post("/login", loginLimiter, validate(loginSchema), login);
+
+router.post("/logout", protect, logout);
 
 router.post(
   "/forgot-password",
@@ -46,17 +47,28 @@ router.post(
   validate(forgotPasswordSchema),
   forgotPassword
 );
-router.post("/reset-password/:token", validate(resetPasswordSchema), resetPassword);
 
+
+router.post("/reset-password/:token", validate(resetPasswordSchema), resetPassword);
 
 router.get("/me", protect, me);
 
+router.get("/", protectAdminRoute, fetchUsers);
 
-router.get("/", protect, authorizeRoles("admin"), fetchUsers);
-router.get("/:id", protect, fetchUserById);
-router.put("/:id", protect, upload.single("image"), validate(updateUserSchema), editUser);
-router.delete("/:id", protect, authorizeRoles("admin"), removeUser);
 
+router.get("/:id", protectAdminRoute, fetchUserById);
+
+
+router.put(
+  "/:id",
+  protectAdminRoute,
+  upload.single("image"),
+  validate(updateUserSchema),
+  editUser
+);
+
+
+router.delete("/:id", protectAdminRoute, removeUser);
 
 router.get("/debug/auth", protect, (req, res) => {
   res.status(200).json({
@@ -72,7 +84,6 @@ router.get("/debug/auth", protect, (req, res) => {
 });
 
 export default router;
-
 
 
 
