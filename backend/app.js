@@ -44,16 +44,21 @@ app.use(
 app.use(
   cors({
     origin: function (origin, callback) {
-      if (
-        !origin || 
-        origin.includes("vercel.app") || 
-        origin.includes("localhost") || 
-        origin === process.env.CLIENT_URL 
-      ) {
+      if (!origin) return callback(null, true);
+
+      const normalized = origin.toLowerCase();
+
+      const allowed =
+        normalized.includes("vercel.app") ||
+        normalized.includes("localhost") ||
+        normalized.includes("render.com") ||
+        normalized === process.env.CLIENT_URL?.toLowerCase();
+
+      if (allowed) {
         callback(null, true);
       } else {
         console.warn("CORS refusé pour :", origin);
-        callback(new Error("Not allowed by CORS"));
+        return callback(new Error("Not allowed by CORS"));
       }
     },
     credentials: true,
@@ -63,11 +68,9 @@ app.use(
       "Authorization",
       "Access-Control-Allow-Credentials",
     ],
-    exposedHeaders: ["Authorization"],
   })
 );
 
-console.log("🌐 CORS activé pour :", process.env.CLIENT_URL || "localhost/vercel.app");
 
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true }));
