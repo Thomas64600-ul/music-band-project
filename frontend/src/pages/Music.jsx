@@ -78,8 +78,7 @@ export default function Music() {
         "
       ></div>
 
-     
-      <div className="relative inline-block mb-12 text-center">
+      <div className="relative inline-block mb-10 text-center">
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[var(--accent)]/30 to-transparent blur-md"></div>
         <h1 className="relative text-4xl md:text-5xl font-extrabold text-[var(--accent)] drop-shadow-[0_0_12px_var(--accent)] tracking-wide">
           Musiques
@@ -87,8 +86,8 @@ export default function Music() {
         <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-40 h-[2px] bg-gradient-to-r from-transparent via-[var(--gold)] to-transparent animate-glow-line"></div>
       </div>
 
-     
-      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 w-full max-w-6xl mb-20">
+
+      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 w-full max-w-6xl mb-20">
         {musics.map((m) => (
           <motion.div
             key={m.id}
@@ -98,7 +97,7 @@ export default function Music() {
             transition={{ duration: 0.5 }}
             className="flex flex-col items-center"
           >
-          
+
             <div
               className="
                 bg-[color-mix(in_oklab,var(--bg)_92%,black_8%)]
@@ -116,16 +115,14 @@ export default function Music() {
               />
             </div>
 
-            
-            <div className="mt-6 w-full">
+            <div className="mt-3 w-full border-t border-[var(--accent)]/20 pt-3">
               <CommentSection type="music" relatedId={m.id} user={user} />
             </div>
           </motion.div>
         ))}
       </section>
 
-     
-      <section className="text-center max-w-xl mt-16 mb-32">
+      <section className="text-center max-w-xl mt-12 mb-32">
         <h2 className="text-2xl font-semibold mb-3 text-[var(--gold)] tracking-wide">
           Nouvel EP –{" "}
           <span className="text-[var(--accent)] italic">Electric Sunrise</span>
@@ -152,7 +149,6 @@ export default function Music() {
         </Button>
       </section>
 
-    
       <div
         className="
           absolute bottom-0 left-1/2 -translate-x-1/2 
@@ -164,6 +160,7 @@ export default function Music() {
     </motion.main>
   );
 }
+
 
 
 

@@ -9,6 +9,7 @@ export default function CommentSection({ type, relatedId, user }) {
   const [error, setError] = useState(null);
   const [editingId, setEditingId] = useState(null);
   const [editedContent, setEditedContent] = useState("");
+  const [savedId, setSavedId] = useState(null); 
 
   const normalizedType = type?.toLowerCase().replace(/s$/, "");
 
@@ -16,7 +17,6 @@ export default function CommentSection({ type, relatedId, user }) {
     (async () => {
       try {
         const data = await get(`/comments/${normalizedType}/${relatedId}`);
-       
         setComments(Array.isArray(data.data) ? data.data : []);
       } catch (e) {
         console.error("Erreur chargement commentaires :", e);
@@ -39,7 +39,6 @@ export default function CommentSection({ type, relatedId, user }) {
       };
 
       const response = await post("/comments", body);
-     
       setComments((prev) => [response.data, ...prev]);
       setNewComment("");
       setError(null);
@@ -71,13 +70,13 @@ export default function CommentSection({ type, relatedId, user }) {
 
     try {
       const res = await put(`/comments/${editingId}`, { content: editedContent });
-     
       setComments((prev) =>
         prev.map((c) => (c.id === editingId ? res.data : c))
       );
       setEditingId(null);
       setEditedContent("");
-      setError(null);
+      setSavedId(editingId); 
+      setTimeout(() => setSavedId(null), 1000);
     } catch (e) {
       console.error("Erreur modification :", e);
       setError("Impossible de modifier le commentaire.");
@@ -97,7 +96,7 @@ export default function CommentSection({ type, relatedId, user }) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
       className="
-        mt-10 p-6 rounded-xl 
+        mt-3 p-5 pt-4 rounded-xl border-t border-[var(--accent)]/20
         border border-[color-mix(in_oklab,var(--accent)_30%,black_70%)]/60
         bg-[color-mix(in_oklab,var(--bg)_95%,black_5%)]
         text-[var(--text)]
@@ -120,8 +119,16 @@ export default function CommentSection({ type, relatedId, user }) {
             <motion.div
               key={comment.id}
               initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3 }}
+              animate={{
+                opacity: 1,
+                y: 0,
+                scale: savedId === comment.id ? 1.02 : 1,
+                boxShadow:
+                  savedId === comment.id
+                    ? "0 0 12px var(--gold)"
+                    : "0 0 0 transparent",
+              }}
+              transition={{ duration: 0.4 }}
               className="
                 p-3 rounded-lg border border-[color-mix(in_oklab,var(--accent)_20%,black_70%)]/40
                 bg-[color-mix(in_oklab,var(--bg)_92%,black_8%)] text-[var(--text)]
