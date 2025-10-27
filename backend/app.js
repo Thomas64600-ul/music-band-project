@@ -14,6 +14,7 @@ import donationRoutes from "./routes/donationRoutes.js";
 import messageRoutes from "./routes/messageRoutes.js";
 import commentRoutes from "./routes/commentRoutes.js";
 import musicRoutes from "./routes/musicRoutes.js";
+import statsRoutes from "./routes/statsRoutes.js"; 
 
 dotenv.config();
 const app = express();
@@ -43,24 +44,16 @@ app.use(
 
 app.use(
   cors({
-    origin: (origin, callback) => {
-      if (!origin) return callback(null, true); 
-
-      const allowed = [
-        "http://localhost:5173",
-        "https://music-band-project.vercel.app",
-        /\.vercel\.app$/,
-        /\.onrender\.com$/,
-      ];
-
-      const isAllowed = allowed.some((rule) => {
-        if (rule instanceof RegExp) return rule.test(origin);
-        return rule === origin;
-      });
-
-      if (isAllowed) {
-        callback(null, true);
-      } else {
+    origin: function (origin, callback) {
+      if (!origin) return callback(null, true);
+      const normalized = origin.toLowerCase();
+      const allowed =
+        normalized.includes("vercel.app") ||
+        normalized.includes("localhost") ||
+        normalized.includes("render.com") ||
+        normalized === process.env.CLIENT_URL?.toLowerCase();
+      if (allowed) callback(null, true);
+      else {
         console.warn("CORS refusé pour :", origin);
         callback(new Error("Not allowed by CORS"));
       }
@@ -70,18 +63,15 @@ app.use(
     allowedHeaders: [
       "Content-Type",
       "Authorization",
-      "X-Requested-With", 
       "Access-Control-Allow-Credentials",
     ],
-    exposedHeaders: ["Authorization"],
   })
 );
-
-console.log("CORS activé : Render + Vercel + localhost");
 
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+
 
 app.use("/api/users", userRoutes);
 app.use("/api/articles", articleRoutes);
@@ -90,6 +80,8 @@ app.use("/api/comments", commentRoutes);
 app.use("/api/musics", musicRoutes);
 app.use("/api/messages", messageRoutes);
 app.use("/api/donations", donationRoutes);
+app.use("/api/stats", statsRoutes); 
+
 
 app.use(
   "/api/donations/webhook",
@@ -110,7 +102,6 @@ if (process.env.NODE_ENV !== "production") {
 app.use(errorHandler);
 
 export default app;
-
 
 
 
