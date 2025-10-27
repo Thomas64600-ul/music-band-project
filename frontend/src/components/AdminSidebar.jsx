@@ -46,8 +46,8 @@ export default function AdminSidebar() {
   return (
     <aside
       className="
-        hidden md:flex flex-col fixed left-0 top-[80px]
-        h-[calc(100vh-80px)] w-64
+        hidden md:flex flex-col fixed left-0 top-[100px]
+        h-[calc(100vh-100px)] w-64
         bg-[var(--bg)] text-[var(--text)]
         border-r border-[var(--accent)]/30
         shadow-[0_0_15px_var(--accent)]/15
@@ -55,8 +55,7 @@ export default function AdminSidebar() {
         z-40
       "
     >
-   
-      <div className="py-6 text-center border-b border-[var(--accent)]/30 bg-[var(--bg-secondary)]">
+      <div className="py-5 text-center border-b border-[var(--accent)]/30 bg-[var(--bg-secondary)]">
         <h1
           onClick={() => navigate("/admin")}
           className="
@@ -69,12 +68,12 @@ export default function AdminSidebar() {
         </h1>
       </div>
 
-      <nav className="flex-1 mt-6 px-4 space-y-1 overflow-y-auto">
+      <nav className="flex-1 mt-5 px-4 space-y-1 overflow-y-auto">
         {links.map(({ name, path, Icon }) => (
           <NavLink
             key={path}
             to={path}
-            end={path === "/admin"} 
+            end={path === "/admin"}
             className={({ isActive }) =>
               `
               flex items-center gap-3 px-4 py-2 rounded-lg font-medium
