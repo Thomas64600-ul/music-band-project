@@ -20,34 +20,13 @@ const app = express();
 
 app.set("trust proxy", 1);
 app.disable("x-powered-by");
-app.use(compression());
-app.use(morgan(process.env.NODE_ENV !== "production" ? "dev" : "combined"));
-
-app.use(
-  helmet({
-    crossOriginResourcePolicy: false,
-    contentSecurityPolicy: {
-      useDefaults: true,
-      directives: {
-        "img-src": ["'self'", "data:", "blob:", "res.cloudinary.com"],
-        "connect-src": [
-          "'self'",
-          process.env.CLIENT_URL || "http://localhost:5173",
-          "https://api.stripe.com",
-        ],
-        "script-src": ["'self'", "'unsafe-inline'", "https://js.stripe.com"],
-      },
-    },
-  })
-);
 
 app.use(
   cors({
     origin: function (origin, callback) {
-      if (!origin) return callback(null, true);
+      if (!origin) return callback(null, true); 
 
       const normalized = origin.toLowerCase();
-
       const allowed =
         normalized.includes("vercel.app") ||
         normalized.includes("localhost") ||
@@ -63,14 +42,48 @@ app.use(
     },
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-    allowedHeaders: [
-      "Content-Type",
-      "Authorization",
-      "Access-Control-Allow-Credentials",
-    ],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
+console.log("🌍 CORS configuré avec succès");
+
+app.use(compression());
+app.use(morgan(process.env.NODE_ENV !== "production" ? "dev" : "combined"));
+
+app.use(
+  helmet({
+    crossOriginResourcePolicy: false,
+    contentSecurityPolicy: {
+      useDefaults: true,
+      directives: {
+        "default-src": ["'self'"],
+        "script-src": [
+          "'self'",
+          "'unsafe-inline'",
+          "https://js.stripe.com",
+          "https://vercel.live", 
+        ],
+        "connect-src": [
+          "'self'",
+          "https://api.stripe.com",
+          "https://vercel.live",
+          "https://*.vercel.app",
+          process.env.CLIENT_URL || "http://localhost:5173",
+          process.env.RENDER_EXTERNAL_URL || "https://music-band-project.onrender.com",
+        ],
+        "img-src": [
+          "'self'",
+          "data:",
+          "blob:",
+          "https://res.cloudinary.com",
+        ],
+        "style-src": ["'self'", "'unsafe-inline'"],
+        "frame-src": ["https://js.stripe.com"],
+      },
+    },
+  })
+);
 
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true }));
@@ -95,7 +108,6 @@ if (process.env.NODE_ENV !== "production") {
   app.use("/api", testRoute);
 
   app.get("/api/debug/cookies", (req, res) => {
-    console.log("Cookies reçus :", req.cookies);
     res.json({ cookies: req.cookies || {} });
   });
 }
@@ -103,9 +115,6 @@ if (process.env.NODE_ENV !== "production") {
 app.use(errorHandler);
 
 export default app;
-
-
-
 
 
 
