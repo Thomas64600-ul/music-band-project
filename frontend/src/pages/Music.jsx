@@ -69,7 +69,7 @@ export default function Music() {
         overflow-hidden
       "
     >
-     
+   
       <div
         className="
           absolute top-[35%] left-1/2 -translate-x-1/2 
@@ -79,7 +79,7 @@ export default function Music() {
         "
       ></div>
 
-   
+     
       <div className="relative inline-block mb-10 text-center">
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[var(--accent)]/30 to-transparent blur-md"></div>
         <h1 className="relative text-4xl md:text-5xl font-extrabold text-[var(--accent)] drop-shadow-[0_0_12px_var(--accent)] tracking-wide">
@@ -88,7 +88,7 @@ export default function Music() {
         <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-40 h-[2px] bg-gradient-to-r from-transparent via-[var(--gold)] to-transparent animate-glow-line"></div>
       </div>
 
- 
+    
       <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 w-full max-w-6xl mb-20">
         {musics.map((m) => (
           <motion.article
@@ -107,51 +107,7 @@ export default function Music() {
             "
           >
           
-            {m.cover_url && (
-              <div className="relative w-full h-52 sm:h-56 md:h-64 overflow-hidden group">
-                <img
-                  src={m.cover_url}
-                  alt={m.title}
-                  className="
-                    w-full h-full object-cover transform
-                    transition-transform duration-700
-                    sm:group-hover:scale-110 pointer-events-none select-none
-                  "
-                  draggable="false"
-                />
-                <div
-                  className="
-                    absolute inset-0 bg-gradient-to-t 
-                    from-[var(--bg)]/90 via-[var(--bg)]/40 to-transparent
-                    opacity-80 sm:opacity-0 sm:group-hover:opacity-100
-                    transition-opacity duration-500
-                  "
-                ></div>
-                <div
-                  className="
-                    absolute inset-0 bg-gradient-to-tr 
-                    from-transparent via-[var(--accent)]/25 to-transparent
-                    opacity-40 sm:opacity-0 sm:group-hover:opacity-100
-                    blur-[3px] transition-opacity duration-700
-                  "
-                ></div>
-              </div>
-            )}
-
- 
             <div className="flex flex-col flex-grow p-5 sm:p-6 text-center">
-              <h3
-                className="
-                  text-lg sm:text-xl font-bold text-[var(--accent)]
-                  mb-1 sm:group-hover:text-[var(--gold)] transition-colors
-                "
-              >
-                {m.title || "Titre inconnu"}
-              </h3>
-              <p className="text-[var(--subtext)] text-sm mb-4">
-                {m.artist || "REVEREN"}
-              </p>
-
               <Player
                 src={m.url}
                 title={m.title}
