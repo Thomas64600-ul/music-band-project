@@ -44,13 +44,13 @@ export default function Articles() {
           Aucun article pour le moment
         </h1>
         <p className="text-[var(--subtext)] max-w-md mx-auto">
-          Revenez bientôt pour découvrir les dernières nouvelles de REVEREN —
+          Revenez bientôt pour découvrir les dernières nouvelles de{" "}
+          <span className="text-[var(--accent)] font-semibold">REVEREN</span> —
           le groupe prépare du nouveau contenu !
         </p>
 
-        
         <div className="max-w-4xl mx-auto mt-16 px-6">
-          <CommentSection type="article" relatedId={1} user={user} />
+          <CommentSection type="article" relatedId={0} user={user} />
         </div>
       </section>
     );
@@ -79,7 +79,6 @@ export default function Articles() {
         "
       ></div>
 
-     
       <div className="relative inline-block mb-12 text-center">
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[var(--accent)]/30 to-transparent blur-md"></div>
         <h1 className="relative text-4xl md:text-5xl font-extrabold text-[var(--accent)] drop-shadow-[0_0_12px_var(--accent)] tracking-wide">
@@ -88,7 +87,6 @@ export default function Articles() {
         <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-40 h-[2px] bg-gradient-to-r from-transparent via-[var(--gold)] to-transparent animate-glow-line"></div>
       </div>
 
-     
       <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 w-full max-w-6xl mb-20">
         {articles.map((a) => (
           <motion.div
@@ -97,6 +95,16 @@ export default function Articles() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
+            className="
+              flex flex-col gap-6
+              bg-[color-mix(in_oklab,var(--bg)_92%,black_8%)]
+              border border-[var(--accent)]/20
+              rounded-2xl p-5
+              shadow-[0_0_25px_var(--accent)]/30
+              hover:border-[var(--accent)]/50 
+              hover:shadow-[0_0_35px_var(--accent)]/40
+              transition-all duration-500
+            "
           >
             <ArticleCard
               title={a.title}
@@ -104,21 +112,21 @@ export default function Articles() {
               image={a.image_url}
               date={
                 a.created_at
-                  ? new Date(a.created_at).toLocaleDateString("fr-FR")
+                  ? new Date(a.created_at).toLocaleDateString("fr-FR", {
+                      day: "2-digit",
+                      month: "long",
+                      year: "numeric",
+                    })
                   : "—"
               }
               link={`/blog/${a.id}`}
             />
 
-            
-            <div className="mt-6">
-              <CommentSection type="article" relatedId={a.id} user={user} />
-            </div>
+            <CommentSection type="article" relatedId={a.id} user={user} />
           </motion.div>
         ))}
       </section>
 
-     
       <div
         className="
           absolute bottom-0 left-1/2 -translate-x-1/2 
@@ -130,6 +138,7 @@ export default function Articles() {
     </motion.main>
   );
 }
+
 
 
 

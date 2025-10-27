@@ -9,7 +9,7 @@ export default function CommentSection({ type, relatedId, user }) {
   const [error, setError] = useState(null);
   const [editingId, setEditingId] = useState(null);
   const [editedContent, setEditedContent] = useState("");
-  const [savedId, setSavedId] = useState(null); 
+  const [savedId, setSavedId] = useState(null);
 
   const normalizedType = type?.toLowerCase().replace(/s$/, "");
 
@@ -75,8 +75,8 @@ export default function CommentSection({ type, relatedId, user }) {
       );
       setEditingId(null);
       setEditedContent("");
-      setSavedId(editingId); 
-      setTimeout(() => setSavedId(null), 1000);
+      setSavedId(editingId);
+      setTimeout(() => setSavedId(null), 1200);
     } catch (e) {
       console.error("Erreur modification :", e);
       setError("Impossible de modifier le commentaire.");
@@ -96,20 +96,19 @@ export default function CommentSection({ type, relatedId, user }) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
       className="
-        mt-3 p-5 pt-4 rounded-xl border-t border-[var(--accent)]/20
-        border border-[color-mix(in_oklab,var(--accent)_30%,black_70%)]/60
-        bg-[color-mix(in_oklab,var(--bg)_95%,black_5%)]
+        mt-4 p-4 rounded-xl
+        bg-[color-mix(in_oklab,var(--bg)_92%,black_8%)]
+        border border-[var(--accent)]/20
+        shadow-[0_0_25px_var(--accent)]/30
         text-[var(--text)]
-        shadow-[0_0_10px_color-mix(in_oklab,var(--accent)_12%,transparent)]
-        hover:border-[var(--accent)]/50 hover:shadow-[0_0_18px_var(--accent)]/30
-        transition-all duration-700 ease-in-out
+        transition-all duration-500
       "
     >
-      <h3 className="text-lg font-semibold text-[var(--accent)] mb-4 tracking-wide">
+      <h3 className="text-lg font-semibold text-[var(--accent)] mb-4 tracking-wide drop-shadow-[0_0_6px_var(--accent)]">
         Commentaires ({comments.length})
       </h3>
 
-      <div className="flex flex-col gap-4 mb-6 max-h-[350px] overflow-y-auto no-scrollbar">
+      <div className="flex flex-col gap-3 mb-5 max-h-[300px] overflow-y-auto no-scrollbar">
         {comments.length === 0 ? (
           <p className="text-[var(--subtext)] text-sm italic">
             Aucun commentaire pour le moment.
@@ -130,9 +129,11 @@ export default function CommentSection({ type, relatedId, user }) {
               }}
               transition={{ duration: 0.4 }}
               className="
-                p-3 rounded-lg border border-[color-mix(in_oklab,var(--accent)_20%,black_70%)]/40
-                bg-[color-mix(in_oklab,var(--bg)_92%,black_8%)] text-[var(--text)]
-                hover:border-[var(--accent)]/60 hover:shadow-[0_0_12px_var(--accent)]/30
+                p-3 rounded-lg 
+                bg-[color-mix(in_oklab,var(--bg)_95%,black_5%)]
+                border border-[var(--accent)]/10 
+                hover:border-[var(--accent)]/50 
+                hover:shadow-[0_0_12px_var(--accent)]/40
                 transition-all duration-300
               "
             >
@@ -162,9 +163,7 @@ export default function CommentSection({ type, relatedId, user }) {
                 </form>
               ) : (
                 <>
-                  <p className="text-sm leading-snug break-words">
-                    {comment.content}
-                  </p>
+                  <p className="text-sm leading-snug break-words">{comment.content}</p>
                   <p className="text-xs text-[var(--subtext)] mt-2">
                     Par{" "}
                     <span className="text-[var(--accent)] font-medium">
@@ -209,21 +208,21 @@ export default function CommentSection({ type, relatedId, user }) {
             value={newComment}
             onChange={(e) => setNewComment(e.target.value)}
             placeholder="Écrire un commentaire..."
-            rows={3}
+            rows={2}
             className="
-              w-full p-3 rounded-md border border-[color-mix(in_oklab,var(--accent)_25%,black_70%)]/40
-              bg-[color-mix(in_oklab,var(--bg)_95%,black_5%)] text-[var(--text)]
-              focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/70
+              w-full p-3 rounded-md border border-[var(--accent)]/25
+              bg-[color-mix(in_oklab,var(--bg)_94%,black_6%)] text-[var(--text)]
+              focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/60
               transition-all duration-300
             "
           />
           <button
             type="submit"
             className="
-              self-end px-5 py-2 rounded-md
+              self-end px-4 py-2 rounded-md
               bg-[var(--accent)] text-white
               hover:bg-[var(--gold)] hover:text-[var(--bg)]
-              shadow-md hover:shadow-[0_0_20px_var(--accent)]
+              shadow-[0_0_10px_var(--accent)]/40
               transition-all duration-300 active:scale-95
             "
           >
