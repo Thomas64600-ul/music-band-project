@@ -42,18 +42,23 @@ app.use(
   })
 );
 
+import cors from "cors";
+
 app.use(
   cors({
     origin: function (origin, callback) {
+      
       if (!origin) return callback(null, true);
-      const normalized = origin.toLowerCase();
-      const allowed =
-        normalized.includes("vercel.app") ||
-        normalized.includes("localhost") ||
-        normalized.includes("render.com") ||
-        normalized === process.env.CLIENT_URL?.toLowerCase();
-      if (allowed) callback(null, true);
-      else {
+
+      const allowedOrigins = [
+        process.env.CLIENT_URL,                
+        "http://localhost:5173",               
+        "https://music-band-project.onrender.com" 
+      ];
+
+      if (allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
         console.warn("CORS refusé pour :", origin);
         callback(new Error("Not allowed by CORS"));
       }
@@ -64,9 +69,12 @@ app.use(
       "Content-Type",
       "Authorization",
       "Access-Control-Allow-Credentials",
+      "X-Requested-With"
     ],
+    exposedHeaders: ["Set-Cookie"],
   })
 );
+
 
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true }));
