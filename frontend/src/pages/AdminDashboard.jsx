@@ -38,7 +38,6 @@ export default function AdminDashboard() {
             Tableau de bord Admin
           </h1>
 
-          
           <p className="mb-10 text-[var(--subtext)] text-sm sm:text-base leading-relaxed">
             Bienvenue{" "}
             <span className="text-[var(--accent)] font-semibold">
@@ -49,7 +48,6 @@ export default function AdminDashboard() {
             panneau.
           </p>
 
-          
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 text-center">
             <Button
               onClick={() => navigate("/admin/articles")}
@@ -59,7 +57,7 @@ export default function AdminDashboard() {
                 hover:shadow-[0_0_15px_var(--accent)] transition-all duration-300
               "
             >
-              GÉRER LES ARTICLES
+            
             </Button>
 
             <Button
@@ -70,7 +68,7 @@ export default function AdminDashboard() {
                 hover:shadow-[0_0_15px_var(--accent)] transition-all duration-300
               "
             >
-              GÉRER LES CONCERTS
+            
             </Button>
 
             <Button
@@ -81,7 +79,7 @@ export default function AdminDashboard() {
                 hover:shadow-[0_0_15px_var(--accent)] transition-all duration-300
               "
             >
-              GÉRER LES MUSIQUES
+            
             </Button>
 
             <Button
@@ -106,6 +104,18 @@ export default function AdminDashboard() {
               GÉRER LES MESSAGES
             </Button>
 
+            
+            <Button
+              onClick={() => navigate("/admin/comments")}
+              className="
+                bg-[var(--accent)] text-white py-3 rounded-lg font-semibold
+                hover:bg-[var(--gold)] hover:text-[var(--bg)]
+                hover:shadow-[0_0_15px_var(--accent)] transition-all duration-300
+              "
+            >
+              GÉRER LES COMMENTAIRES
+            </Button>
+
             <Button
               onClick={() => navigate("/admin/stats")}
               className="
@@ -122,6 +132,7 @@ export default function AdminDashboard() {
     </AdminLayout>
   );
 }
+
 
 
 
