@@ -55,21 +55,33 @@ const allowedOrigins = [
 app.use(
   cors({
     origin: function (origin, callback) {
+      const allowedOrigins = [
+        "http://localhost:5173",
+        "https://music-band-project-five.vercel.app",
+        "https://music-band-project-7ck7tvh2i-thomas-projects-6c01465d.vercel.app",
+        process.env.CLIENT_URL,
+      ].filter(Boolean);
+
       
-      if (!origin) return callback(null, true);
 
       if (allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
         console.warn("CORS refusé pour :", origin);
-        callback(new Error("Not allowed by CORS"));
+        return callback(new Error("Not allowed by CORS"));
       }
     },
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
+    allowedHeaders: [
+      "Content-Type",
+      "Authorization",
+      "Access-Control-Allow-Credentials",
+    ],
+    exposedHeaders: ["Authorization"],
   })
 );
+
 
 console.log("CORS activé pour :", allowedOrigins);
 
