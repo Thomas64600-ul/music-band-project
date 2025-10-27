@@ -54,7 +54,7 @@ export default function ArticleDetail() {
         transition-colors duration-700 ease-in-out
       "
     >
- 
+   
       <div
         className="
           absolute top-[30%] left-1/2 -translate-x-1/2 
@@ -69,7 +69,7 @@ export default function ArticleDetail() {
         {article.title}
       </h1>
 
-    
+     
       <p className="text-[var(--subtext)] text-sm text-center mb-10">
         Publié le{" "}
         <span className="text-[var(--gold)] font-medium">
@@ -83,7 +83,7 @@ export default function ArticleDetail() {
         </span>
       </p>
 
-   
+    
       <motion.article
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -98,14 +98,15 @@ export default function ArticleDetail() {
           transition-all duration-700 ease-in-out
         "
       >
-      
+     
         {article.image_url && (
           <img
             src={article.image_url}
             alt={article.title}
             className="
               w-full h-80 object-cover rounded-xl mb-8
-              shadow-[0_0_20px_var(--accent)]/40 border border-[var(--accent)]/30
+              shadow-[0_0_25px_var(--accent)]/35 border border-[var(--accent)]/30
+              hover:shadow-[0_0_35px_var(--accent)]/50 transition-all duration-500
             "
             loading="lazy"
           />
@@ -121,7 +122,16 @@ export default function ArticleDetail() {
         />
       </motion.article>
 
-      <div className="w-full max-w-3xl mt-12">
+      <div
+        className="
+          w-full max-w-3xl mt-10 p-5 rounded-xl
+          bg-[color-mix(in_oklab,var(--bg)_94%,black_6%)]
+          border border-[var(--accent)]/15
+          shadow-[0_0_20px_var(--accent)]/20
+          hover:shadow-[0_0_28px_var(--accent)]/30
+          transition-all duration-500
+        "
+      >
         <CommentSection type="article" relatedId={article.id} user={user} />
       </div>
 
@@ -149,5 +159,6 @@ export default function ArticleDetail() {
     </motion.main>
   );
 }
+
 
 

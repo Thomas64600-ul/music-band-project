@@ -68,7 +68,7 @@ export default function Music() {
         overflow-hidden
       "
     >
-     
+   
       <div
         className="
           absolute top-[35%] left-1/2 -translate-x-1/2 
@@ -78,7 +78,7 @@ export default function Music() {
         "
       ></div>
 
-     
+    
       <div className="relative inline-block mb-10 text-center">
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[var(--accent)]/30 to-transparent blur-md"></div>
         <h1 className="relative text-4xl md:text-5xl font-extrabold text-[var(--accent)] drop-shadow-[0_0_12px_var(--accent)] tracking-wide">
@@ -87,7 +87,7 @@ export default function Music() {
         <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-40 h-[2px] bg-gradient-to-r from-transparent via-[var(--gold)] to-transparent animate-glow-line"></div>
       </div>
 
-     
+    
       <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 w-full max-w-6xl mb-20">
         {musics.map((m) => (
           <motion.div
@@ -98,14 +98,15 @@ export default function Music() {
             transition={{ duration: 0.5 }}
             className="
               flex flex-col items-center 
-              bg-[color-mix(in_oklab,var(--bg)_93%,black_7%)]
-              border border-[color-mix(in_oklab,var(--accent)_25%,black_70%)]/40
-              rounded-2xl shadow-md p-5 w-full
-              hover:border-[var(--accent)]/60 hover:shadow-[0_0_18px_var(--accent)]/30
+              bg-[color-mix(in_oklab,var(--bg)_92%,black_8%)]
+              border border-[var(--accent)]/20
+              rounded-2xl shadow-[0_0_25px_var(--accent)]/25
+              p-5 w-full
+              hover:border-[var(--accent)]/40 hover:shadow-[0_0_35px_var(--accent)]/35
               transition-all duration-300
             "
           >
-        
+      
             <Player
               src={m.url}
               title={m.title}
@@ -113,7 +114,16 @@ export default function Music() {
               cover={m.cover_url}
             />
 
-            <div className="mt-4 w-full bg-[color-mix(in_oklab,var(--bg)_96%,black_4%)] rounded-xl p-3 border border-[var(--accent)]/10">
+            <div
+              className="
+                mt-5 w-full p-4 rounded-xl
+                bg-[color-mix(in_oklab,var(--bg)_94%,black_6%)]
+                border border-[var(--accent)]/15
+                shadow-[0_0_20px_var(--accent)]/20
+                hover:shadow-[0_0_28px_var(--accent)]/30
+                transition-all duration-500
+              "
+            >
               <CommentSection type="music" relatedId={m.id} user={user} />
             </div>
           </motion.div>
@@ -158,7 +168,6 @@ export default function Music() {
     </motion.main>
   );
 }
-
 
 
 
