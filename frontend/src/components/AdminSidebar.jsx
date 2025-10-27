@@ -47,18 +47,14 @@ export default function AdminSidebar() {
     <aside
       className="
         hidden md:flex flex-col fixed left-0
-        top-[var(--header-height,120px)] 
-        h-[calc(100vh-var(--header-height,120px))] 
-        w-64
+        top-[217px] h-[calc(100vh-217px)] w-64
         bg-[var(--bg)] text-[var(--text)]
         border-r border-[var(--accent)]/30
         shadow-[0_0_15px_var(--accent)]/15
         transition-colors duration-700 ease-in-out
         z-40
       "
-      style={{ "--header-height": "120px" }}
     >
- 
       <div className="py-5 text-center border-b border-[var(--accent)]/30 bg-[var(--bg-secondary)]">
         <h1
           onClick={() => navigate("/admin")}
