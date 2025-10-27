@@ -45,7 +45,8 @@ export default function Music() {
           Aucune musique publiée
         </h1>
         <p className="text-[var(--subtext)] max-w-md mx-auto">
-          Restez à l’écoute — <span className="text-[var(--accent)]">REVEREN</span> prépare du lourd 🔥
+          Restez à l’écoute —{" "}
+          <span className="text-[var(--accent)]">REVEREN</span> prépare du lourd 🔥
         </p>
 
         <div className="max-w-4xl mx-auto mt-16 px-6">
@@ -68,7 +69,7 @@ export default function Music() {
         overflow-hidden
       "
     >
-   
+     
       <div
         className="
           absolute top-[35%] left-1/2 -translate-x-1/2 
@@ -78,7 +79,6 @@ export default function Music() {
         "
       ></div>
 
-    
       <div className="relative inline-block mb-10 text-center">
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[var(--accent)]/30 to-transparent blur-md"></div>
         <h1 className="relative text-4xl md:text-5xl font-extrabold text-[var(--accent)] drop-shadow-[0_0_12px_var(--accent)] tracking-wide">
@@ -99,18 +99,17 @@ export default function Music() {
             className="
               flex flex-col items-center 
               bg-[color-mix(in_oklab,var(--bg)_92%,black_8%)]
-              border border-[var(--accent)]/20
-              rounded-2xl shadow-[0_0_25px_var(--accent)]/25
+              border-2 border-[var(--accent)] border-solid
+              rounded-2xl shadow-[0_0_25px_var(--accent)]
               p-5 w-full
-              hover:border-[var(--accent)]/40 hover:shadow-[0_0_35px_var(--accent)]/35
+              hover:shadow-[0_0_35px_var(--accent)]
               transition-all duration-300
             "
           >
-      
             <Player
               src={m.url}
               title={m.title}
-              artist={m.artist || "REVEREN"}
+              artist={m.artist || 'REVEREN'}
               cover={m.cover_url}
             />
 
@@ -118,13 +117,13 @@ export default function Music() {
               className="
                 mt-5 w-full p-4 rounded-xl
                 bg-[color-mix(in_oklab,var(--bg)_94%,black_6%)]
-                border border-[var(--accent)]/15
-                shadow-[0_0_20px_var(--accent)]/20
-                hover:shadow-[0_0_28px_var(--accent)]/30
+                border border-[var(--accent)] border-solid
+                shadow-[0_0_20px_var(--accent)]
+                hover:shadow-[0_0_28px_var(--accent)]
                 transition-all duration-500
               "
             >
-              <CommentSection type="music" relatedId={m.id} user={user} />
+              <CommentSection type='music' relatedId={m.id} user={user} />
             </div>
           </motion.div>
         ))}
@@ -168,8 +167,6 @@ export default function Music() {
     </motion.main>
   );
 }
-
-
 
 
 
