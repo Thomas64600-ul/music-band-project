@@ -1,11 +1,10 @@
-import { getGlobalStats } from "../models/Stats.js";
+import express from "express";
+import { getGlobalStatsController } from "../controllers/statsController.js";
+import { protect } from "../middlewares/authMiddleware.js";
+import { authorizeRoles } from "../middlewares/roleMiddleware.js";
 
-export async function getGlobalStatsController(req, res, next) {
-  try {
-    const data = await getGlobalStats();
-    res.status(200).json({ success: true, data });
-  } catch (error) {
-    console.error("Erreur getGlobalStatsController :", error);
-    next(error);
-  }
-}
+const router = express.Router();
+
+router.get("/", protect, authorizeRoles("admin"), getGlobalStatsController);
+
+export default router;

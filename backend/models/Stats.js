@@ -1,23 +1,25 @@
 import pool from "../config/db.js";
 
 async function getGlobalStats() {
-  const result = {};
-
   try {
+    const result = {};
+
     const usersRes = await pool.query(`SELECT COUNT(*) AS count FROM users`);
-    result.usersCount = parseInt(usersRes.rows[0].count) || 0;
+    result.usersCount = parseInt(usersRes.rows[0]?.count || 0);
 
     const articlesRes = await pool.query(`SELECT COUNT(*) AS count FROM articles`);
-    result.articlesCount = parseInt(articlesRes.rows[0].count) || 0;
+    result.articlesCount = parseInt(articlesRes.rows[0]?.count || 0);
 
     const concertsRes = await pool.query(`SELECT COUNT(*) AS count FROM concerts`);
-    result.concertsCount = parseInt(concertsRes.rows[0].count) || 0;
+    result.concertsCount = parseInt(concertsRes.rows[0]?.count || 0);
 
     const musicsRes = await pool.query(`SELECT COUNT(*) AS count FROM musics`);
-    result.musicsCount = parseInt(musicsRes.rows[0].count) || 0;
+    result.musicsCount = parseInt(musicsRes.rows[0]?.count || 0);
 
-    const donationsRes = await pool.query(`SELECT COALESCE(SUM(amount), 0) AS total FROM donations`);
-    result.totalDonations = parseFloat(donationsRes.rows[0].total) || 0;
+    const donationsRes = await pool.query(`
+      SELECT COALESCE(SUM(amount), 0) AS total FROM donations
+    `);
+    result.totalDonations = parseFloat(donationsRes.rows[0]?.total || 0);
 
     const rolesRes = await pool.query(`
       SELECT role, COUNT(*) AS count
@@ -27,8 +29,7 @@ async function getGlobalStats() {
 
     result.rolesDistribution = {
       admin: 0,
-      seller: 0,
-      buyer: 0,
+      user: 0,
     };
 
     rolesRes.rows.forEach((row) => {
@@ -41,9 +42,10 @@ async function getGlobalStats() {
 
     return result;
   } catch (error) {
-    console.error("Erreur getGlobalStats :", error);
+    console.error("Erreur getGlobalStats :", error.message);
     throw error;
   }
 }
 
 export { getGlobalStats };
+
