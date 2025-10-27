@@ -18,16 +18,14 @@ import musicRoutes from "./routes/musicRoutes.js";
 dotenv.config();
 const app = express();
 
-
-app.set("trust proxy", 1); 
+app.set("trust proxy", 1);
 app.disable("x-powered-by");
 app.use(compression());
 app.use(morgan(process.env.NODE_ENV !== "production" ? "dev" : "combined"));
 
-
 app.use(
   helmet({
-    crossOriginResourcePolicy: false, 
+    crossOriginResourcePolicy: false,
     contentSecurityPolicy: {
       useDefaults: true,
       directives: {
@@ -43,32 +41,19 @@ app.use(
   })
 );
 
-
-const allowedOrigins = [
-  "http://localhost:5173",
-  "https://music-band-project-five.vercel.app",
-  "https://music-band-project-7ck7tvh2i-thomas-projects-6c01465d.vercel.app",
-  process.env.CLIENT_URL,
-].filter(Boolean);
-
-
 app.use(
   cors({
     origin: function (origin, callback) {
-      const allowedOrigins = [
-        "http://localhost:5173",
-        "https://music-band-project-five.vercel.app",
-        "https://music-band-project-7ck7tvh2i-thomas-projects-6c01465d.vercel.app",
-        process.env.CLIENT_URL,
-      ].filter(Boolean);
-
-      
-
-      if (allowedOrigins.includes(origin)) {
+      if (
+        !origin || 
+        origin.includes("vercel.app") || 
+        origin.includes("localhost") || 
+        origin === process.env.CLIENT_URL 
+      ) {
         callback(null, true);
       } else {
         console.warn("CORS refusé pour :", origin);
-        return callback(new Error("Not allowed by CORS"));
+        callback(new Error("Not allowed by CORS"));
       }
     },
     credentials: true,
@@ -82,15 +67,11 @@ app.use(
   })
 );
 
-
-console.log("CORS activé pour :", allowedOrigins);
-
-
+console.log("🌐 CORS activé pour :", process.env.CLIENT_URL || "localhost/vercel.app");
 
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-
 
 app.use("/api/users", userRoutes);
 app.use("/api/articles", articleRoutes);
@@ -100,29 +81,26 @@ app.use("/api/musics", musicRoutes);
 app.use("/api/messages", messageRoutes);
 app.use("/api/donations", donationRoutes);
 
-
 app.use(
   "/api/donations/webhook",
   express.raw({ type: "application/json" }),
   donationRoutes
 );
 
-
 if (process.env.NODE_ENV !== "production") {
   const { default: testRoute } = await import("./routes/testRoute.js");
   app.use("/api", testRoute);
 
-  
   app.get("/api/debug/cookies", (req, res) => {
     console.log("Cookies reçus :", req.cookies);
     res.json({ cookies: req.cookies || {} });
   });
 }
 
-
 app.use(errorHandler);
 
 export default app;
+
 
 
 
