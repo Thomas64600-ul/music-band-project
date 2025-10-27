@@ -85,6 +85,43 @@ export async function register(req, res, next) {
   }
 }
 
+export async function verifyEmail(req, res, next) {
+  try {
+    const { token } = req.params;
+
+    const user = await getUserByEmailToken(token);
+    if (!user) {
+      return res
+        .status(400)
+        .json({ success: false, error: "Token invalide ou expiré." });
+    }
+
+    await updateUser(
+      user.id,
+      user.firstname,
+      user.lastname,
+      user.email,
+      user.role,
+      user.image_url,
+      true
+    );
+
+    await sendEmail(
+      user.email,
+      "Ton compte est maintenant vérifié !",
+      "Ton adresse e-mail a bien été confirmée.",
+      "emailVerified.html",
+      { firstname: user.firstname }
+    );
+
+    res
+      .status(200)
+      .json({ success: true, message: "Adresse e-mail vérifiée avec succès." });
+  } catch (error) {
+    next(error);
+  }
+}
+
 export async function login(req, res, next) {
   try {
     const { email, password } = req.validatedBody;

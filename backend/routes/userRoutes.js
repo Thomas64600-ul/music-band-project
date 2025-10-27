@@ -29,16 +29,13 @@ import {
   registerLimiter,
   resetPasswordLimiter,
 } from "../middlewares/rateLimiter.js";
-import { protectAdminRoute } from "../middlewares/protectAdminRoute.js"; // ✅ nouveau middleware combiné
+import { protectAdminRoute } from "../middlewares/protectAdminRoute.js";
 
 const router = express.Router();
 
 router.post("/register", registerLimiter, validate(registerSchema), register);
-
-router.get("/verify/:token", verifyEmail);
-
+router.get("/verify-email/:token", verifyEmail); 
 router.post("/login", loginLimiter, validate(loginSchema), login);
-
 router.post("/logout", protect, logout);
 
 router.post(
@@ -47,18 +44,12 @@ router.post(
   validate(forgotPasswordSchema),
   forgotPassword
 );
-
-
 router.post("/reset-password/:token", validate(resetPasswordSchema), resetPassword);
 
 router.get("/me", protect, me);
 
 router.get("/", protectAdminRoute, fetchUsers);
-
-
 router.get("/:id", protectAdminRoute, fetchUserById);
-
-
 router.put(
   "/:id",
   protectAdminRoute,
@@ -66,8 +57,6 @@ router.put(
   validate(updateUserSchema),
   editUser
 );
-
-
 router.delete("/:id", protectAdminRoute, removeUser);
 
 router.get("/debug/auth", protect, (req, res) => {
