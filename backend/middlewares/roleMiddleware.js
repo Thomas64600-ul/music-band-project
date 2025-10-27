@@ -2,7 +2,7 @@ export function authorizeRoles(...allowedRoles) {
   return (req, res, next) => {
     const user = req.user;
 
-    
+   
     if (!user) {
       return res.status(401).json({
         success: false,
@@ -18,7 +18,7 @@ export function authorizeRoles(...allowedRoles) {
       });
     }
 
-   
+  
     if (!allowedRoles.includes(user.role)) {
       console.warn(`Accès refusé : ${user.email || "Inconnu"} (${user.role})`);
       return res.status(403).json({
@@ -27,7 +27,9 @@ export function authorizeRoles(...allowedRoles) {
       });
     }
 
-    
+    console.log(`Accès autorisé : ${user.email || "Inconnu"} (${user.role})`);
+
     next();
   };
 }
+

@@ -36,6 +36,7 @@ async function getComments(target_type = null, target_id = null) {
   let values = [];
 
   if (target_type && target_id) {
+   
     query = `
       SELECT 
         c.id, c.content, c.created_at, c.updated_at,
@@ -48,12 +49,13 @@ async function getComments(target_type = null, target_id = null) {
     `;
     values = [target_type, target_id];
   } else {
+   
     query = `
       SELECT 
         c.id, c.content, c.created_at, c.updated_at,
         c.target_type, c.target_id,
         u.id AS user_id, u.firstname, u.lastname, u.image_url,
-        COALESCE(a.title, con.title, m.title) AS article_title
+        COALESCE(a.title, con.title, m.title) AS related_title
       FROM comments AS c
       LEFT JOIN users AS u ON c.user_id = u.id
       LEFT JOIN articles AS a ON (c.target_type = 'article' AND c.target_id = a.id)
@@ -77,6 +79,7 @@ async function deleteComment(id, user_id, role) {
   const result = await pool.query(query, values);
   return result.rowCount > 0;
 }
+
 
 async function updateComment(id, user_id, content) {
   const updateResult = await pool.query(
@@ -111,10 +114,5 @@ async function updateComment(id, user_id, content) {
   };
 }
 
-export {
-  addComment,
-  getComments,
-  deleteComment,
-  updateComment
-};
+export { addComment, getComments, deleteComment, updateComment };
 
