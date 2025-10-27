@@ -16,6 +16,7 @@ import VerifyEmail from "./pages/VerifyEmail";
 
 import ProtectedRoute from "./components/ProtectedRoute";
 import AdminLayout from "./layouts/AdminLayout";
+
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminListArticles from "./pages/AdminListArticles";
 import AdminEditArticle from "./pages/AdminEditArticle";
@@ -27,11 +28,10 @@ import AdminMessages from "./pages/AdminMessages";
 import AdminDonations from "./pages/AdminDonations";
 import AdminUsers from "./pages/AdminUsers";
 import AdminStats from "./pages/AdminStats";
-import AdminComments from "./pages/AdminComments"; 
+import AdminComments from "./pages/AdminComments";
 
 export default function App() {
-  console.log("API URL =", import.meta.env.VITE_API_URL);
-
+  
   return (
     <div
       className="min-h-screen flex flex-col transition-colors duration-500 
@@ -50,9 +50,10 @@ export default function App() {
         ]}
       />
 
+    
       <main className="flex-grow pt-20 md:pt-28 pb-16 md:pb-18">
         <Routes>
-         
+       
           <Route path="/" element={<Home />} />
           <Route path="/music" element={<Music />} />
           <Route path="/concerts" element={<Concerts />} />
@@ -169,6 +170,16 @@ export default function App() {
           />
 
           <Route
+            path="/admin/comments"
+            element={
+              <ProtectedRoute requireAdmin={true}>
+                <AdminLayout>
+                  <AdminComments />
+                </AdminLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
             path="/admin/messages"
             element={
               <ProtectedRoute requireAdmin={true}>
@@ -178,7 +189,6 @@ export default function App() {
               </ProtectedRoute>
             }
           />
-
           <Route
             path="/admin/donations"
             element={
@@ -189,7 +199,6 @@ export default function App() {
               </ProtectedRoute>
             }
           />
-
           <Route
             path="/admin/users"
             element={
@@ -200,24 +209,12 @@ export default function App() {
               </ProtectedRoute>
             }
           />
-
           <Route
             path="/admin/stats"
             element={
               <ProtectedRoute requireAdmin={true}>
                 <AdminLayout>
                   <AdminStats />
-                </AdminLayout>
-              </ProtectedRoute>
-            }
-          />
-
-          <Route
-            path="/admin/comments"
-            element={
-              <ProtectedRoute requireAdmin={true}>
-                <AdminLayout>
-                  <AdminComments />
                 </AdminLayout>
               </ProtectedRoute>
             }

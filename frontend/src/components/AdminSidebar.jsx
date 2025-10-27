@@ -7,7 +7,7 @@ import {
   Music2,
   Gift,
   Mail,
-  MessageSquareQuote, 
+  MessageSquareQuote,
   Users,
   PieChart,
   LogOut,
@@ -29,42 +29,52 @@ export default function AdminSidebar() {
     { name: "Concerts", path: "/admin/concerts", Icon: Music2 },
     { name: "Dons", path: "/admin/donations", Icon: Gift },
     { name: "Messages", path: "/admin/messages", Icon: Mail },
-    { name: "Commentaires", path: "/admin/comments", Icon: MessageSquareQuote }, 
+    { name: "Commentaires", path: "/admin/comments", Icon: MessageSquareQuote },
     { name: "Utilisateurs", path: "/admin/users", Icon: Users },
     { name: "Statistiques", path: "/admin/stats", Icon: PieChart },
   ];
 
+  async function handleLogout() {
+    try {
+      await logout();
+      navigate("/login");
+    } catch (e) {
+      console.error("Erreur déconnexion :", e);
+    }
+  }
+
   return (
     <aside
       className="
-        hidden md:flex flex-col fixed left-0 top-0 h-full w-64
+        hidden md:flex flex-col fixed left-0 top-[80px]
+        h-[calc(100vh-80px)] w-64
         bg-[var(--bg)] text-[var(--text)]
         border-r border-[var(--accent)]/30
         shadow-[0_0_15px_var(--accent)]/15
         transition-colors duration-700 ease-in-out
-        z-50
+        z-40
       "
     >
-    
+   
       <div className="py-6 text-center border-b border-[var(--accent)]/30 bg-[var(--bg-secondary)]">
         <h1
           onClick={() => navigate("/admin")}
           className="
             text-2xl font-bold text-[var(--accent)] cursor-pointer
             drop-shadow-[0_0_6px_var(--accent)]
-            hover:scale-[1.03] transition-transform duration-300
+            hover:scale-[1.05] transition-transform duration-300
           "
         >
           REVEREN Admin
         </h1>
       </div>
 
-      <nav className="flex-1 mt-8 px-4 space-y-1">
+      <nav className="flex-1 mt-6 px-4 space-y-1 overflow-y-auto">
         {links.map(({ name, path, Icon }) => (
           <NavLink
             key={path}
             to={path}
-            end
+            end={path === "/admin"} 
             className={({ isActive }) =>
               `
               flex items-center gap-3 px-4 py-2 rounded-lg font-medium
@@ -85,9 +95,10 @@ export default function AdminSidebar() {
 
       <div className="border-t border-[var(--accent)]/30 p-4 bg-[var(--bg-secondary)]">
         <button
-          onClick={logout}
+          onClick={handleLogout}
           className="
-            flex items-center gap-2 text-[var(--accent)] font-medium
+            flex items-center gap-2 w-full justify-center
+            text-[var(--accent)] font-medium
             hover:text-[var(--gold)] transition-all duration-300
           "
         >
@@ -98,3 +109,4 @@ export default function AdminSidebar() {
     </aside>
   );
 }
+
