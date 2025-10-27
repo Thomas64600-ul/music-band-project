@@ -112,6 +112,18 @@ export default function AdminDashboard() {
             GÉRER LES COMMENTAIRES
           </Button>
 
+       
+          <Button
+            onClick={() => navigate("/admin/users")}
+            className="
+              bg-[var(--accent)] text-white py-3 rounded-lg font-semibold
+              hover:bg-[var(--gold)] hover:text-[var(--bg)]
+              hover:shadow-[0_0_15px_var(--accent)] transition-all duration-300
+            "
+          >
+            GÉRER LES UTILISATEURS
+          </Button>
+
           <Button
             onClick={() => navigate("/admin/stats")}
             className="
