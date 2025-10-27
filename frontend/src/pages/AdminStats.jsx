@@ -14,65 +14,22 @@ import Button from "../components/Button";
 import { motion } from "framer-motion";
 
 export default function AdminStats() {
-  const [stats, setStats] = useState({
-    users: [],
-    articles: 0,
-    concerts: 0,
-    musics: 0,
-    donations: 0,
-  });
+  const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const { isAdmin } = useAuth();
   const navigate = useNavigate();
+
 
   useEffect(() => {
     if (!isAdmin) navigate("/login");
   }, [isAdmin, navigate]);
 
+  
   useEffect(() => {
     (async () => {
       try {
-        const [usersRes, articlesRes, concertsRes, musicsRes, donationsRes] =
-          await Promise.all([
-            get("/users"),
-            get("/articles"),
-            get("/concerts"),
-            get("/musics"),
-            get("/donations"),
-          ]);
-
-        const users = Array.isArray(usersRes)
-          ? usersRes
-          : usersRes.users || [];
-
-        const articles = Array.isArray(articlesRes)
-          ? articlesRes
-          : articlesRes.articles || [];
-
-        const concerts = Array.isArray(concertsRes)
-          ? concertsRes
-          : concertsRes.concerts || [];
-
-        const musics = Array.isArray(musicsRes)
-          ? musicsRes
-          : musicsRes.musics || [];
-
-        const donations = Array.isArray(donationsRes)
-          ? donationsRes
-          : donationsRes.donations || [];
-
-        const totalDonations = donations.reduce(
-          (sum, d) => sum + (parseFloat(d.amount) || 0),
-          0
-        );
-
-        setStats({
-          users,
-          articles: articles.length,
-          concerts: concerts.length,
-          musics: musics.length,
-          donations: totalDonations,
-        });
+        const res = await get("/stats");
+        setStats(res.data || res);
       } catch (e) {
         console.error("Erreur chargement stats :", e);
       } finally {
@@ -88,13 +45,21 @@ export default function AdminStats() {
       </p>
     );
 
+  if (!stats)
+    return (
+      <p className="text-center mt-10 text-red-500">
+        Impossible de charger les statistiques.
+      </p>
+    );
+
+ 
+  const roles = stats.rolesDistribution || {};
   const roleData = [
-    { name: "Admins", value: stats.users.filter((u) => u.roles === "admin").length },
-    { name: "Vendeurs", value: stats.users.filter((u) => u.roles === "seller").length },
-    { name: "Utilisateurs", value: stats.users.filter((u) => u.roles === "buyer").length },
+    { name: "Admins", value: roles.admin || 0 },
+    { name: "Utilisateurs", value: roles.user || 0 },
   ];
 
-  const COLORS = ["#B3122D", "#FF4C4C", "#FFD700"];
+  const COLORS = ["#B3122D", "#FFD700"];
 
   return (
     <motion.section
@@ -119,19 +84,20 @@ export default function AdminStats() {
         
         <div className="absolute -top-20 -right-20 w-80 h-80 bg-[var(--accent)]/30 rounded-full blur-[150px] opacity-50 pointer-events-none"></div>
 
-       
         <h1 className="text-3xl sm:text-4xl font-extrabold text-center text-[var(--accent)] drop-shadow-[0_0_15px_var(--accent)] mb-8 sm:mb-12">
           Statistiques globales
         </h1>
 
-       
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6 mb-10 sm:mb-12">
           {[
-            { label: "Utilisateurs", value: stats.users.length },
-            { label: "Articles", value: stats.articles },
-            { label: "Concerts", value: stats.concerts },
-            { label: "Musiques", value: stats.musics },
-            { label: "Total dons (€)", value: stats.donations.toFixed(2) },
+            { label: "Utilisateurs", value: stats.usersCount },
+            { label: "Articles", value: stats.articlesCount },
+            { label: "Concerts", value: stats.concertsCount },
+            { label: "Musiques", value: stats.musicsCount },
+            {
+              label: "Total dons (€)",
+              value: stats.totalDonations.toFixed(2),
+            },
           ].map((stat, i) => (
             <div
               key={i}
@@ -153,7 +119,6 @@ export default function AdminStats() {
           ))}
         </div>
 
-        
         <div
           className="
             bg-[var(--bg)] rounded-2xl p-4 sm:p-6
@@ -164,6 +129,7 @@ export default function AdminStats() {
           <h2 className="text-xl sm:text-2xl font-semibold text-[var(--accent)] mb-4 sm:mb-6 text-center">
             Répartition des rôles utilisateurs
           </h2>
+
           <div className="w-full h-[250px] sm:h-[320px]">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
@@ -171,8 +137,7 @@ export default function AdminStats() {
                   data={roleData}
                   cx="50%"
                   cy="50%"
-                  outerRadius={80}
-                  sm={{ outerRadius: 100 }}
+                  outerRadius={90}
                   dataKey="value"
                   label
                 >
@@ -199,7 +164,6 @@ export default function AdminStats() {
           </div>
         </div>
 
-        
         <div className="mt-8 sm:mt-10 text-center">
           <Button
             onClick={() => navigate("/admin")}
