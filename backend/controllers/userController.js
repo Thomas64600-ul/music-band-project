@@ -20,7 +20,6 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-
 function generateToken(user) {
   return jwt.sign(
     { id: user.id, email: user.email, role: user.role },
@@ -28,7 +27,6 @@ function generateToken(user) {
     { expiresIn: "1h" }
   );
 }
-
 
 export async function register(req, res, next) {
   try {
@@ -87,41 +85,6 @@ export async function register(req, res, next) {
   }
 }
 
-
-export async function verifyEmail(req, res, next) {
-  try {
-    const { token } = req.params;
-    const user = await getUserByEmailToken(token);
-
-    if (!user) {
-      return res.status(400).json({ success: false, error: "Token invalide ou expiré." });
-    }
-
-    await updateUser(
-      user.id,
-      user.firstname,
-      user.lastname,
-      user.email,
-      user.role,
-      user.image_url,
-      true
-    );
-
-    await sendEmail(
-      user.email,
-      "Ton compte est maintenant vérifié !",
-      "Ton adresse e-mail a bien été confirmée.",
-      "emailVerified.html",
-      { firstname: user.firstname }
-    );
-
-    res.status(200).json({ success: true, message: "Adresse e-mail vérifiée avec succès." });
-  } catch (error) {
-    next(error);
-  }
-}
-
-
 export async function login(req, res, next) {
   try {
     const { email, password } = req.validatedBody;
@@ -142,15 +105,13 @@ export async function login(req, res, next) {
 
     const token = generateToken(user);
 
-    
     res.cookie("token", token, {
-  httpOnly: true,
-  secure: process.env.NODE_ENV === "production",
-  sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax", 
-  maxAge: 60 * 60 * 1000,
-  path: "/", 
-});
-
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production", 
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      maxAge: 60 * 60 * 1000, 
+      path: "/", 
+    });
 
     res.status(200).json({
       success: true,
@@ -169,13 +130,12 @@ export async function login(req, res, next) {
   }
 }
 
-
 export async function logout(req, res, next) {
   try {
     res.clearCookie("token", {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "None",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       path: "/",
     });
     res.status(200).json({ success: true, message: "Déconnexion réussie." });
@@ -183,7 +143,6 @@ export async function logout(req, res, next) {
     next(error);
   }
 }
-
 
 export async function me(req, res, next) {
   try {
@@ -196,7 +155,6 @@ export async function me(req, res, next) {
     next(error);
   }
 }
-
 
 export async function forgotPassword(req, res, next) {
   try {
@@ -260,7 +218,6 @@ export async function resetPassword(req, res, next) {
   }
 }
 
-
 export async function fetchUsers(req, res, next) {
   try {
     const users = await getAllUsers();
@@ -316,6 +273,7 @@ export async function removeUser(req, res, next) {
     next(error);
   }
 }
+
 
 
 
