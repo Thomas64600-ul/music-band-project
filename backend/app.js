@@ -20,40 +20,6 @@ const app = express();
 
 app.set("trust proxy", 1);
 app.disable("x-powered-by");
-
-const allowedPatterns = [
-  /^https?:\/\/localhost(:\d+)?$/,
-  /^https?:\/\/.*\.vercel\.app$/,
-  /^https?:\/\/.*\.onrender\.com$/,
-  process.env.CLIENT_URL
-].filter(Boolean);
-
-app.use(
-  cors({
-    origin: function (origin, callback) {
-   
-      if (!origin) return callback(null, true);
-
-      const allowed = allowedPatterns.some((pattern) => {
-        if (typeof pattern === "string") return origin === pattern;
-        return pattern.test(origin);
-      });
-
-      if (allowed) {
-        callback(null, true);
-      } else {
-        console.warn("CORS refusé pour :", origin);
-        return callback(new Error("Not allowed by CORS"));
-      }
-    },
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-  })
-);
-
-console.log("CORS activé — Origines autorisées :", allowedPatterns);
-
 app.use(compression());
 app.use(morgan(process.env.NODE_ENV !== "production" ? "dev" : "combined"));
 
@@ -63,33 +29,55 @@ app.use(
     contentSecurityPolicy: {
       useDefaults: true,
       directives: {
-        "default-src": ["'self'"],
-        "script-src": [
-          "'self'",
-          "'unsafe-inline'",
-          "https://js.stripe.com",
-          "https://vercel.live", 
-        ],
+        "img-src": ["'self'", "data:", "blob:", "res.cloudinary.com"],
         "connect-src": [
           "'self'",
-          "https://api.stripe.com",
-          "https://vercel.live",
-          "https://*.vercel.app",
           process.env.CLIENT_URL || "http://localhost:5173",
-          process.env.RENDER_EXTERNAL_URL || "https://music-band-project.onrender.com",
+          "https://api.stripe.com",
         ],
-        "img-src": [
-          "'self'",
-          "data:",
-          "blob:",
-          "https://res.cloudinary.com",
-        ],
-        "style-src": ["'self'", "'unsafe-inline'"],
-        "frame-src": ["https://js.stripe.com"],
+        "script-src": ["'self'", "'unsafe-inline'", "https://js.stripe.com"],
       },
     },
   })
 );
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin) return callback(null, true); 
+
+      const allowed = [
+        "http://localhost:5173",
+        "https://music-band-project.vercel.app",
+        /\.vercel\.app$/,
+        /\.onrender\.com$/,
+      ];
+
+      const isAllowed = allowed.some((rule) => {
+        if (rule instanceof RegExp) return rule.test(origin);
+        return rule === origin;
+      });
+
+      if (isAllowed) {
+        callback(null, true);
+      } else {
+        console.warn("CORS refusé pour :", origin);
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    allowedHeaders: [
+      "Content-Type",
+      "Authorization",
+      "X-Requested-With", 
+      "Access-Control-Allow-Credentials",
+    ],
+    exposedHeaders: ["Authorization"],
+  })
+);
+
+console.log("CORS activé : Render + Vercel + localhost");
 
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true }));
@@ -114,6 +102,7 @@ if (process.env.NODE_ENV !== "production") {
   app.use("/api", testRoute);
 
   app.get("/api/debug/cookies", (req, res) => {
+    console.log("Cookies reçus :", req.cookies);
     res.json({ cookies: req.cookies || {} });
   });
 }
