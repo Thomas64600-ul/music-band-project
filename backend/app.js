@@ -21,17 +21,23 @@ const app = express();
 app.set("trust proxy", 1);
 app.disable("x-powered-by");
 
+const allowedPatterns = [
+  /^https?:\/\/localhost(:\d+)?$/,
+  /^https?:\/\/.*\.vercel\.app$/,
+  /^https?:\/\/.*\.onrender\.com$/,
+  process.env.CLIENT_URL
+].filter(Boolean);
+
 app.use(
   cors({
     origin: function (origin, callback) {
-      if (!origin) return callback(null, true); 
+   
+      if (!origin) return callback(null, true);
 
-      const normalized = origin.toLowerCase();
-      const allowed =
-        normalized.includes("vercel.app") ||
-        normalized.includes("localhost") ||
-        normalized.includes("render.com") ||
-        normalized === process.env.CLIENT_URL?.toLowerCase();
+      const allowed = allowedPatterns.some((pattern) => {
+        if (typeof pattern === "string") return origin === pattern;
+        return pattern.test(origin);
+      });
 
       if (allowed) {
         callback(null, true);
@@ -46,7 +52,7 @@ app.use(
   })
 );
 
-console.log("🌍 CORS configuré avec succès");
+console.log("CORS activé — Origines autorisées :", allowedPatterns);
 
 app.use(compression());
 app.use(morgan(process.env.NODE_ENV !== "production" ? "dev" : "combined"));
