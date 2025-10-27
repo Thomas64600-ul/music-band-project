@@ -7,6 +7,7 @@ import {
   Music2,
   Gift,
   Mail,
+  MessageSquareQuote, 
   Users,
   PieChart,
   LogOut,
@@ -28,6 +29,7 @@ export default function AdminSidebar() {
     { name: "Concerts", path: "/admin/concerts", Icon: Music2 },
     { name: "Dons", path: "/admin/donations", Icon: Gift },
     { name: "Messages", path: "/admin/messages", Icon: Mail },
+    { name: "Commentaires", path: "/admin/comments", Icon: MessageSquareQuote }, 
     { name: "Utilisateurs", path: "/admin/users", Icon: Users },
     { name: "Statistiques", path: "/admin/stats", Icon: PieChart },
   ];
@@ -43,7 +45,7 @@ export default function AdminSidebar() {
         z-50
       "
     >
-     
+    
       <div className="py-6 text-center border-b border-[var(--accent)]/30 bg-[var(--bg-secondary)]">
         <h1
           onClick={() => navigate("/admin")}
@@ -57,7 +59,6 @@ export default function AdminSidebar() {
         </h1>
       </div>
 
-    
       <nav className="flex-1 mt-8 px-4 space-y-1">
         {links.map(({ name, path, Icon }) => (
           <NavLink
@@ -82,7 +83,6 @@ export default function AdminSidebar() {
         ))}
       </nav>
 
-     
       <div className="border-t border-[var(--accent)]/30 p-4 bg-[var(--bg-secondary)]">
         <button
           onClick={logout}
@@ -98,5 +98,3 @@ export default function AdminSidebar() {
     </aside>
   );
 }
-
-

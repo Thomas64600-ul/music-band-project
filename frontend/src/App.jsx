@@ -2,7 +2,6 @@ import { Routes, Route } from "react-router-dom";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 
-
 import Home from "./pages/Home";
 import Music from "./pages/Music";
 import Concerts from "./pages/Concerts";
@@ -13,8 +12,7 @@ import Cagnotte from "./pages/Cagnotte";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import NotFound from "./pages/NotFound";
-import VerifyEmail from "./pages/VerifyEmail"; 
-
+import VerifyEmail from "./pages/VerifyEmail";
 
 import ProtectedRoute from "./components/ProtectedRoute";
 import AdminLayout from "./layouts/AdminLayout";
@@ -29,16 +27,17 @@ import AdminMessages from "./pages/AdminMessages";
 import AdminDonations from "./pages/AdminDonations";
 import AdminUsers from "./pages/AdminUsers";
 import AdminStats from "./pages/AdminStats";
+import AdminComments from "./pages/AdminComments"; 
 
 export default function App() {
-  console.log("🌍 API URL =", import.meta.env.VITE_API_URL);
+  console.log("API URL =", import.meta.env.VITE_API_URL);
 
   return (
     <div
       className="min-h-screen flex flex-col transition-colors duration-500 
       bg-[var(--bg)] text-[var(--text)]"
     >
-      
+    
       <Header
         logoSrc="/src/assets/logo.png"
         links={[
@@ -51,7 +50,6 @@ export default function App() {
         ]}
       />
 
-     
       <main className="flex-grow pt-20 md:pt-28 pb-16 md:pb-18">
         <Routes>
          
@@ -64,11 +62,8 @@ export default function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-
-        
           <Route path="/verify-email/:token" element={<VerifyEmail />} />
 
-         
           <Route
             path="/admin"
             element={
@@ -183,6 +178,7 @@ export default function App() {
               </ProtectedRoute>
             }
           />
+
           <Route
             path="/admin/donations"
             element={
@@ -193,6 +189,7 @@ export default function App() {
               </ProtectedRoute>
             }
           />
+
           <Route
             path="/admin/users"
             element={
@@ -203,6 +200,7 @@ export default function App() {
               </ProtectedRoute>
             }
           />
+
           <Route
             path="/admin/stats"
             element={
@@ -214,12 +212,21 @@ export default function App() {
             }
           />
 
-        
+          <Route
+            path="/admin/comments"
+            element={
+              <ProtectedRoute requireAdmin={true}>
+                <AdminLayout>
+                  <AdminComments />
+                </AdminLayout>
+              </ProtectedRoute>
+            }
+          />
+
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
 
-      
       <Footer
         siteTitle="REVEREN"
         socials={[
@@ -231,6 +238,7 @@ export default function App() {
     </div>
   );
 }
+
 
 
 

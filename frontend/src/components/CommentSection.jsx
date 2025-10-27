@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { get, post } from "../lib/api";
+import { get, post, del, put } from "../lib/api";
 import { motion } from "framer-motion";
 
 export default function CommentSection({ type, relatedId, user }) {
@@ -7,16 +7,17 @@ export default function CommentSection({ type, relatedId, user }) {
   const [newComment, setNewComment] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [editingId, setEditingId] = useState(null);
+  const [editedContent, setEditedContent] = useState("");
 
-  
   const normalizedType = type?.toLowerCase().replace(/s$/, "");
 
- 
   useEffect(() => {
     (async () => {
       try {
         const data = await get(`/comments/${normalizedType}/${relatedId}`);
-        setComments(Array.isArray(data) ? data : []);
+       
+        setComments(Array.isArray(data.data) ? data.data : []);
       } catch (e) {
         console.error("Erreur chargement commentaires :", e);
         setError("Impossible de charger les commentaires.");
@@ -26,20 +27,20 @@ export default function CommentSection({ type, relatedId, user }) {
     })();
   }, [normalizedType, relatedId]);
 
-  
   async function handleSubmit(e) {
     e.preventDefault();
     if (!newComment.trim()) return;
 
     try {
       const body = {
-        target_type: normalizedType, 
+        target_type: normalizedType,
         target_id: relatedId,
         content: newComment,
       };
 
       const response = await post("/comments", body);
-      setComments((prev) => [response, ...prev]);
+     
+      setComments((prev) => [response.data, ...prev]);
       setNewComment("");
       setError(null);
     } catch (e) {
@@ -48,7 +49,41 @@ export default function CommentSection({ type, relatedId, user }) {
     }
   }
 
- 
+  async function handleDelete(id) {
+    if (!window.confirm("Supprimer ce commentaire ?")) return;
+    try {
+      await del(`/comments/${id}`);
+      setComments((prev) => prev.filter((c) => c.id !== id));
+    } catch (e) {
+      console.error("Erreur suppression :", e);
+      setError("Erreur lors de la suppression du commentaire.");
+    }
+  }
+
+  function startEdit(comment) {
+    setEditingId(comment.id);
+    setEditedContent(comment.content);
+  }
+
+  async function handleEdit(e) {
+    e.preventDefault();
+    if (!editedContent.trim()) return;
+
+    try {
+      const res = await put(`/comments/${editingId}`, { content: editedContent });
+     
+      setComments((prev) =>
+        prev.map((c) => (c.id === editingId ? res.data : c))
+      );
+      setEditingId(null);
+      setEditedContent("");
+      setError(null);
+    } catch (e) {
+      console.error("Erreur modification :", e);
+      setError("Impossible de modifier le commentaire.");
+    }
+  }
+
   if (loading)
     return (
       <p className="text-[var(--subtext)] text-sm animate-pulse">
@@ -56,7 +91,6 @@ export default function CommentSection({ type, relatedId, user }) {
       </p>
     );
 
- 
   return (
     <motion.section
       initial={{ opacity: 0, y: 10 }}
@@ -95,27 +129,73 @@ export default function CommentSection({ type, relatedId, user }) {
                 transition-all duration-300
               "
             >
-              <p className="text-sm leading-snug">{comment.content}</p>
-              <p className="text-xs text-[var(--subtext)] mt-2">
-                Par{" "}
-                <span className="text-[var(--accent)] font-medium">
-                  {comment.firstname || "Utilisateur"}
-                </span>{" "}
-                —{" "}
-                {comment.created_at
-                  ? new Date(comment.created_at).toLocaleDateString("fr-FR", {
-                      day: "2-digit",
-                      month: "long",
-                      year: "numeric",
-                    })
-                  : "Date inconnue"}
-              </p>
+              {editingId === comment.id ? (
+                <form onSubmit={handleEdit} className="flex flex-col gap-2">
+                  <textarea
+                    value={editedContent}
+                    onChange={(e) => setEditedContent(e.target.value)}
+                    rows={2}
+                    className="w-full p-2 rounded-md border border-[var(--accent)]/40 bg-[var(--bg)] text-[var(--text)] focus:ring-2 focus:ring-[var(--accent)]/70 transition-all"
+                  />
+                  <div className="flex justify-end gap-2">
+                    <button
+                      type="submit"
+                      className="px-3 py-1 bg-[var(--accent)] text-white rounded-md hover:bg-[var(--gold)] hover:text-[var(--bg)] transition-all"
+                    >
+                      Enregistrer
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setEditingId(null)}
+                      className="px-3 py-1 border border-[var(--accent)] text-[var(--accent)] rounded-md hover:bg-[var(--accent)] hover:text-[var(--bg)] transition-all"
+                    >
+                      Annuler
+                    </button>
+                  </div>
+                </form>
+              ) : (
+                <>
+                  <p className="text-sm leading-snug break-words">
+                    {comment.content}
+                  </p>
+                  <p className="text-xs text-[var(--subtext)] mt-2">
+                    Par{" "}
+                    <span className="text-[var(--accent)] font-medium">
+                      {comment.firstname || "Utilisateur"}
+                    </span>{" "}
+                    —{" "}
+                    {comment.created_at
+                      ? new Date(comment.created_at).toLocaleDateString("fr-FR", {
+                          day: "2-digit",
+                          month: "long",
+                          year: "numeric",
+                        })
+                      : "Date inconnue"}
+                  </p>
+
+                  {user && comment.user_id === user.id && (
+                    <div className="flex justify-end gap-3 mt-2 text-xs">
+                      <button
+                        onClick={() => startEdit(comment)}
+                        className="text-[var(--accent)] hover:text-[var(--gold)] font-medium transition"
+                      >
+                        Modifier
+                      </button>
+                      <button
+                        onClick={() => handleDelete(comment.id)}
+                        className="text-red-500 hover:text-red-400 font-medium transition"
+                      >
+                        Supprimer
+                      </button>
+                    </div>
+                  )}
+                </>
+              )}
             </motion.div>
           ))
         )}
       </div>
 
-      
       {user ? (
         <form onSubmit={handleSubmit} className="flex flex-col gap-3">
           <textarea
