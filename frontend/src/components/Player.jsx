@@ -14,7 +14,7 @@ export default function Player({
   const [volume, setVolume] = useState(1);
   const [isMuted, setIsMuted] = useState(false);
 
-  
+ 
   const togglePlay = () => {
     const audio = audioRef.current;
     if (!audio) return;
@@ -36,7 +36,7 @@ export default function Player({
     return () => audio.removeEventListener("timeupdate", updateProgress);
   }, []);
 
-  
+
   const toggleMute = () => {
     const audio = audioRef.current;
     if (!audio) return;
@@ -44,7 +44,6 @@ export default function Player({
     setIsMuted(audio.muted);
   };
 
-  
   const handleVolume = (e) => {
     const value = parseFloat(e.target.value);
     setVolume(value);
@@ -63,51 +62,52 @@ export default function Player({
   return (
     <div
       className="
-        w-full max-w-md 
-        bg-gradient-to-b from-[color-mix(in_oklab,var(--surface)_95%,var(--bg)_5%)] to-[var(--bg)]
-        border border-[color-mix(in_oklab,var(--border)_90%,var(--accent)_10%)]
-        rounded-2xl shadow-[0_0_20px_color-mix(in_oklab,var(--accent)_25%,transparent)]
-        overflow-hidden flex flex-col items-center text-[var(--text)]
-        transition-transform duration-300 hover:scale-[1.015] 
-        hover:shadow-[0_0_25px_color-mix(in_oklab,var(--accent)_40%,transparent)]
+        w-full
+        bg-[color-mix(in_oklab,var(--bg)_95%,black_5%)]
+        rounded-xl border border-[var(--border)]
+        shadow-[inset_0_0_10px_var(--accent)]
+        p-4 sm:p-5 text-center
+        flex flex-col items-center
+        transition-all duration-300
+        hover:shadow-[0_0_20px_var(--accent)]
       "
     >
-     
+ 
       {cover && (
-        <div className="relative w-full">
+        <div className="relative w-full h-40 sm:h-48 overflow-hidden rounded-lg mb-4">
           <img
             src={cover}
             alt={title}
-            className="w-full h-48 object-cover border-b border-[var(--border)]"
+            className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
           />
           {isPlaying && (
-            <div className="absolute inset-0 bg-[color-mix(in_oklab,var(--accent)_40%,transparent)] backdrop-blur-[2px] flex items-center justify-center animate-pulse">
-              <FaPlay size={40} className="text-[var(--gold)]" />
+            <div className="absolute inset-0 bg-[var(--accent)]/30 backdrop-blur-[2px] flex items-center justify-center">
+              <FaPlay size={40} className="text-[var(--gold)] animate-pulse" />
             </div>
           )}
         </div>
       )}
 
-      
-      <div className="p-4 text-center">
-        <h3 className="text-lg font-semibold text-[var(--gold)] drop-shadow-[0_0_6px_var(--gold)]">
+     
+      <div className="mb-3">
+        <h3 className="text-lg font-semibold text-[var(--accent)]">
           {title}
         </h3>
         <p className="text-sm text-[var(--subtext)] italic">{artist}</p>
       </div>
 
-      
-      <div className="flex items-center justify-center gap-6 py-3">
-        
+  
+      <div className="flex items-center justify-center gap-6 py-2">
+    
         <button
           onClick={togglePlay}
-          className={`relative text-[var(--accent)] hover:text-[color-mix(in_oklab,var(--accent)_80%,var(--gold)_20%)] transition-all duration-300 ${
+          className={`relative text-[var(--accent)] hover:text-[var(--gold)] transition-transform duration-300 ${
             isPlaying ? "scale-110" : "hover:scale-110"
           }`}
         >
           {isPlaying ? <FaPause size={28} /> : <FaPlay size={28} />}
           {isPlaying && (
-            <span className="absolute inset-0 rounded-full bg-[color-mix(in_oklab,var(--accent)_35%,transparent)] blur-md animate-pulse"></span>
+            <span className="absolute inset-0 rounded-full bg-[var(--accent)]/30 blur-md animate-pulse"></span>
           )}
         </button>
 
@@ -130,8 +130,8 @@ export default function Player({
         />
       </div>
 
-      
-      <div className="w-full bg-[var(--border)] h-1 rounded-full mb-4 relative overflow-hidden">
+     
+      <div className="w-full bg-[var(--border)] h-1 rounded-full mt-2 mb-1 relative overflow-hidden">
         <div
           className={`absolute top-0 left-0 h-1 
             bg-gradient-to-r from-[var(--accent)] to-[var(--gold)] 
@@ -146,5 +146,6 @@ export default function Player({
     </div>
   );
 }
+
 
 

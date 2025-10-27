@@ -96,10 +96,11 @@ export default function CommentSection({ type, relatedId, user }) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
       className="
-        mt-4 p-4 rounded-xl
-        bg-[color-mix(in_oklab,var(--bg)_92%,black_8%)]
-        border border-[var(--accent)]/20
-        shadow-[0_0_25px_var(--accent)]/30
+        mt-4 p-5 rounded-xl
+        bg-[color-mix(in_oklab,var(--bg)_96%,black_4%)]
+        border border-[var(--border)]
+        hover:border-[var(--accent)]
+        hover:shadow-[0_0_18px_var(--accent)]
         text-[var(--text)]
         transition-all duration-500
       "
@@ -108,7 +109,7 @@ export default function CommentSection({ type, relatedId, user }) {
         Commentaires ({comments.length})
       </h3>
 
-      <div className="flex flex-col gap-3 mb-5 max-h-[300px] overflow-y-auto no-scrollbar">
+      <div className="flex flex-col gap-3 mb-5 max-h-[280px] overflow-y-auto no-scrollbar">
         {comments.length === 0 ? (
           <p className="text-[var(--subtext)] text-sm italic">
             Aucun commentaire pour le moment.
@@ -124,16 +125,16 @@ export default function CommentSection({ type, relatedId, user }) {
                 scale: savedId === comment.id ? 1.02 : 1,
                 boxShadow:
                   savedId === comment.id
-                    ? "0 0 12px var(--gold)"
+                    ? "0 0 10px var(--gold)"
                     : "0 0 0 transparent",
               }}
-              transition={{ duration: 0.4 }}
+              transition={{ duration: 0.3 }}
               className="
                 p-3 rounded-lg 
                 bg-[color-mix(in_oklab,var(--bg)_95%,black_5%)]
-                border border-[var(--accent)]/10 
-                hover:border-[var(--accent)]/50 
-                hover:shadow-[0_0_12px_var(--accent)]/40
+                border border-[var(--border)]
+                hover:border-[var(--accent)]
+                hover:shadow-[0_0_10px_var(--accent)]
                 transition-all duration-300
               "
             >
@@ -143,7 +144,7 @@ export default function CommentSection({ type, relatedId, user }) {
                     value={editedContent}
                     onChange={(e) => setEditedContent(e.target.value)}
                     rows={2}
-                    className="w-full p-2 rounded-md border border-[var(--accent)]/40 bg-[var(--bg)] text-[var(--text)] focus:ring-2 focus:ring-[var(--accent)]/70 transition-all"
+                    className="w-full p-2 rounded-md border border-[var(--accent)]/50 bg-[var(--bg)] text-[var(--text)] focus:ring-2 focus:ring-[var(--accent)]/70 transition-all"
                   />
                   <div className="flex justify-end gap-2">
                     <button
@@ -210,8 +211,8 @@ export default function CommentSection({ type, relatedId, user }) {
             placeholder="Écrire un commentaire..."
             rows={2}
             className="
-              w-full p-3 rounded-md border border-[var(--accent)]/25
-              bg-[color-mix(in_oklab,var(--bg)_94%,black_6%)] text-[var(--text)]
+              w-full p-3 rounded-md border border-[var(--border)]
+              bg-[color-mix(in_oklab,var(--bg)_96%,black_4%)] text-[var(--text)]
               focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/60
               transition-all duration-300
             "
@@ -220,9 +221,9 @@ export default function CommentSection({ type, relatedId, user }) {
             type="submit"
             className="
               self-end px-4 py-2 rounded-md
-              bg-[var(--accent)] text-white
+              bg-[var(--accent)] text-white font-semibold
               hover:bg-[var(--gold)] hover:text-[var(--bg)]
-              shadow-[0_0_10px_var(--accent)]/40
+              shadow-[0_0_12px_var(--accent)]/40
               transition-all duration-300 active:scale-95
             "
           >

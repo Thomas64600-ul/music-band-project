@@ -69,7 +69,7 @@ export default function Articles() {
         overflow-hidden
       "
     >
-   
+     
       <div
         className="
           absolute top-[35%] left-1/2 -translate-x-1/2 
@@ -87,24 +87,21 @@ export default function Articles() {
         <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-40 h-[2px] bg-gradient-to-r from-transparent via-[var(--gold)] to-transparent animate-glow-line"></div>
       </div>
 
-    
       <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 w-full max-w-6xl mb-20">
         {articles.map((a) => (
-          <motion.div
+          <motion.article
             key={a.id}
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
             className="
-              flex flex-col items-center
-              bg-[color-mix(in_oklab,var(--bg)_92%,black_8%)]
-              border border-[var(--accent)]/25
-              rounded-2xl p-5
-              shadow-[0_0_25px_var(--accent)]/30
-              hover:border-[var(--accent)]/50 
-              hover:shadow-[0_0_35px_var(--accent)]/40
-              transition-all duration-500
+              relative rounded-2xl overflow-hidden
+              bg-[var(--surface)] text-[var(--text)]
+              border border-[var(--border)]
+              hover:border-[var(--accent)]
+              hover:shadow-[0_0_25px_var(--accent)]
+              transition-all duration-500 flex flex-col
             "
           >
             <ArticleCard
@@ -123,19 +120,10 @@ export default function Articles() {
               link={`/blog/${a.id}`}
             />
 
-            <div
-              className="
-                mt-5 w-full p-4 rounded-xl
-                bg-[color-mix(in_oklab,var(--bg)_94%,black_6%)]
-                border border-[var(--accent)]/15
-                shadow-[0_0_20px_var(--accent)]/20
-                hover:shadow-[0_0_28px_var(--accent)]/30
-                transition-all duration-500
-              "
-            >
-              <CommentSection type='article' relatedId={a.id} user={user} />
+            <div className="px-5 pb-6">
+              <CommentSection type="article" relatedId={a.id} user={user} />
             </div>
-          </motion.div>
+          </motion.article>
         ))}
       </section>
 

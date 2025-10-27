@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { get } from "../lib/api";
+import { useAuth } from "../context/AuthContext";
+import { motion } from "framer-motion";
 import Player from "../components/Player";
 import CommentSection from "../components/CommentSection";
 import Button from "../components/Button";
-import { useAuth } from "../context/AuthContext";
-import { motion } from "framer-motion";
 
 export default function Music() {
   const [musics, setMusics] = useState([]);
@@ -79,6 +79,7 @@ export default function Music() {
         "
       ></div>
 
+   
       <div className="relative inline-block mb-10 text-center">
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[var(--accent)]/30 to-transparent blur-md"></div>
         <h1 className="relative text-4xl md:text-5xl font-extrabold text-[var(--accent)] drop-shadow-[0_0_12px_var(--accent)] tracking-wide">
@@ -87,45 +88,82 @@ export default function Music() {
         <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-40 h-[2px] bg-gradient-to-r from-transparent via-[var(--gold)] to-transparent animate-glow-line"></div>
       </div>
 
-    
+ 
       <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 w-full max-w-6xl mb-20">
         {musics.map((m) => (
-          <motion.div
+          <motion.article
             key={m.id}
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
             className="
-              flex flex-col items-center 
-              bg-[color-mix(in_oklab,var(--bg)_92%,black_8%)]
-              border-2 border-[var(--accent)] border-solid
-              rounded-2xl shadow-[0_0_25px_var(--accent)]
-              p-5 w-full
-              hover:shadow-[0_0_35px_var(--accent)]
-              transition-all duration-300
+              relative rounded-2xl overflow-hidden
+              bg-[var(--surface)] text-[var(--text)]
+              border border-[var(--border)]
+              hover:border-[var(--accent)]
+              hover:shadow-[0_0_25px_var(--accent)]
+              transition-all duration-500 flex flex-col
             "
           >
-            <Player
-              src={m.url}
-              title={m.title}
-              artist={m.artist || 'REVEREN'}
-              cover={m.cover_url}
-            />
+          
+            {m.cover_url && (
+              <div className="relative w-full h-52 sm:h-56 md:h-64 overflow-hidden group">
+                <img
+                  src={m.cover_url}
+                  alt={m.title}
+                  className="
+                    w-full h-full object-cover transform
+                    transition-transform duration-700
+                    sm:group-hover:scale-110 pointer-events-none select-none
+                  "
+                  draggable="false"
+                />
+                <div
+                  className="
+                    absolute inset-0 bg-gradient-to-t 
+                    from-[var(--bg)]/90 via-[var(--bg)]/40 to-transparent
+                    opacity-80 sm:opacity-0 sm:group-hover:opacity-100
+                    transition-opacity duration-500
+                  "
+                ></div>
+                <div
+                  className="
+                    absolute inset-0 bg-gradient-to-tr 
+                    from-transparent via-[var(--accent)]/25 to-transparent
+                    opacity-40 sm:opacity-0 sm:group-hover:opacity-100
+                    blur-[3px] transition-opacity duration-700
+                  "
+                ></div>
+              </div>
+            )}
 
-            <div
-              className="
-                mt-5 w-full p-4 rounded-xl
-                bg-[color-mix(in_oklab,var(--bg)_94%,black_6%)]
-                border border-[var(--accent)] border-solid
-                shadow-[0_0_20px_var(--accent)]
-                hover:shadow-[0_0_28px_var(--accent)]
-                transition-all duration-500
-              "
-            >
-              <CommentSection type='music' relatedId={m.id} user={user} />
+ 
+            <div className="flex flex-col flex-grow p-5 sm:p-6 text-center">
+              <h3
+                className="
+                  text-lg sm:text-xl font-bold text-[var(--accent)]
+                  mb-1 sm:group-hover:text-[var(--gold)] transition-colors
+                "
+              >
+                {m.title || "Titre inconnu"}
+              </h3>
+              <p className="text-[var(--subtext)] text-sm mb-4">
+                {m.artist || "REVEREN"}
+              </p>
+
+              <Player
+                src={m.url}
+                title={m.title}
+                artist={m.artist || "REVEREN"}
+                cover={m.cover_url}
+              />
             </div>
-          </motion.div>
+
+            <div className="px-5 pb-6">
+              <CommentSection type="music" relatedId={m.id} user={user} />
+            </div>
+          </motion.article>
         ))}
       </section>
 

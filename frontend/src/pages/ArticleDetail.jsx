@@ -54,7 +54,7 @@ export default function ArticleDetail() {
         transition-colors duration-700 ease-in-out
       "
     >
-   
+     
       <div
         className="
           absolute top-[30%] left-1/2 -translate-x-1/2 
@@ -64,12 +64,12 @@ export default function ArticleDetail() {
         "
       ></div>
 
-     
+
       <h1 className="text-4xl md:text-5xl font-extrabold text-[var(--accent)] mb-6 drop-shadow-[0_0_15px_var(--accent)] text-center max-w-3xl leading-tight">
         {article.title}
       </h1>
 
-     
+      
       <p className="text-[var(--subtext)] text-sm text-center mb-10">
         Publié le{" "}
         <span className="text-[var(--gold)] font-medium">
@@ -90,22 +90,23 @@ export default function ArticleDetail() {
         transition={{ duration: 0.6 }}
         className="
           relative max-w-3xl w-full 
-          bg-[color-mix(in_oklab,var(--bg)_92%,black_8%)]
-          border border-[var(--accent)]/25 rounded-2xl
-          shadow-[0_0_25px_var(--accent)]/30
+          bg-[var(--surface)]
+          border border-[var(--border)] rounded-2xl
+          hover:border-[var(--accent)]
+          hover:shadow-[0_0_25px_var(--accent)]
+          shadow-[0_0_15px_var(--accent)]/25
           p-8 text-[var(--text)] leading-relaxed
-          hover:border-[var(--accent)]/50 hover:shadow-[0_0_35px_var(--accent)]/40
           transition-all duration-700 ease-in-out
         "
       >
-     
+ 
         {article.image_url && (
           <img
             src={article.image_url}
             alt={article.title}
             className="
               w-full h-80 object-cover rounded-xl mb-8
-              shadow-[0_0_25px_var(--accent)]/35 border border-[var(--accent)]/30
+              shadow-[0_0_25px_var(--accent)]/35 border border-[var(--border)]
               hover:shadow-[0_0_35px_var(--accent)]/50 transition-all duration-500
             "
             loading="lazy"
@@ -125,10 +126,10 @@ export default function ArticleDetail() {
       <div
         className="
           w-full max-w-3xl mt-10 p-5 rounded-xl
-          bg-[color-mix(in_oklab,var(--bg)_94%,black_6%)]
-          border border-[var(--accent)]/15
-          shadow-[0_0_20px_var(--accent)]/20
-          hover:shadow-[0_0_28px_var(--accent)]/30
+          bg-[color-mix(in_oklab,var(--bg)_96%,black_4%)]
+          border border-[var(--border)]
+          hover:border-[var(--accent)]
+          hover:shadow-[0_0_18px_var(--accent)]
           transition-all duration-500
         "
       >
@@ -159,6 +160,7 @@ export default function ArticleDetail() {
     </motion.main>
   );
 }
+
 
 
 

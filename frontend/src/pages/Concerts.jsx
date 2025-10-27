@@ -77,7 +77,6 @@ export default function Concerts() {
         "
       ></div>
 
-    
       <div className="relative inline-block mb-10 text-center">
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[var(--accent)]/30 to-transparent blur-md"></div>
         <h1 className="relative text-4xl md:text-5xl font-extrabold text-[var(--accent)] drop-shadow-[0_0_12px_var(--accent)] tracking-wide">
@@ -89,23 +88,21 @@ export default function Concerts() {
     
       <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 w-full max-w-6xl mb-20">
         {concerts.map((c) => (
-          <motion.div
+          <motion.article
             key={c.id}
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
             className="
-              flex flex-col items-center
-              bg-[color-mix(in_oklab,var(--bg)_92%,black_8%)]
-              border border-[var(--accent)]/25
-              rounded-2xl shadow-[0_0_25px_var(--accent)]/30
-              p-5 w-full
-              hover:border-[var(--accent)]/50 hover:shadow-[0_0_35px_var(--accent)]/40
-              transition-all duration-500
+              relative rounded-2xl overflow-hidden
+              bg-[var(--surface)] text-[var(--text)]
+              border border-[var(--border)]
+              hover:border-[var(--accent)]
+              hover:shadow-[0_0_25px_var(--accent)]
+              transition-all duration-500 flex flex-col
             "
           >
-         
             <ConcertCard
               city={c.city}
               date={
@@ -122,19 +119,10 @@ export default function Concerts() {
               ticketLink={c.ticket_url}
             />
 
-            <div
-              className="
-                mt-5 w-full p-4 rounded-xl
-                bg-[color-mix(in_oklab,var(--bg)_94%,black_6%)]
-                border border-[var(--accent)]/15
-                shadow-[0_0_20px_var(--accent)]/20
-                hover:shadow-[0_0_28px_var(--accent)]/30
-                transition-all duration-500
-              "
-            >
+            <div className="px-5 pb-6">
               <CommentSection type="concert" relatedId={c.id} user={user} />
             </div>
-          </motion.div>
+          </motion.article>
         ))}
       </section>
 

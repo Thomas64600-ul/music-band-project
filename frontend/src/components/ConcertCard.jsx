@@ -14,7 +14,7 @@ export default function ConcertCard({ city, date, location, image, ticketLink })
         sm:max-w-none w-full
       "
     >
-      {/* === Image du concert === */}
+     
       <div className="relative w-full h-52 sm:h-56 md:h-64 overflow-hidden group">
         <img
           src={image}
@@ -27,7 +27,6 @@ export default function ConcertCard({ city, date, location, image, ticketLink })
           draggable="false"
         />
 
-        {/* Dégradé fondu pour lisibilité du texte */}
         <div
           className="
             absolute inset-0 bg-gradient-to-t 
@@ -37,7 +36,7 @@ export default function ConcertCard({ city, date, location, image, ticketLink })
           "
         ></div>
 
-        {/* Glow subtil au survol */}
+      
         <div
           className="
             absolute inset-0 bg-gradient-to-tr 
@@ -47,13 +46,13 @@ export default function ConcertCard({ city, date, location, image, ticketLink })
           "
         ></div>
 
-        {/* Étiquette date */}
+       
         <div className="absolute top-3 left-3 bg-[var(--accent)] text-[var(--surface)] font-semibold text-xs px-3 py-1 rounded shadow-md">
           {date}
         </div>
       </div>
 
-      {/* === Contenu texte === */}
+      
       <div className="flex flex-col flex-grow p-5 sm:p-6 text-center sm:text-left">
         <h3
           className="
