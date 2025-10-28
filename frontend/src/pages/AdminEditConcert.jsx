@@ -110,30 +110,42 @@ export default function AdminEditConcert() {
 
   return (
     <motion.section
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.6 }}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.7 }}
       className="
         min-h-screen flex justify-center items-start
         bg-[var(--bg)] text-[var(--text)]
-        py-12 px-6 sm:px-12 transition-colors duration-700
+        py-12 px-6 sm:px-12 relative overflow-hidden
       "
     >
+      
+      <div
+        className="
+          absolute inset-0 -z-10
+          bg-[radial-gradient(circle_at_center,#B3122D33_0%,transparent_70%)]
+          blur-[150px] opacity-70
+        "
+      ></div>
+
       <form
         onSubmit={onSubmit}
         encType="multipart/form-data"
         className="
-          w-full max-w-2xl bg-[var(--bg-secondary)]
-          border border-[var(--accent)]/40 rounded-2xl
-          shadow-[0_0_25px_var(--accent)]/30
-          p-8 sm:p-10 transition-all duration-700
+          relative w-full max-w-3xl
+          border border-[color-mix(in_oklab,var(--accent)_70%,transparent_30%)]
+          rounded-2xl
+          shadow-[0_0_25px_color-mix(in_oklab,var(--accent)_40%,transparent_60%)]
+          hover:shadow-[0_0_40px_color-mix(in_oklab,var(--accent)_60%,transparent_40%)]
+          bg-[color-mix(in_oklab,var(--bg)_96%,var(--accent)_4%)]
+          p-8 sm:p-10
+          transition-all duration-500
         "
       >
-        <h1 className="text-3xl font-extrabold text-center text-[var(--accent)] mb-8 drop-shadow-[0_0_10px_var(--accent)]">
+        <h1 className="text-3xl font-extrabold text-center text-[var(--accent)] drop-shadow-[0_0_12px_var(--accent)] mb-8">
           {id === "new" ? "Créer un concert" : "Modifier le concert"}
         </h1>
 
-       
         <div className="mb-5">
           <label htmlFor="title" className="block text-[var(--accent)] mb-2 font-semibold">
             Ville / Titre
@@ -145,14 +157,17 @@ export default function AdminEditConcert() {
             onChange={onChange}
             required
             className="
-              w-full p-3 rounded-md border border-[var(--accent)]/40
-              bg-[var(--bg)] text-[var(--text)]
-              focus:border-[var(--accent)] outline-none transition
+              w-full p-3 rounded-md
+              bg-[color-mix(in_oklab,var(--bg)_94%,black_6%)]
+              border border-[color-mix(in_oklab,var(--accent)_40%,transparent_60%)]
+              text-[color-mix(in_oklab,var(--text)_90%,var(--accent)_10%)]
+              focus:ring-2 focus:ring-[var(--accent)]/40
+              focus:border-[var(--accent)]
+              transition-all duration-300
             "
           />
         </div>
 
-       
         <div className="mb-5">
           <label htmlFor="date" className="block text-[var(--accent)] mb-2 font-semibold">
             Date
@@ -164,14 +179,17 @@ export default function AdminEditConcert() {
             onChange={onChange}
             required
             className="
-              w-full p-3 rounded-md border border-[var(--accent)]/40
-              bg-[var(--bg)] text-[var(--text)]
-              focus:border-[var(--accent)] outline-none transition
+              w-full p-3 rounded-md
+              bg-[color-mix(in_oklab,var(--bg)_94%,black_6%)]
+              border border-[color-mix(in_oklab,var(--accent)_40%,transparent_60%)]
+              text-[color-mix(in_oklab,var(--text)_90%,var(--accent)_10%)]
+              focus:ring-2 focus:ring-[var(--accent)]/40
+              focus:border-[var(--accent)]
+              transition-all duration-300
             "
           />
         </div>
 
-       
         <div className="mb-5">
           <label htmlFor="location" className="block text-[var(--accent)] mb-2 font-semibold">
             Lieu
@@ -183,14 +201,17 @@ export default function AdminEditConcert() {
             onChange={onChange}
             required
             className="
-              w-full p-3 rounded-md border border-[var(--accent)]/40
-              bg-[var(--bg)] text-[var(--text)]
-              focus:border-[var(--accent)] outline-none transition
+              w-full p-3 rounded-md
+              bg-[color-mix(in_oklab,var(--bg)_94%,black_6%)]
+              border border-[color-mix(in_oklab,var(--accent)_40%,transparent_60%)]
+              text-[color-mix(in_oklab,var(--text)_90%,var(--accent)_10%)]
+              focus:ring-2 focus:ring-[var(--accent)]/40
+              focus:border-[var(--accent)]
+              transition-all duration-300
             "
           />
         </div>
 
-        
         <div className="mb-5">
           <label htmlFor="ticket_url" className="block text-[var(--accent)] mb-2 font-semibold">
             Lien de billetterie
@@ -202,15 +223,18 @@ export default function AdminEditConcert() {
             onChange={onChange}
             placeholder="https://billetterie.com"
             className="
-              w-full p-3 rounded-md border border-[var(--accent)]/40
-              bg-[var(--bg)] text-[var(--text)]
-              focus:border-[var(--accent)] outline-none transition
+              w-full p-3 rounded-md
+              bg-[color-mix(in_oklab,var(--bg)_94%,black_6%)]
+              border border-[color-mix(in_oklab,var(--accent)_40%,transparent_60%)]
+              text-[color-mix(in_oklab,var(--text)_90%,var(--accent)_10%)]
+              focus:ring-2 focus:ring-[var(--accent)]/40
+              focus:border-[var(--accent)]
+              transition-all duration-300
             "
           />
         </div>
 
-       
-        <div className="mb-5">
+        <div className="mb-8">
           <label htmlFor="image" className="block text-[var(--accent)] mb-2 font-semibold">
             Image (upload local)
           </label>
@@ -225,12 +249,11 @@ export default function AdminEditConcert() {
             <img
               src={preview}
               alt="Aperçu"
-              className="mt-3 rounded-lg max-h-48 mx-auto border border-[var(--accent)]/40 shadow-[0_0_15px_var(--accent)]/30"
+              className="mt-3 rounded-lg max-h-48 mx-auto border border-[var(--accent)]/40 shadow-[0_0_15px_rgba(179,18,45,0.3)]"
             />
           )}
         </div>
 
-       
         <div className="text-center mt-8">
           <Button
             variant="primary"
@@ -239,7 +262,8 @@ export default function AdminEditConcert() {
             className="
               bg-[var(--accent)] hover:bg-[var(--gold)] hover:text-[var(--bg)]
               text-white font-semibold px-8 py-3 rounded-xl
-              shadow-[0_0_12px_var(--accent)]/40 transition
+              shadow-[0_0_20px_var(--accent)] hover:shadow-[0_0_25px_var(--gold)]
+              transition-all duration-300
             "
           >
             {status === "loading"
@@ -250,13 +274,26 @@ export default function AdminEditConcert() {
           </Button>
 
           {status === "success" && (
-            <p className="mt-3 text-green-500">Concert enregistré avec succès</p>
+            <p className="mt-4 text-green-400 font-medium">
+              Concert enregistré avec succès
+            </p>
           )}
           {status === "error" && (
-            <p className="mt-3 text-red-500">Erreur lors de l’enregistrement</p>
+            <p className="mt-4 text-red-400 font-medium">
+              Erreur lors de l’enregistrement
+            </p>
           )}
         </div>
       </form>
+
+      <div
+        className="
+          absolute bottom-0 left-1/2 -translate-x-1/2
+          w-[60vw] h-[60vw]
+          bg-[radial-gradient(circle_at_center,#B3122D33_0%,transparent_70%)]
+          blur-[120px] opacity-60 pointer-events-none
+        "
+      ></div>
     </motion.section>
   );
 }
