@@ -143,12 +143,12 @@ export async function login(req, res, next) {
     const token = generateToken(user);
 
    res.cookie("token", token, {
-  httpOnly: true,
-  secure: true,
-  sameSite: "none",
-  partitioned: true,   
-  maxAge: 60 * 60 * 1000,
-  path: "/",
+  httpOnly: true,           
+  secure: process.env.NODE_ENV === "production", 
+  sameSite: "none",           
+  path: "/",                  
+  partitioned: true,          
+  maxAge: 60 * 60 * 1000,    
 });
 
     res.status(200).json({
@@ -173,7 +173,7 @@ export async function logout(req, res, next) {
   try {
     res.clearCookie("token", {
   httpOnly: true,
-  secure: true,
+  secure: process.env.NODE_ENV === "production",
   sameSite: "none",
   path: "/",
 });
