@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { get, post, put } from "../lib/api";
 import { useNavigate, useParams } from "react-router-dom";
 import Button from "../components/Button";
-import { motion } from "framer-motion";
+
 
 export default function AdminEditMusic() {
   const { id } = useParams();

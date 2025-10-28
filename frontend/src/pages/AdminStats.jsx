@@ -11,7 +11,6 @@ import {
   Legend,
 } from "recharts";
 import Button from "../components/Button";
-import { motion } from "framer-motion";
 
 export default function AdminStats() {
   const [stats, setStats] = useState(null);

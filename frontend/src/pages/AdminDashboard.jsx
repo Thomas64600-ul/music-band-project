@@ -2,7 +2,7 @@ import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import Button from "../components/Button";
-import { motion } from "framer-motion";
+
 
 export default function AdminDashboard() {
   const { user, isAdmin } = useAuth();

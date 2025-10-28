@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { FaBars, FaTimes, FaSun, FaMoon } from "react-icons/fa";
 import { User, LogOut, Shield, LayoutDashboard } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 
 function LinkItem({ to, children, onClick, className = "" }) {
   return (
@@ -31,7 +31,7 @@ function LinkItem({ to, children, onClick, className = "" }) {
   );
 }
 
-export default function Header({ logoSrc, links }) {
+export default function Header({ links }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const { user, isAdmin, logout } = useAuth();

@@ -3,7 +3,7 @@ import { get, del } from "../lib/api";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import Button from "../components/Button";
-import { motion } from "framer-motion";
+
 
 export default function AdminDonations() {
   const [donations, setDonations] = useState([]);

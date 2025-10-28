@@ -76,7 +76,7 @@ export default function AdminSidebar() {
       </div>
 
       <nav className="flex-1 mt-5 px-4 space-y-1 overflow-y-auto">
-        {links.map(({ name, path, Icon }) => (
+        {links.map(({ name, path }) => (
           <NavLink
             key={path}
             to={path}

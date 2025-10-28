@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import AdminSidebar from "../components/AdminSidebar";
 import { useLocation } from "react-router-dom";

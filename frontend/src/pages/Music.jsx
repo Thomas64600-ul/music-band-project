@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { get } from "../lib/api";
 import { useAuth } from "../context/AuthContext";
-import { motion } from "framer-motion";
 import Player from "../components/Player";
 import CommentSection from "../components/CommentSection";
 import Button from "../components/Button";
