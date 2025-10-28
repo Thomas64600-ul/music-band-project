@@ -78,7 +78,7 @@ export default function AdminComments() {
         transition-colors duration-700 ease-in-out
       "
     >
-   
+    
       <div
         className="
           absolute inset-0 -z-10
@@ -99,7 +99,7 @@ export default function AdminComments() {
           p-6 sm:p-10
         "
       >
-       
+        
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-10 text-center sm:text-left">
           <h1 className="text-3xl font-extrabold text-[var(--accent)] drop-shadow-[0_0_12px_var(--accent)]">
             Gestion des commentaires
@@ -165,80 +165,133 @@ export default function AdminComments() {
             Aucun commentaire ne correspond à votre recherche.
           </p>
         ) : (
-          <div
-            className="
-              overflow-x-auto rounded-2xl
-              border border-[color-mix(in_oklab,var(--accent)_40%,transparent_60%)]
-              bg-[color-mix(in_oklab,var(--bg)_94%,var(--accent)_6%)]
-              shadow-[0_0_25px_color-mix(in_oklab,var(--accent)_30%,transparent_70%)]
-              transition-all duration-500
-            "
-          >
-            <table className="min-w-full text-sm sm:text-base border-collapse">
-              <thead
-                className="
-                  bg-[color-mix(in_oklab,var(--accent)_10%,var(--bg)_90%)]
-                  text-[var(--accent)] uppercase tracking-wide
-                  border-b border-[color-mix(in_oklab,var(--accent)_40%,transparent_60%)]
-                "
-              >
-                <tr>
-                  <th className="py-3 px-4 text-left">Auteur</th>
-                  <th className="py-3 px-4 text-left">Contenu</th>
-                  <th className="py-3 px-4 text-left">Cible</th>
-                  <th className="py-3 px-4 text-left">Date</th>
-                  <th className="py-3 px-4 text-center">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredComments.map((c, index) => (
-                  <motion.tr
-                    key={c.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.05 }}
+          <>
+         
+            <div className="block sm:hidden space-y-4">
+              {filteredComments.map((c) => (
+                <motion.div
+                  key={c.id}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="
+                    border border-[color-mix(in_oklab,var(--accent)_40%,transparent_60%)]
+                    rounded-xl p-4
+                    bg-[color-mix(in_oklab,var(--bg)_95%,var(--accent)_5%)]
+                    shadow-[0_0_20px_color-mix(in_oklab,var(--accent)_25%,transparent_75%)]
+                    flex flex-col gap-2
+                  "
+                >
+                  <div className="flex justify-between items-center">
+                    <h3 className="text-lg font-semibold text-[var(--accent)]">
+                      {c.firstname
+                        ? `${c.firstname} ${c.lastname || ""}`
+                        : "Anonyme"}
+                    </h3>
+                    <p className="text-[var(--subtext)] text-xs">
+                      {new Date(c.created_at).toLocaleDateString("fr-FR")}
+                    </p>
+                  </div>
+
+                  <p className="text-[var(--text)] text-sm mt-1 italic">
+                    “{c.content}”
+                  </p>
+
+                  <p className="text-[var(--accent)] text-xs">
+                    Cible : {c.article_title || c.target_type || "—"}
+                  </p>
+
+                  <Button
+                    onClick={() => handleDelete(c.id)}
                     className="
-                      border-b border-[color-mix(in_oklab,var(--accent)_25%,transparent_75%)]
-                      hover:bg-[color-mix(in_oklab,var(--accent)_12%,transparent_88%)]
-                      transition-all duration-300
+                      bg-[var(--accent)] text-white 
+                      hover:bg-[var(--gold)] hover:text-[var(--bg)]
+                      mt-3 w-full
                     "
                   >
-                    <td className="py-3 px-4 font-semibold text-[color-mix(in_oklab,var(--text)_90%,var(--accent)_10%)] whitespace-nowrap">
-                      {c.firstname ? `${c.firstname} ${c.lastname || ""}` : "Anonyme"}
-                    </td>
-                    <td
-                      className="py-3 px-4 text-[var(--text)] max-w-[300px] truncate"
-                      title={c.content}
+                    Supprimer
+                  </Button>
+                </motion.div>
+              ))}
+            </div>
+
+            <div
+              className="
+                hidden sm:block overflow-x-auto rounded-2xl
+                border border-[color-mix(in_oklab,var(--accent)_40%,transparent_60%)]
+                bg-[color-mix(in_oklab,var(--bg)_94%,var(--accent)_6%)]
+                shadow-[0_0_25px_color-mix(in_oklab,var(--accent)_30%,transparent_70%)]
+                transition-all duration-500
+              "
+            >
+              <table className="min-w-[800px] text-sm sm:text-base border-collapse">
+                <thead
+                  className="
+                    bg-[color-mix(in_oklab,var(--accent)_10%,var(--bg)_90%)]
+                    text-[var(--accent)] uppercase tracking-wide
+                    border-b border-[color-mix(in_oklab,var(--accent)_40%,transparent_60%)]
+                  "
+                >
+                  <tr>
+                    <th className="py-3 px-4 text-left">Auteur</th>
+                    <th className="py-3 px-4 text-left">Contenu</th>
+                    <th className="py-3 px-4 text-left">Cible</th>
+                    <th className="py-3 px-4 text-left">Date</th>
+                    <th className="py-3 px-4 text-center">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredComments.map((c, index) => (
+                    <motion.tr
+                      key={c.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.05 }}
+                      className="
+                        border-b border-[color-mix(in_oklab,var(--accent)_25%,transparent_75%)]
+                        hover:bg-[color-mix(in_oklab,var(--accent)_12%,transparent_88%)]
+                        transition-all duration-300
+                      "
                     >
-                      {c.content}
-                    </td>
-                    <td className="py-3 px-4 text-[var(--accent)] whitespace-nowrap">
-                      {c.article_title || c.target_type || "—"}
-                    </td>
-                    <td className="py-3 px-4 text-[var(--subtext)] whitespace-nowrap">
-                      {new Date(c.created_at).toLocaleDateString("fr-FR", {
-                        day: "2-digit",
-                        month: "long",
-                        year: "numeric",
-                      })}
-                    </td>
-                    <td className="py-3 px-4 text-center">
-                      <Button
-                        onClick={() => handleDelete(c.id)}
-                        className="
-                          bg-[var(--accent)] text-white 
-                          hover:bg-[var(--gold)] hover:text-[var(--bg)]
-                          w-28
-                        "
+                      <td className="py-3 px-4 font-semibold text-[color-mix(in_oklab,var(--text)_90%,var(--accent)_10%)] whitespace-nowrap">
+                        {c.firstname
+                          ? `${c.firstname} ${c.lastname || ""}`
+                          : "Anonyme"}
+                      </td>
+                      <td
+                        className="py-3 px-4 text-[var(--text)] max-w-[300px] truncate"
+                        title={c.content}
                       >
-                        Supprimer
-                      </Button>
-                    </td>
-                  </motion.tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                        {c.content}
+                      </td>
+                      <td className="py-3 px-4 text-[var(--accent)] whitespace-nowrap">
+                        {c.article_title || c.target_type || "—"}
+                      </td>
+                      <td className="py-3 px-4 text-[var(--subtext)] whitespace-nowrap">
+                        {new Date(c.created_at).toLocaleDateString("fr-FR", {
+                          day: "2-digit",
+                          month: "long",
+                          year: "numeric",
+                        })}
+                      </td>
+                      <td className="py-3 px-4 text-center">
+                        <Button
+                          onClick={() => handleDelete(c.id)}
+                          className="
+                            bg-[var(--accent)] text-white 
+                            hover:bg-[var(--gold)] hover:text-[var(--bg)]
+                            w-28
+                          "
+                        >
+                          Supprimer
+                        </Button>
+                      </td>
+                    </motion.tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </>
         )}
       </div>
 
@@ -253,4 +306,5 @@ export default function AdminComments() {
     </motion.section>
   );
 }
+
 
