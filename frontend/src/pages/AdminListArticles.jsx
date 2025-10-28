@@ -60,7 +60,7 @@ export default function AdminListArticles() {
         transition-colors duration-700 ease-in-out
       "
     >
-     
+   
       <div
         className="
           absolute inset-0 -z-10
@@ -81,7 +81,7 @@ export default function AdminListArticles() {
           p-6 sm:p-10
         "
       >
-    
+      
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-10 text-center sm:text-left">
           <h1 className="text-3xl font-extrabold text-[var(--accent)] drop-shadow-[0_0_12px_var(--accent)]">
             Gestion des articles
@@ -106,7 +106,7 @@ export default function AdminListArticles() {
           </p>
         ) : (
           <>
-         
+           
             <div className="block sm:hidden space-y-4">
               {articles.map((a) => (
                 <motion.div
@@ -149,13 +149,13 @@ export default function AdminListArticles() {
 
                   <div className="flex gap-3 mt-3">
                     <Button
-                      onClick={() =>
-                       navigate(`/admin/articles/${m.id}`)
-                      }
+                      onClick={() => navigate(`/admin/articles/${a.id}`)}
                       className="
                         border border-[var(--accent)] text-[var(--accent)]
                         hover:bg-[var(--accent)] hover:text-[var(--bg)]
-                        flex-1
+                        flex-1 transition-all duration-300
+                        shadow-[0_0_10px_color-mix(in_oklab,var(--accent)_30%,transparent_70%)]
+                        hover:shadow-[0_0_18px_color-mix(in_oklab,var(--accent)_50%,transparent_50%)]
                       "
                     >
                       Modifier
@@ -165,7 +165,9 @@ export default function AdminListArticles() {
                       className="
                         bg-[var(--accent)] text-white 
                         hover:bg-[var(--gold)] hover:text-[var(--bg)]
-                        flex-1
+                        flex-1 transition-all duration-300
+                        shadow-[0_0_10px_color-mix(in_oklab,var(--accent)_30%,transparent_70%)]
+                        hover:shadow-[0_0_18px_color-mix(in_oklab,var(--accent)_50%,transparent_50%)]
                       "
                     >
                       Supprimer
@@ -175,7 +177,7 @@ export default function AdminListArticles() {
                       className="
                         border border-[var(--accent)]/50 text-[var(--subtext)]
                         hover:text-[var(--accent)] hover:border-[var(--accent)]
-                        flex-1
+                        flex-1 transition-all duration-300
                       "
                     >
                       Voir
@@ -192,7 +194,6 @@ export default function AdminListArticles() {
                 bg-[color-mix(in_oklab,var(--bg)_94%,var(--accent)_6%)]
                 shadow-[0_0_25px_color-mix(in_oklab,var(--accent)_30%,transparent_70%)]
                 transition-all duration-500
-                w-full
               "
             >
               <table className="w-full text-sm sm:text-base border-collapse">
@@ -257,13 +258,13 @@ export default function AdminListArticles() {
 
                       <td className="py-3 px-4 text-center flex flex-col gap-2 items-center justify-center">
                         <Button
-                          onClick={() =>
-                            navigate(`/admin/articles/edit/${a.id}`)
-                          }
+                          onClick={() => navigate(`/admin/articles/${a.id}`)}
                           className="
                             border border-[var(--accent)] text-[var(--accent)]
                             hover:bg-[var(--accent)] hover:text-[var(--bg)]
-                            w-28
+                            w-28 transition-all duration-300
+                            shadow-[0_0_10px_color-mix(in_oklab,var(--accent)_30%,transparent_70%)]
+                            hover:shadow-[0_0_18px_color-mix(in_oklab,var(--accent)_50%,transparent_50%)]
                           "
                         >
                           Modifier
@@ -273,7 +274,9 @@ export default function AdminListArticles() {
                           className="
                             bg-[var(--accent)] text-white 
                             hover:bg-[var(--gold)] hover:text-[var(--bg)]
-                            w-28
+                            w-28 transition-all duration-300
+                            shadow-[0_0_10px_color-mix(in_oklab,var(--accent)_30%,transparent_70%)]
+                            hover:shadow-[0_0_18px_color-mix(in_oklab,var(--accent)_50%,transparent_50%)]
                           "
                         >
                           Supprimer
@@ -283,7 +286,7 @@ export default function AdminListArticles() {
                           className="
                             border border-[var(--accent)]/50 text-[var(--subtext)]
                             hover:text-[var(--accent)] hover:border-[var(--accent)]
-                            w-28
+                            w-28 transition-all duration-300
                           "
                         >
                           Voir
@@ -309,6 +312,7 @@ export default function AdminListArticles() {
     </motion.section>
   );
 }
+
 
 
 

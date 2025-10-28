@@ -60,7 +60,7 @@ export default function AdminListConcerts() {
         transition-colors duration-700 ease-in-out
       "
     >
-      
+    
       <div
         className="
           absolute inset-0 -z-10
@@ -81,7 +81,7 @@ export default function AdminListConcerts() {
           p-6 sm:p-10
         "
       >
-        
+       
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-10 text-center sm:text-left">
           <h1 className="text-3xl font-extrabold text-[var(--accent)] drop-shadow-[0_0_12px_var(--accent)]">
             Gestion des concerts
@@ -106,7 +106,7 @@ export default function AdminListConcerts() {
           </p>
         ) : (
           <>
-          
+         
             <div className="block sm:hidden space-y-4">
               {concerts.map((c) => (
                 <motion.div
@@ -154,19 +154,19 @@ export default function AdminListConcerts() {
                       rel="noopener noreferrer"
                       className="text-[var(--accent)] hover:text-[var(--gold)] mt-2 text-sm underline"
                     >
-                      Billetterie
+                      🎟️ Billetterie
                     </a>
                   )}
 
                   <div className="flex gap-3 mt-3">
                     <Button
-                      onClick={() =>
-                        navigate(`/admin/concerts/${m.id}`)
-                      }
+                      onClick={() => navigate(`/admin/concerts/${c.id}`)}
                       className="
                         border border-[var(--accent)] text-[var(--accent)]
                         hover:bg-[var(--accent)] hover:text-[var(--bg)]
-                        flex-1
+                        flex-1 transition-all duration-300
+                        shadow-[0_0_10px_color-mix(in_oklab,var(--accent)_30%,transparent_70%)]
+                        hover:shadow-[0_0_18px_color-mix(in_oklab,var(--accent)_50%,transparent_50%)]
                       "
                     >
                       Modifier
@@ -176,7 +176,9 @@ export default function AdminListConcerts() {
                       className="
                         bg-[var(--accent)] text-white 
                         hover:bg-[var(--gold)] hover:text-[var(--bg)]
-                        flex-1
+                        flex-1 transition-all duration-300
+                        shadow-[0_0_10px_color-mix(in_oklab,var(--accent)_30%,transparent_70%)]
+                        hover:shadow-[0_0_18px_color-mix(in_oklab,var(--accent)_50%,transparent_50%)]
                       "
                     >
                       Supprimer
@@ -215,8 +217,11 @@ export default function AdminListConcerts() {
 
                 <tbody>
                   {concerts.map((c, index) => (
-                    <tr
+                    <motion.tr
                       key={c.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.05 }}
                       className={`
                         ${index !== concerts.length - 1 ? "border-b" : ""}
                         border-[color-mix(in_oklab,var(--accent)_25%,transparent_75%)]
@@ -237,6 +242,7 @@ export default function AdminListConcerts() {
                           </div>
                         )}
                       </td>
+
                       <td className="py-3 px-4 font-semibold text-[color-mix(in_oklab,var(--text)_90%,var(--accent)_10%)]">
                         {c.title || c.city}
                       </td>
@@ -266,15 +272,16 @@ export default function AdminListConcerts() {
                           <span className="text-[var(--subtext)]">—</span>
                         )}
                       </td>
+
                       <td className="py-3 px-4 text-center flex flex-col gap-2 items-center justify-center">
                         <Button
-                          onClick={() =>
-                            navigate(`/admin/concerts/edit/${c.id}`)
-                          }
+                          onClick={() => navigate(`/admin/concerts/${c.id}`)}
                           className="
                             border border-[var(--accent)] text-[var(--accent)]
                             hover:bg-[var(--accent)] hover:text-[var(--bg)]
-                            w-28
+                            w-28 transition-all duration-300
+                            shadow-[0_0_10px_color-mix(in_oklab,var(--accent)_30%,transparent_70%)]
+                            hover:shadow-[0_0_18px_color-mix(in_oklab,var(--accent)_50%,transparent_50%)]
                           "
                         >
                           Modifier
@@ -284,13 +291,15 @@ export default function AdminListConcerts() {
                           className="
                             bg-[var(--accent)] text-white 
                             hover:bg-[var(--gold)] hover:text-[var(--bg)]
-                            w-28
+                            w-28 transition-all duration-300
+                            shadow-[0_0_10px_color-mix(in_oklab,var(--accent)_30%,transparent_70%)]
+                            hover:shadow-[0_0_18px_color-mix(in_oklab,var(--accent)_50%,transparent_50%)]
                           "
                         >
                           Supprimer
                         </Button>
                       </td>
-                    </tr>
+                    </motion.tr>
                   ))}
                 </tbody>
               </table>
@@ -310,6 +319,7 @@ export default function AdminListConcerts() {
     </motion.section>
   );
 }
+
 
 
 
