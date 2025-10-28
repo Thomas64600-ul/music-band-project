@@ -14,7 +14,7 @@ export function AuthProvider({ children }) {
         const res = await get("/users/me");
         setUser(res?.data || null);
       } catch (error) {
-        console.warn("⚠️ Aucun utilisateur connecté :", error?.response?.status);
+        console.warn("Aucun utilisateur connecté :", error?.response?.status);
         setUser(null);
       } finally {
         setLoading(false);
