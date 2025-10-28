@@ -114,7 +114,8 @@ export default function AdminListMusics() {
     transition-all duration-500
   "
 >
-  <table className="min-w-full text-sm sm:text-base border-collapse">
+  <table className="min-w-[600px] sm:min-w-full text-sm sm:text-base border-collapse">
+
     <thead
       className="
         bg-[color-mix(in_oklab,var(--accent)_10%,var(--bg)_90%)]
