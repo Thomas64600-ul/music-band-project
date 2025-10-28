@@ -11,12 +11,12 @@ export default function SocialLinks() {
 
   return (
     <div className="flex flex-col items-center gap-6 mt-10">
-      {/* === Titre === */}
+     
       <h3 className="text-2xl font-bold text-[#B3122D] drop-shadow-[0_0_6px_#B3122D55]">
         Réseaux & Liens
       </h3>
 
-      {/* === Liens sociaux === */}
+  
       <div className="flex flex-wrap justify-center gap-6">
         {links.map((link) => (
           <a

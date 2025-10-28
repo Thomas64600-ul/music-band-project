@@ -4,7 +4,7 @@ import { FaMoon, FaSun } from "react-icons/fa";
 export default function ThemeToggle() {
   const [darkMode, setDarkMode] = useState(() => {
     if (typeof window !== "undefined") {
-      // 🔹 Récupère le thème stocké, sinon détecte le thème système
+     
       const savedTheme = localStorage.getItem("theme");
       if (savedTheme) return savedTheme === "dark";
       return window.matchMedia("(prefers-color-scheme: dark)").matches;
@@ -13,7 +13,7 @@ export default function ThemeToggle() {
   });
 
   useEffect(() => {
-    const htmlElement = document.querySelector("html"); // ✅ cible bien <html>
+    const htmlElement = document.querySelector("html"); 
 
     if (darkMode) {
       htmlElement.classList.add("dark");

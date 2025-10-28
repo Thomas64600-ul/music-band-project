@@ -47,7 +47,7 @@ export default function Button({
     lg: "text-lg px-6 py-3",
   }[size];
 
-  // 🟣 Thèmes dynamiques basés sur tes variables CSS
+  
   const variants = {
     primary: cx(
       "bg-[var(--accent)] text-[var(--bg)] border border-[var(--accent)]",
