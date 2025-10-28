@@ -19,12 +19,10 @@ export default function AdminStats() {
   const { isAdmin } = useAuth();
   const navigate = useNavigate();
 
-
   useEffect(() => {
     if (!isAdmin) navigate("/login");
   }, [isAdmin, navigate]);
 
-  
   useEffect(() => {
     (async () => {
       try {
@@ -47,12 +45,11 @@ export default function AdminStats() {
 
   if (!stats)
     return (
-      <p className="text-center mt-10 text-red-500">
+      <p className="text-center mt-10 text-[color-mix(in_oklab,red_80%,var(--accent)_20%)]">
         Impossible de charger les statistiques.
       </p>
     );
 
- 
   const roles = stats.rolesDistribution || {};
   const roleData = [
     { name: "Admins", value: roles.admin || 0 },
@@ -67,23 +64,39 @@ export default function AdminStats() {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.8 }}
       className="
-        min-h-screen py-8 sm:py-10 px-4 sm:px-12 
+        min-h-screen py-12 px-6 sm:px-12
         flex flex-col items-center
         bg-[var(--bg)] text-[var(--text)]
+        relative overflow-hidden
         transition-colors duration-700 ease-in-out
       "
     >
+   
       <div
         className="
-          w-full max-w-5xl relative overflow-hidden
-          bg-[var(--bg-secondary)] border border-[var(--accent)]/40
-          rounded-2xl shadow-[0_0_25px_var(--accent)]/30
+          absolute inset-0 -z-10
+          bg-[radial-gradient(circle_at_center,#B3122D33_0%,transparent_70%)]
+          blur-[150px] opacity-70
+        "
+      ></div>
+
+      <div
+        className="
+          relative w-full max-w-6xl
+          bg-[var(--surface)]
+          border border-[var(--border)]
+          rounded-2xl
+          shadow-[0_0_25px_var(--accent)]
+          hover:shadow-[0_0_35px_var(--accent)]
+          hover:border-[var(--accent)]
+          transition-all duration-500
           p-6 sm:p-10
         "
       >
-        
-        <div className="absolute -top-20 -right-20 w-80 h-80 bg-[var(--accent)]/30 rounded-full blur-[150px] opacity-50 pointer-events-none"></div>
+       
+        <div className="absolute -top-20 -right-20 w-80 h-80 bg-[var(--accent)]/25 rounded-full blur-[150px] opacity-60 pointer-events-none"></div>
 
+       
         <h1 className="text-3xl sm:text-4xl font-extrabold text-center text-[var(--accent)] drop-shadow-[0_0_15px_var(--accent)] mb-8 sm:mb-12">
           Statistiques globales
         </h1>
@@ -102,11 +115,13 @@ export default function AdminStats() {
             <div
               key={i}
               className="
-                bg-[var(--bg)] rounded-xl p-3 sm:p-6 text-center
-                border border-[var(--accent)]/40
-                shadow-[0_0_10px_var(--accent)]/20
-                hover:shadow-[0_0_20px_var(--accent)]/40
-                hover:scale-[1.02] transition-all duration-300
+                bg-[color-mix(in_oklab,var(--bg)_95%,black_5%)]
+                rounded-xl p-3 sm:p-6 text-center
+                border border-[var(--accent)]/30
+                shadow-[0_0_15px_rgba(179,18,45,0.25)]
+                hover:shadow-[0_0_25px_rgba(179,18,45,0.45)]
+                hover:scale-[1.03]
+                transition-all duration-300
               "
             >
               <p className="text-[var(--subtext)] text-sm sm:text-base mb-1 sm:mb-2">
@@ -121,12 +136,14 @@ export default function AdminStats() {
 
         <div
           className="
-            bg-[var(--bg)] rounded-2xl p-4 sm:p-6
-            border border-[var(--accent)]/40
-            shadow-[0_0_20px_var(--accent)]/20
+            bg-[color-mix(in_oklab,var(--bg)_95%,black_5%)]
+            rounded-2xl p-4 sm:p-6
+            border border-[var(--accent)]/30
+            shadow-[0_0_25px_rgba(179,18,45,0.35)]
+            transition-all duration-500
           "
         >
-          <h2 className="text-xl sm:text-2xl font-semibold text-[var(--accent)] mb-4 sm:mb-6 text-center">
+          <h2 className="text-xl sm:text-2xl font-semibold text-[var(--accent)] mb-6 text-center">
             Répartition des rôles utilisateurs
           </h2>
 
@@ -171,16 +188,27 @@ export default function AdminStats() {
               border border-[var(--accent)] text-[var(--accent)]
               hover:bg-[var(--accent)] hover:text-[var(--bg)]
               font-semibold px-6 py-2 rounded-xl
-              shadow-[0_0_8px_var(--accent)]/40 transition text-sm sm:text-base
+              shadow-[0_0_10px_var(--accent)]/40 transition-all duration-300
+              text-sm sm:text-base
             "
           >
             ⏎ Retour Dashboard
           </Button>
         </div>
       </div>
+
+      <div
+        className="
+          absolute bottom-0 left-1/2 -translate-x-1/2
+          w-[60vw] h-[60vw]
+          bg-[radial-gradient(circle_at_center,#B3122D33_0%,transparent_70%)]
+          blur-[120px] opacity-60 pointer-events-none
+        "
+      ></div>
     </motion.section>
   );
 }
+
 
 
 

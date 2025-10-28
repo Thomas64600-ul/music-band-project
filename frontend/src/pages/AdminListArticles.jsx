@@ -3,6 +3,7 @@ import { get, del } from "../lib/api";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import Button from "../components/Button";
+import { motion } from "framer-motion";
 
 export default function AdminListArticles() {
   const [articles, setArticles] = useState([]);
@@ -41,160 +42,240 @@ export default function AdminListArticles() {
 
   if (loading)
     return (
-      <p className="text-center mt-10 text-gray-400 animate-pulse">
+      <p className="text-center mt-10 text-[var(--subtext)] animate-pulse">
         Chargement des articles...
       </p>
     );
 
   return (
-    <section className="min-h-screen bg-[#0A0A0A] text-[#F2F2F2] py-10 px-6 sm:px-12">
-      
-      <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-10 text-center sm:text-left">
-        <h1 className="text-3xl font-extrabold text-[#B3122D] drop-shadow-[0_0_12px_#B3122D70]">
-          Gestion des articles
-        </h1>
-        <Button
-          variant="primary"
-          onClick={() => navigate("/admin/articles/new")}
-          className="bg-[#B3122D] hover:bg-[#FF4C4C] px-6 py-2 text-white font-semibold rounded-xl shadow-[0_0_10px_#B3122D50]"
-        >
-          + Nouvel article
-        </Button>
-      </div>
+    <motion.section
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.8 }}
+      className="
+        min-h-screen py-12 px-6 sm:px-12 
+        flex flex-col items-center
+        bg-[var(--bg)] text-[var(--text)]
+        relative overflow-hidden
+        transition-colors duration-700 ease-in-out
+      "
+    >
+    
+      <div
+        className="
+          absolute inset-0 -z-10
+          bg-[radial-gradient(circle_at_center,#B3122D33_0%,transparent_70%)]
+          blur-[150px] opacity-70
+        "
+      ></div>
 
      
-      {articles.length === 0 ? (
-        <p className="text-gray-400 text-center mt-10 italic">
-          Aucun article publié pour le moment.
-        </p>
-      ) : (
-        <>
-          
-          <div className="grid gap-6 sm:hidden">
-            {articles.map((a) => (
-              <div
-                key={a.id}
-                className="bg-[#111] border border-[#B3122D40] rounded-2xl p-5 shadow-[0_0_20px_#B3122D20] transition hover:shadow-[0_0_25px_#B3122D40]"
-              >
-                {a.image_url && (
-                  <img
-                    src={a.image_url}
-                    alt={a.title}
-                    className="w-full h-40 object-cover rounded-lg mb-4 border border-[#B3122D30]"
-                  />
-                )}
-                <h3 className="text-lg font-semibold text-[#F2F2F2] mb-2">
-                  {a.title}
-                </h3>
-                <p className="text-sm text-gray-400 mb-4">
-                  {a.created_at
-                    ? new Date(a.created_at).toLocaleDateString("fr-FR")
-                    : "—"}
-                </p>
-                <div className="flex flex-wrap justify-center gap-3">
-                  <Button
-                    variant="secondary"
-                    onClick={() =>
-                      navigate(`/admin/articles/edit/${a.id}`)
-                    }
-                    className="border border-[#B3122D] text-[#B3122D] hover:bg-[#B3122D] hover:text-white text-sm"
-                  >
-                    Modifier
-                  </Button>
-                  <Button
-                    variant="danger"
-                    onClick={() => handleDelete(a.id)}
-                    className="bg-[#B3122D] text-white hover:bg-[#FF4C4C] text-sm"
-                  >
-                    Supprimer
-                  </Button>
-                  <Button
-                    variant="outline"
-                    onClick={() => navigate(`/blog/${a.id}`)}
-                    className="border border-[#B3122D60] text-gray-300 hover:text-[#FF4C4C] hover:border-[#FF4C4C] text-sm"
-                  >
-                    Voir
-                  </Button>
-                </div>
-              </div>
-            ))}
-          </div>
+      <div
+        className="
+          relative w-full max-w-6xl
+          bg-[var(--surface)]
+          border border-[var(--border)]
+          rounded-2xl
+          shadow-[0_0_25px_var(--accent)]
+          hover:shadow-[0_0_35px_var(--accent)]
+          hover:border-[var(--accent)]
+          transition-all duration-500
+          p-6 sm:p-10
+        "
+      >
+  
+        <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-10 text-center sm:text-left">
+          <h1 className="text-3xl font-extrabold text-[var(--accent)] drop-shadow-[0_0_10px_var(--accent)]">
+            Gestion des articles
+          </h1>
+          <Button
+            onClick={() => navigate("/admin/articles/new")}
+            className="
+              bg-[var(--accent)] hover:bg-[var(--gold)]
+              text-white hover:text-[var(--bg)]
+              font-semibold px-6 py-2 rounded-xl
+              shadow-[0_0_12px_var(--accent)]
+              transition-all duration-300
+            "
+          >
+            + Nouvel article
+          </Button>
+        </div>
 
-         
-          <div className="hidden sm:block overflow-x-auto rounded-2xl border border-[#B3122D30] bg-[#111] shadow-[0_0_25px_#B3122D20]">
-            <table className="min-w-full text-sm sm:text-base">
-              <thead className="bg-[#1A1A1A] border-b border-[#B3122D40]">
-                <tr className="text-[#FF4C4C] uppercase tracking-wide">
-                  <th className="py-3 px-4 text-left">Image</th>
-                  <th className="py-3 px-4 text-left">Titre</th>
-                  <th className="py-3 px-4 text-left">Date</th>
-                  <th className="py-3 px-4 text-left">Auteur</th>
-                  <th className="py-3 px-4 text-center">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {articles.map((a) => (
-                  <tr
-                    key={a.id}
-                    className="border-b border-[#222] hover:bg-[#181818] transition"
-                  >
-                    <td className="py-3 px-4">
-                      {a.image_url ? (
-                        <img
-                          src={a.image_url}
-                          alt={a.title}
-                          className="w-20 h-14 object-cover rounded-md border border-[#B3122D40]"
-                        />
-                      ) : (
-                        <div className="w-20 h-14 bg-[#1A1A1A] rounded-md flex items-center justify-center text-gray-500 text-xs">
-                          Aucune
-                        </div>
-                      )}
-                    </td>
-                    <td className="py-3 px-4 font-medium">{a.title}</td>
-                    <td className="py-3 px-4 text-gray-400">
-                      {a.created_at
-                        ? new Date(a.created_at).toLocaleDateString("fr-FR")
-                        : "—"}
-                    </td>
-                    <td className="py-3 px-4 text-gray-400">
-                      {a.author_name || a.author || "—"}
-                    </td>
-                    <td className="py-3 px-4 text-center space-x-2">
-                      <Button
-                        variant="secondary"
-                        onClick={() =>
-                          navigate(`/admin/articles/edit/${a.id}`)
-                        }
-                        className="border border-[#B3122D] text-[#B3122D] hover:bg-[#B3122D] hover:text-white transition-all"
-                      >
-                        Modifier
-                      </Button>
-                      <Button
-                        variant="danger"
-                        onClick={() => handleDelete(a.id)}
-                        className="bg-[#B3122D] text-white hover:bg-[#FF4C4C]"
-                      >
-                        Supprimer
-                      </Button>
-                      <Button
-                        variant="outline"
-                        onClick={() => navigate(`/blog/${a.id}`)}
-                        className="border border-[#B3122D60] text-gray-300 hover:border-[#FF4C4C] hover:text-[#FF4C4C]"
-                      >
-                        Voir
-                      </Button>
-                    </td>
+        {articles.length === 0 ? (
+          <p className="text-[var(--subtext)] text-center mt-10 italic">
+            Aucun article publié pour le moment.
+          </p>
+        ) : (
+          <>
+           
+            <div className="grid gap-6 sm:hidden">
+              {articles.map((a) => (
+                <div
+                  key={a.id}
+                  className="
+                    bg-[color-mix(in_oklab,var(--bg)_95%,black_5%)]
+                    border border-[var(--accent)]/30
+                    rounded-2xl p-5
+                    shadow-[0_0_25px_rgba(179,18,45,0.3)]
+                    hover:shadow-[0_0_35px_rgba(179,18,45,0.5)]
+                    transition-all duration-300
+                  "
+                >
+                  {a.image_url && (
+                    <img
+                      src={a.image_url}
+                      alt={a.title}
+                      className="w-full h-40 object-cover rounded-lg mb-4 border border-[var(--accent)]/40"
+                    />
+                  )}
+                  <h3 className="text-lg font-semibold mb-2">{a.title}</h3>
+                  <p className="text-sm text-[var(--subtext)] mb-4">
+                    {a.created_at
+                      ? new Date(a.created_at).toLocaleDateString("fr-FR")
+                      : "—"}
+                  </p>
+                  <div className="flex flex-wrap justify-center gap-3">
+                    <Button
+                      onClick={() => navigate(`/admin/articles/edit/${a.id}`)}
+                      className="
+                        border border-[var(--accent)] text-[var(--accent)]
+                        hover:bg-[var(--accent)] hover:text-[var(--bg)]
+                        text-sm
+                      "
+                    >
+                      Modifier
+                    </Button>
+                    <Button
+                      onClick={() => handleDelete(a.id)}
+                      className="
+                        bg-[var(--accent)] text-white hover:bg-[var(--gold)]
+                        hover:text-[var(--bg)] text-sm
+                      "
+                    >
+                      Supprimer
+                    </Button>
+                    <Button
+                      onClick={() => navigate(`/blog/${a.id}`)}
+                      className="
+                        border border-[var(--accent)]/50 text-[var(--subtext)]
+                        hover:text-[var(--accent)] hover:border-[var(--accent)]
+                        text-sm
+                      "
+                    >
+                      Voir
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+           
+            <div
+              className="
+                hidden sm:block overflow-x-auto
+                rounded-2xl border border-[var(--accent)]/30
+                bg-[color-mix(in_oklab,var(--bg)_95%,black_5%)]
+                shadow-[0_0_25px_rgba(179,18,45,0.35)]
+                transition-all duration-500
+              "
+            >
+              <table className="min-w-full text-sm sm:text-base">
+                <thead className="bg-[var(--accent)]/10 border-b border-[var(--accent)]/30">
+                  <tr className="text-[var(--accent)] uppercase tracking-wide">
+                    <th className="py-3 px-4 text-left">Image</th>
+                    <th className="py-3 px-4 text-left">Titre</th>
+                    <th className="py-3 px-4 text-left">Date</th>
+                    <th className="py-3 px-4 text-left">Auteur</th>
+                    <th className="py-3 px-4 text-center">Actions</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </>
-      )}
-    </section>
+                </thead>
+                <tbody>
+                  {articles.map((a) => (
+                    <tr
+                      key={a.id}
+                      className="
+                        border-b border-[var(--accent)]/20 
+                        hover:bg-[var(--accent)]/10
+                        transition-colors duration-300
+                      "
+                    >
+                      <td className="py-3 px-4">
+                        {a.image_url ? (
+                          <img
+                            src={a.image_url}
+                            alt={a.title}
+                            className="w-20 h-14 object-cover rounded-md border border-[var(--accent)]/30"
+                          />
+                        ) : (
+                          <div className="w-20 h-14 bg-[var(--accent)]/5 rounded-md flex items-center justify-center text-[var(--subtext)] text-xs">
+                            Aucune
+                          </div>
+                        )}
+                      </td>
+                      <td className="py-3 px-4 font-semibold text-[var(--text)]">
+                        {a.title}
+                      </td>
+                      <td className="py-3 px-4 text-[var(--subtext)]">
+                        {a.created_at
+                          ? new Date(a.created_at).toLocaleDateString("fr-FR")
+                          : "—"}
+                      </td>
+                      <td className="py-3 px-4 text-[var(--subtext)]">
+                        {a.author_name || a.author || "—"}
+                      </td>
+                      <td className="py-3 px-4 text-center flex flex-col gap-2 items-center justify-center">
+                        <Button
+                          onClick={() => navigate(`/admin/articles/edit/${a.id}`)}
+                          className="
+                            border border-[var(--accent)] text-[var(--accent)]
+                            hover:bg-[var(--accent)] hover:text-[var(--bg)]
+                            w-28
+                          "
+                        >
+                          Modifier
+                        </Button>
+                        <Button
+                          onClick={() => handleDelete(a.id)}
+                          className="
+                            bg-[var(--accent)] text-white hover:bg-[var(--gold)]
+                            hover:text-[var(--bg)] w-28
+                          "
+                        >
+                          Supprimer
+                        </Button>
+                        <Button
+                          onClick={() => navigate(`/blog/${a.id}`)}
+                          className="
+                            border border-[var(--accent)]/50 text-[var(--subtext)]
+                            hover:text-[var(--accent)] hover:border-[var(--accent)]
+                            w-28
+                          "
+                        >
+                          Voir
+                        </Button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </>
+        )}
+      </div>
+
+      <div
+        className="
+          absolute bottom-0 left-1/2 -translate-x-1/2
+          w-[60vw] h-[60vw]
+          bg-[radial-gradient(circle_at_center,#B3122D33_0%,transparent_70%)]
+          blur-[120px] opacity-60 pointer-events-none
+        "
+      ></div>
+    </motion.section>
   );
 }
+
 
 
 
