@@ -53,69 +53,61 @@ export default function Register() {
         "
       ></div>
 
-      <form
+     <form
   onSubmit={onSubmit}
   className="
     relative w-full max-w-md
-    bg-[#0A0A0A]
-    border border-[#B3122D66]
-    rounded-2xl shadow-[0_0_25px_#B3122D55]
-    hover:shadow-[0_0_40px_#B3122D99]
-    hover:border-[#B3122D]
-    transition-all duration-500
-    p-8 sm:p-10
+    rounded-2xl p-8 sm:p-10 transition-all duration-500
+    border border-[color-mix(in_oklab,var(--accent)_70%,transparent_30%)]
+    shadow-[0_0_25px_color-mix(in_oklab,var(--accent)_40%,transparent_60%)]
+    hover:shadow-[0_0_40px_color-mix(in_oklab,var(--accent)_60%,transparent_40%)]
+    bg-[color-mix(in_oklab,var(--bg)_96%,var(--accent)_4%)]
   "
 >
-  <h1 className="text-3xl font-extrabold text-center text-[#B3122D] mb-8 drop-shadow-[0_0_15px_#B3122D99]">
+  <h1
+    className="
+      text-3xl font-extrabold text-center mb-8
+      text-[var(--accent)] drop-shadow-[0_0_15px_var(--accent)]
+    "
+  >
     Inscription
   </h1>
 
   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
-    <div>
-      <label htmlFor="firstname" className="block text-[#CFCFCF] mb-2 font-medium">
-        Prénom
-      </label>
-      <input
-        id="firstname"
-        type="text"
-        value={form.firstname}
-        onChange={onChange}
-        required
-        className="
-          w-full p-3 rounded-md
-          bg-[#111]
-          text-[#F2F2F2]
-          border border-[#B3122D66]
-          focus:border-[#B3122D]
-          outline-none transition-all duration-300
-        "
-      />
-    </div>
-
-    <div>
-      <label htmlFor="lastname" className="block text-[#CFCFCF] mb-2 font-medium">
-        Nom
-      </label>
-      <input
-        id="lastname"
-        type="text"
-        value={form.lastname}
-        onChange={onChange}
-        required
-        className="
-          w-full p-3 rounded-md
-          bg-[#111]
-          text-[#F2F2F2]
-          border border-[#B3122D66]
-          focus:border-[#B3122D]
-          outline-none transition-all duration-300
-        "
-      />
-    </div>
+    {[
+      { id: "firstname", label: "Prénom" },
+      { id: "lastname", label: "Nom" },
+    ].map(({ id, label }) => (
+      <div key={id}>
+        <label
+          htmlFor={id}
+          className="block mb-2 font-medium text-[color-mix(in_oklab,var(--text)_85%,var(--accent)_15%)]"
+        >
+          {label}
+        </label>
+        <input
+          id={id}
+          type="text"
+          value={form[id]}
+          onChange={onChange}
+          required
+          className="
+            w-full p-3 rounded-md border outline-none transition-all duration-300
+            bg-[color-mix(in_oklab,var(--bg)_90%,var(--accent)_10%)]
+            border-[color-mix(in_oklab,var(--accent)_40%,transparent_60%)]
+            text-[var(--text)]
+            focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/30
+          "
+        />
+      </div>
+    ))}
   </div>
 
   <div className="mb-5">
-    <label htmlFor="email" className="block text-[#CFCFCF] mb-2 font-medium">
+    <label
+      htmlFor="email"
+      className="block mb-2 font-medium text-[color-mix(in_oklab,var(--text)_85%,var(--accent)_15%)]"
+    >
       Email
     </label>
     <input
@@ -125,18 +117,21 @@ export default function Register() {
       onChange={onChange}
       required
       className="
-        w-full p-3 rounded-md
-        bg-[#111]
-        text-[#F2F2F2]
-        border border-[#B3122D66]
-        focus:border-[#B3122D]
-        outline-none transition-all duration-300
+        w-full p-3 rounded-md border outline-none transition-all duration-300
+        bg-[color-mix(in_oklab,var(--bg)_90%,var(--accent)_10%)]
+        border-[color-mix(in_oklab,var(--accent)_40%,transparent_60%)]
+        text-[var(--text)]
+        focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/30
       "
     />
   </div>
 
+ 
   <div className="mb-8">
-    <label htmlFor="password" className="block text-[#CFCFCF] mb-2 font-medium">
+    <label
+      htmlFor="password"
+      className="block mb-2 font-medium text-[color-mix(in_oklab,var(--text)_85%,var(--accent)_15%)]"
+    >
       Mot de passe
     </label>
     <input
@@ -146,25 +141,25 @@ export default function Register() {
       onChange={onChange}
       required
       className="
-        w-full p-3 rounded-md
-        bg-[#111]
-        text-[#F2F2F2]
-        border border-[#B3122D66]
-        focus:border-[#B3122D]
-        outline-none transition-all duration-300
+        w-full p-3 rounded-md border outline-none transition-all duration-300
+        bg-[color-mix(in_oklab,var(--bg)_90%,var(--accent)_10%)]
+        border-[color-mix(in_oklab,var(--accent)_40%,transparent_60%)]
+        text-[var(--text)]
+        focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/30
       "
     />
   </div>
 
+  
   <div className="text-center">
     <Button
       type="submit"
       disabled={status === 'loading'}
       className="
         px-6 py-3 rounded-md 
-        bg-[#B3122D] text-white font-semibold 
-        hover:bg-[#E6B422] hover:text-[#0A0A0A]
-        hover:shadow-[0_0_25px_#B3122D]
+        bg-[var(--accent)] text-white font-semibold 
+        hover:bg-[var(--gold)] hover:text-[var(--bg)]
+        hover:shadow-[0_0_25px_var(--accent)]
         active:scale-95
         transition-all duration-300 ease-in-out
       "
@@ -182,6 +177,7 @@ export default function Register() {
     )}
   </div>
 </form>
+
 
 
       <div
