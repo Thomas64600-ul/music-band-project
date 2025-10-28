@@ -71,7 +71,7 @@ export default function AdminListArticles() {
 
       <div
         className="
-          relative w-full max-w-6xl
+          relative w-full max-w-7xl
           border border-[color-mix(in_oklab,var(--accent)_70%,transparent_30%)]
           rounded-2xl
           shadow-[0_0_25px_color-mix(in_oklab,var(--accent)_40%,transparent_60%)]
@@ -81,7 +81,7 @@ export default function AdminListArticles() {
           p-6 sm:p-10
         "
       >
-     
+    
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-10 text-center sm:text-left">
           <h1 className="text-3xl font-extrabold text-[var(--accent)] drop-shadow-[0_0_12px_var(--accent)]">
             Gestion des articles
@@ -106,7 +106,7 @@ export default function AdminListArticles() {
           </p>
         ) : (
           <>
-          
+         
             <div className="block sm:hidden space-y-4">
               {articles.map((a) => (
                 <motion.div
@@ -150,7 +150,7 @@ export default function AdminListArticles() {
                   <div className="flex gap-3 mt-3">
                     <Button
                       onClick={() =>
-                        navigate(`/admin/articles/edit/${a.id}`)
+                       navigate(`/admin/articles/${m.id}`)
                       }
                       className="
                         border border-[var(--accent)] text-[var(--accent)]
@@ -192,9 +192,10 @@ export default function AdminListArticles() {
                 bg-[color-mix(in_oklab,var(--bg)_94%,var(--accent)_6%)]
                 shadow-[0_0_25px_color-mix(in_oklab,var(--accent)_30%,transparent_70%)]
                 transition-all duration-500
+                w-full
               "
             >
-              <table className="min-w-[700px] text-sm sm:text-base border-collapse">
+              <table className="w-full text-sm sm:text-base border-collapse">
                 <thead
                   className="
                     bg-[color-mix(in_oklab,var(--accent)_10%,var(--bg)_90%)]
@@ -213,14 +214,16 @@ export default function AdminListArticles() {
 
                 <tbody>
                   {articles.map((a, index) => (
-                    <tr
+                    <motion.tr
                       key={a.id}
-                      className={`
-                        ${index !== articles.length - 1 ? "border-b" : ""}
-                        border-[color-mix(in_oklab,var(--accent)_25%,transparent_75%)]
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.05 }}
+                      className="
+                        border-b border-[color-mix(in_oklab,var(--accent)_25%,transparent_75%)]
                         hover:bg-[color-mix(in_oklab,var(--accent)_12%,transparent_88%)]
-                        transition-colors duration-300
-                      `}
+                        transition-all duration-300
+                      "
                     >
                       <td className="py-3 px-4">
                         {a.image_url ? (
@@ -239,7 +242,7 @@ export default function AdminListArticles() {
                       <td className="py-3 px-4 font-semibold text-[color-mix(in_oklab,var(--text)_90%,var(--accent)_10%)]">
                         {a.title}
                       </td>
-                      <td className="py-3 px-4 text-[color-mix(in_oklab,var(--subtext)_90%,var(--accent)_10%)]">
+                      <td className="py-3 px-4 text-[color-mix(in_oklab,var(--subtext)_90%,var(--accent)_10%)] whitespace-nowrap">
                         {a.created_at
                           ? new Date(a.created_at).toLocaleDateString("fr-FR", {
                               day: "2-digit",
@@ -248,7 +251,7 @@ export default function AdminListArticles() {
                             })
                           : "—"}
                       </td>
-                      <td className="py-3 px-4 text-[color-mix(in_oklab,var(--subtext)_90%,var(--accent)_10%)]">
+                      <td className="py-3 px-4 text-[color-mix(in_oklab,var(--subtext)_90%,var(--accent)_10%)] whitespace-nowrap">
                         {a.author_name || a.author || "—"}
                       </td>
 
@@ -286,7 +289,7 @@ export default function AdminListArticles() {
                           Voir
                         </Button>
                       </td>
-                    </tr>
+                    </motion.tr>
                   ))}
                 </tbody>
               </table>
@@ -306,6 +309,7 @@ export default function AdminListArticles() {
     </motion.section>
   );
 }
+
 
 
 

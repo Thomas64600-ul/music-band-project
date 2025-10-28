@@ -161,7 +161,7 @@ export default function AdminListMusics() {
                   <div className="flex gap-3 mt-3">
                     <Button
                       onClick={() =>
-                        navigate(`/admin/musics/edit/${m.id}`)
+                        navigate(`/admin/musics/${m.id}`)
                       }
                       className="
                         border border-[var(--accent)] text-[var(--accent)]
