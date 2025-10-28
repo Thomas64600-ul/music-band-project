@@ -2,9 +2,12 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import AdminSidebar from "../components/AdminSidebar";
+import { useLocation } from "react-router-dom"; 
 
 export default function AdminLayout({ children }) {
   const [isOpen, setIsOpen] = useState(false);
+  const location = useLocation(); // 🆕
+  const isDashboard = location.pathname === "/admin"; 
 
   return (
     <div
@@ -15,7 +18,7 @@ export default function AdminLayout({ children }) {
         pt-[80px] min-h-screen
       "
     >
-      
+     
       <div
         className="
           hidden md:block fixed
@@ -26,7 +29,6 @@ export default function AdminLayout({ children }) {
         <AdminSidebar />
       </div>
 
-     
       <AnimatePresence>
         {isOpen && (
           <motion.aside
@@ -55,7 +57,6 @@ export default function AdminLayout({ children }) {
         )}
       </AnimatePresence>
 
-      
       <main
         className="
           flex-1 md:ml-64
@@ -66,25 +67,25 @@ export default function AdminLayout({ children }) {
           overflow-y-auto
         "
       >
-       
-        <button
-          onClick={() => setIsOpen(true)}
-          className="
-            md:hidden fixed top-[90px] left-4 z-40
-            bg-[var(--accent)] text-white
-            p-2 rounded-lg shadow-[0_0_15px_var(--accent)]/40
-            hover:bg-[var(--gold)] hover:text-[var(--bg)]
-            transition-all duration-300
-          "
-        >
-          <Menu size={22} />
-        </button>
-
       
+        {!isDashboard && (
+          <button
+            onClick={() => setIsOpen(true)}
+            className="
+              md:hidden fixed top-[90px] left-4 z-40
+              bg-[var(--accent)] text-white
+              p-2 rounded-lg shadow-[0_0_15px_var(--accent)]/40
+              hover:bg-[var(--gold)] hover:text-[var(--bg)]
+              transition-all duration-300
+            "
+          >
+            <Menu size={22} />
+          </button>
+        )}
+
         {children}
       </main>
 
-     
       {isOpen && (
         <div
           className="
