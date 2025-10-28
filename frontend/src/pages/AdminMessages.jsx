@@ -71,7 +71,7 @@ export default function AdminMessages() {
         transition-colors duration-700 ease-in-out
       "
     >
-    
+   
       <div
         className="
           absolute inset-0 -z-10
@@ -83,19 +83,18 @@ export default function AdminMessages() {
       <div
         className="
           relative w-full max-w-6xl
-          bg-[var(--surface)]
-          border border-[var(--border)]
+          border border-[color-mix(in_oklab,var(--accent)_70%,transparent_30%)]
           rounded-2xl
-          shadow-[0_0_25px_var(--accent)]
-          hover:shadow-[0_0_35px_var(--accent)]
-          hover:border-[var(--accent)]
+          shadow-[0_0_25px_color-mix(in_oklab,var(--accent)_40%,transparent_60%)]
+          hover:shadow-[0_0_40px_color-mix(in_oklab,var(--accent)_60%,transparent_40%)]
+          bg-[color-mix(in_oklab,var(--bg)_96%,var(--accent)_4%)]
           transition-all duration-500
           p-6 sm:p-10
         "
       >
-       
+      
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-10 text-center sm:text-left">
-          <h1 className="text-3xl font-extrabold text-[var(--accent)] drop-shadow-[0_0_10px_var(--accent)]">
+          <h1 className="text-3xl font-extrabold text-[var(--accent)] drop-shadow-[0_0_12px_var(--accent)]">
             Messages reçus
           </h1>
           <Button
@@ -116,150 +115,94 @@ export default function AdminMessages() {
             Aucun message pour le moment.
           </p>
         ) : (
-          <>
-          
-            <div className="grid gap-6 sm:hidden">
-              {messages.map((m) => (
-                <div
-                  key={m.id}
-                  className={`
-                    bg-[color-mix(in_oklab,var(--bg)_95%,black_5%)]
-                    border rounded-2xl p-5 transition-all duration-300
-                    ${
-                      m.is_read
-                        ? "border-[var(--subtext)]/40 opacity-80"
-                        : "border-[var(--accent)]/50 shadow-[0_0_25px_rgba(179,18,45,0.3)] hover:shadow-[0_0_35px_rgba(179,18,45,0.5)]"
-                    }
-                  `}
-                >
-                  <h3 className="text-lg font-semibold text-[var(--text)] mb-1">
-                    {m.name}
-                  </h3>
-                  <p className="text-sm text-[var(--subtext)] mb-1">
-                     {m.email || "—"}
-                  </p>
-                  <p className="text-sm text-[var(--text)] mb-3">
-                     {m.message || "Aucun contenu"}
-                  </p>
-                  <p className="text-sm mb-4">
-                     Statut :{" "}
-                    <span
-                      className={
+          <div
+            className="
+              overflow-x-auto rounded-2xl
+              border border-[color-mix(in_oklab,var(--accent)_40%,transparent_60%)]
+              bg-[color-mix(in_oklab,var(--bg)_94%,var(--accent)_6%)]
+              shadow-[0_0_25px_color-mix(in_oklab,var(--accent)_30%,transparent_70%)]
+              transition-all duration-500
+            "
+          >
+            <table className="min-w-full text-sm sm:text-base border-collapse">
+              <thead
+                className="
+                  bg-[color-mix(in_oklab,var(--accent)_10%,var(--bg)_90%)]
+                  text-[var(--accent)] uppercase tracking-wide
+                  border-b border-[color-mix(in_oklab,var(--accent)_40%,transparent_60%)]
+                "
+              >
+                <tr>
+                  <th className="py-3 px-4 text-left">Nom</th>
+                  <th className="py-3 px-4 text-left">Email</th>
+                  <th className="py-3 px-4 text-left">Message</th>
+                  <th className="py-3 px-4 text-center">Statut</th>
+                  <th className="py-3 px-4 text-center">Actions</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {messages.map((m, index) => (
+                  <tr
+                    key={m.id}
+                    className={`
+                      ${index !== messages.length - 1 ? "border-b" : ""}
+                      border-[color-mix(in_oklab,var(--accent)_25%,transparent_75%)]
+                      transition-colors duration-300
+                      ${
                         m.is_read
-                          ? "text-green-500 font-semibold"
-                          : "text-[var(--accent)] font-semibold"
+                          ? "opacity-70 bg-[color-mix(in_oklab,var(--bg)_96%,var(--accent)_3%)]"
+                          : "hover:bg-[color-mix(in_oklab,var(--accent)_12%,transparent_88%)]"
                       }
-                    >
-                      {m.is_read ? "Lu" : "Non lu"}
-                    </span>
-                  </p>
-
-                  <div className="flex flex-wrap justify-center gap-3">
-                    {!m.is_read && (
-                      <Button
-                        onClick={() => handleRead(m.id)}
-                        className="
-                          border border-[var(--accent)] text-[var(--accent)]
-                          hover:bg-[var(--accent)] hover:text-[var(--bg)]
-                          text-sm
-                        "
+                    `}
+                  >
+                    <td className="py-3 px-4 font-semibold text-[color-mix(in_oklab,var(--text)_90%,var(--accent)_10%)]">
+                      {m.name}
+                    </td>
+                    <td className="py-3 px-4 text-[var(--accent)]">
+                      {m.email}
+                    </td>
+                    <td className="py-3 px-4 text-[color-mix(in_oklab,var(--subtext)_90%,var(--accent)_10%)] max-w-sm truncate">
+                      {m.message}
+                    </td>
+                    <td className="py-3 px-4 text-center">
+                      <span
+                        className={`font-semibold ${
+                          m.is_read ? "text-green-500" : "text-[var(--accent)]"
+                        }`}
                       >
-                        Marquer lu
-                      </Button>
-                    )}
-                    <Button
-                      onClick={() => handleDelete(m.id)}
-                      className="
-                        bg-[var(--accent)] text-white
-                        hover:bg-[var(--gold)] hover:text-[var(--bg)]
-                        text-sm
-                      "
-                    >
-                      Supprimer
-                    </Button>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div
-              className="
-                hidden sm:block overflow-x-auto
-                rounded-2xl border border-[var(--accent)]/30
-                bg-[color-mix(in_oklab,var(--bg)_95%,black_5%)]
-                shadow-[0_0_25px_rgba(179,18,45,0.35)]
-                transition-all duration-500
-              "
-            >
-              <table className="min-w-full text-sm sm:text-base">
-                <thead className="bg-[var(--accent)]/10 border-b border-[var(--accent)]/30">
-                  <tr className="text-[var(--accent)] uppercase tracking-wide">
-                    <th className="py-3 px-4 text-left">Nom</th>
-                    <th className="py-3 px-4 text-left">Email</th>
-                    <th className="py-3 px-4 text-left">Message</th>
-                    <th className="py-3 px-4 text-center">Statut</th>
-                    <th className="py-3 px-4 text-center">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {messages.map((m) => (
-                    <tr
-                      key={m.id}
-                      className={`
-                        border-b border-[var(--accent)]/20 transition
-                        ${
-                          m.is_read
-                            ? "opacity-70 bg-[var(--bg-secondary)]"
-                            : "hover:bg-[var(--accent)]/10"
-                        }
-                      `}
-                    >
-                      <td className="py-3 px-4 font-semibold">{m.name}</td>
-                      <td className="py-3 px-4 text-[var(--accent)]">
-                        {m.email}
-                      </td>
-                      <td className="py-3 px-4 text-[var(--subtext)] max-w-sm truncate">
-                        {m.message}
-                      </td>
-                      <td className="py-3 px-4 text-center">
-                        <span
-                          className={`font-semibold ${
-                            m.is_read
-                              ? "text-green-500"
-                              : "text-[var(--accent)]"
-                          }`}
-                        >
-                          {m.is_read ? "Lu" : "Non lu"}
-                        </span>
-                      </td>
-                      <td className="py-3 px-4 text-center flex flex-col gap-2 items-center justify-center">
-                        {!m.is_read && (
-                          <Button
-                            onClick={() => handleRead(m.id)}
-                            className="
-                              border border-[var(--accent)] text-[var(--accent)]
-                              hover:bg-[var(--accent)] hover:text-[var(--bg)] w-28
-                            "
-                          >
-                            Marquer lu
-                          </Button>
-                        )}
+                        {m.is_read ? "Lu" : "Non lu"}
+                      </span>
+                    </td>
+                    <td className="py-3 px-4 text-center flex flex-col gap-2 items-center justify-center">
+                      {!m.is_read && (
                         <Button
-                          onClick={() => handleDelete(m.id)}
+                          onClick={() => handleRead(m.id)}
                           className="
-                            bg-[var(--accent)] text-white hover:bg-[var(--gold)]
-                            hover:text-[var(--bg)] w-28
+                            border border-[var(--accent)] text-[var(--accent)]
+                            hover:bg-[var(--accent)] hover:text-[var(--bg)]
+                            w-28
                           "
                         >
-                          Supprimer
+                          Marquer lu
                         </Button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </>
+                      )}
+                      <Button
+                        onClick={() => handleDelete(m.id)}
+                        className="
+                          bg-[var(--accent)] text-white 
+                          hover:bg-[var(--gold)] hover:text-[var(--bg)]
+                          w-28
+                        "
+                      >
+                        Supprimer
+                      </Button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         )}
       </div>
 
@@ -274,6 +217,7 @@ export default function AdminMessages() {
     </motion.section>
   );
 }
+
 
 
 

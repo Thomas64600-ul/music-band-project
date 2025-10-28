@@ -12,7 +12,6 @@ export default function AdminComments() {
   const [searchTerm, setSearchTerm] = useState("");
   const [filterArticle, setFilterArticle] = useState("");
   const [filterAuthor, setFilterAuthor] = useState("");
-
   const { isAdmin } = useAuth();
   const navigate = useNavigate();
 
@@ -26,9 +25,8 @@ export default function AdminComments() {
         const data = await get("/comments");
         setComments(Array.isArray(data.data) ? data.data : []);
       } catch (e) {
-        console.error("Erreur lors du chargement des commentaires :", e);
+        console.error("Erreur chargement commentaires :", e);
         setError("Impossible de charger les commentaires.");
-        setComments([]);
       } finally {
         setLoading(false);
       }
@@ -41,7 +39,7 @@ export default function AdminComments() {
       await del(`/comments/${id}`);
       setComments((prev) => prev.filter((c) => c.id !== id));
     } catch (e) {
-      console.error("Erreur lors de la suppression :", e);
+      console.error("Erreur suppression commentaire :", e);
       alert("Erreur lors de la suppression du commentaire");
     }
   }
@@ -57,7 +55,6 @@ export default function AdminComments() {
       const articleMatch =
         c.article_title?.toLowerCase().includes(filterArticle.toLowerCase()) ||
         c.target_type?.toLowerCase().includes(filterArticle.toLowerCase());
-
       return contentMatch && authorMatch && articleMatch;
     });
   }, [comments, searchTerm, filterAuthor, filterArticle]);
@@ -75,14 +72,13 @@ export default function AdminComments() {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.8 }}
       className="
-        min-h-screen py-12 px-6 sm:px-12
-        flex flex-col items-center
+        min-h-screen py-12 px-6 sm:px-12 flex flex-col items-center
         bg-[var(--bg)] text-[var(--text)]
         relative overflow-hidden
         transition-colors duration-700 ease-in-out
       "
     >
-     
+   
       <div
         className="
           absolute inset-0 -z-10
@@ -94,22 +90,21 @@ export default function AdminComments() {
       <div
         className="
           relative w-full max-w-7xl
-          bg-[var(--surface)]
-          border border-[var(--border)]
+          border border-[color-mix(in_oklab,var(--accent)_70%,transparent_30%)]
           rounded-2xl
-          shadow-[0_0_25px_var(--accent)]
-          hover:shadow-[0_0_35px_var(--accent)]
-          hover:border-[var(--accent)]
+          shadow-[0_0_25px_color-mix(in_oklab,var(--accent)_40%,transparent_60%)]
+          hover:shadow-[0_0_40px_color-mix(in_oklab,var(--accent)_60%,transparent_40%)]
+          bg-[color-mix(in_oklab,var(--bg)_96%,var(--accent)_4%)]
           transition-all duration-500
           p-6 sm:p-10
         "
       >
-        
+       
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-10 text-center sm:text-left">
-          <h1 className="text-3xl font-extrabold text-[var(--accent)] drop-shadow-[0_0_10px_var(--accent)]">
+          <h1 className="text-3xl font-extrabold text-[var(--accent)] drop-shadow-[0_0_12px_var(--accent)]">
             Gestion des commentaires
           </h1>
-          <p className="text-sm text-[var(--subtext)] italic">
+          <p className="text-sm text-[color-mix(in_oklab,var(--subtext)_90%,var(--accent)_10%)] italic">
             Total : {filteredComments.length} commentaire
             {filteredComments.length > 1 ? "s" : ""}
           </p>
@@ -118,48 +113,47 @@ export default function AdminComments() {
         <div
           className="
             flex flex-col sm:flex-row gap-4 mb-8
-            bg-[color-mix(in_oklab,var(--bg)_95%,black_5%)]
-            border border-[var(--accent)]/30 rounded-xl p-4
-            shadow-[0_0_20px_rgba(179,18,45,0.25)]
+            bg-[color-mix(in_oklab,var(--bg)_94%,var(--accent)_6%)]
+            border border-[color-mix(in_oklab,var(--accent)_40%,transparent_60%)]
+            rounded-xl p-4
+            shadow-[0_0_20px_color-mix(in_oklab,var(--accent)_25%,transparent_75%)]
             transition-all duration-500
           "
         >
-          <input
-            type="text"
-            placeholder="🔍 Rechercher un mot dans les commentaires..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="
-              flex-1 p-2 rounded-md border border-[var(--accent)]/30 
-              bg-[var(--bg)] text-[var(--text)]
-              focus:ring-2 focus:ring-[var(--accent)]/50
-              transition-all
-            "
-          />
-          <input
-            type="text"
-            placeholder="Filtrer par auteur..."
-            value={filterAuthor}
-            onChange={(e) => setFilterAuthor(e.target.value)}
-            className="
-              flex-1 p-2 rounded-md border border-[var(--accent)]/30 
-              bg-[var(--bg)] text-[var(--text)]
-              focus:ring-2 focus:ring-[var(--accent)]/50
-              transition-all
-            "
-          />
-          <input
-            type="text"
-            placeholder="Filtrer par article ou type..."
-            value={filterArticle}
-            onChange={(e) => setFilterArticle(e.target.value)}
-            className="
-              flex-1 p-2 rounded-md border border-[var(--accent)]/30 
-              bg-[var(--bg)] text-[var(--text)]
-              focus:ring-2 focus:ring-[var(--accent)]/50
-              transition-all
-            "
-          />
+          {[
+            {
+              placeholder: "🔍 Rechercher un mot...",
+              value: searchTerm,
+              setter: setSearchTerm,
+            },
+            {
+              placeholder: "Filtrer par auteur...",
+              value: filterAuthor,
+              setter: setFilterAuthor,
+            },
+            {
+              placeholder: "Filtrer par article ou type...",
+              value: filterArticle,
+              setter: setFilterArticle,
+            },
+          ].map(({ placeholder, value, setter }, i) => (
+            <input
+              key={i}
+              type="text"
+              placeholder={placeholder}
+              value={value}
+              onChange={(e) => setter(e.target.value)}
+              className="
+                flex-1 p-2 rounded-md
+                bg-[color-mix(in_oklab,var(--bg)_96%,black_4%)]
+                border border-[color-mix(in_oklab,var(--accent)_40%,transparent_60%)]
+                text-[color-mix(in_oklab,var(--text)_90%,var(--accent)_10%)]
+                focus:ring-2 focus:ring-[var(--accent)]/40
+                focus:border-[var(--accent)]
+                transition-all duration-300
+              "
+            />
+          ))}
         </div>
 
         {error && (
@@ -173,15 +167,22 @@ export default function AdminComments() {
         ) : (
           <div
             className="
-              overflow-x-auto rounded-2xl border border-[var(--accent)]/30 
-              bg-[color-mix(in_oklab,var(--bg)_95%,black_5%)]
-              shadow-[0_0_25px_rgba(179,18,45,0.35)]
+              overflow-x-auto rounded-2xl
+              border border-[color-mix(in_oklab,var(--accent)_40%,transparent_60%)]
+              bg-[color-mix(in_oklab,var(--bg)_94%,var(--accent)_6%)]
+              shadow-[0_0_25px_color-mix(in_oklab,var(--accent)_30%,transparent_70%)]
               transition-all duration-500
             "
           >
-            <table className="min-w-full text-sm sm:text-base">
-              <thead className="bg-[var(--accent)]/10 border-b border-[var(--accent)]/30">
-                <tr className="text-[var(--accent)] uppercase tracking-wide">
+            <table className="min-w-full text-sm sm:text-base border-collapse">
+              <thead
+                className="
+                  bg-[color-mix(in_oklab,var(--accent)_10%,var(--bg)_90%)]
+                  text-[var(--accent)] uppercase tracking-wide
+                  border-b border-[color-mix(in_oklab,var(--accent)_40%,transparent_60%)]
+                "
+              >
+                <tr>
                   <th className="py-3 px-4 text-left">Auteur</th>
                   <th className="py-3 px-4 text-left">Contenu</th>
                   <th className="py-3 px-4 text-left">Cible</th>
@@ -190,18 +191,20 @@ export default function AdminComments() {
                 </tr>
               </thead>
               <tbody>
-                {filteredComments.map((c) => (
-                  <tr
+                {filteredComments.map((c, index) => (
+                  <motion.tr
                     key={c.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.05 }}
                     className="
-                      border-b border-[var(--accent)]/20
-                      hover:bg-[var(--accent)]/10 transition
+                      border-b border-[color-mix(in_oklab,var(--accent)_25%,transparent_75%)]
+                      hover:bg-[color-mix(in_oklab,var(--accent)_12%,transparent_88%)]
+                      transition-all duration-300
                     "
                   >
-                    <td className="py-3 px-4 font-medium whitespace-nowrap">
-                      {c.firstname
-                        ? `${c.firstname} ${c.lastname || ""}`
-                        : "Anonyme"}
+                    <td className="py-3 px-4 font-semibold text-[color-mix(in_oklab,var(--text)_90%,var(--accent)_10%)] whitespace-nowrap">
+                      {c.firstname ? `${c.firstname} ${c.lastname || ""}` : "Anonyme"}
                     </td>
                     <td
                       className="py-3 px-4 text-[var(--text)] max-w-[300px] truncate"
@@ -223,14 +226,15 @@ export default function AdminComments() {
                       <Button
                         onClick={() => handleDelete(c.id)}
                         className="
-                          bg-[var(--accent)] text-white hover:bg-[var(--gold)]
-                          hover:text-[var(--bg)] w-28
+                          bg-[var(--accent)] text-white 
+                          hover:bg-[var(--gold)] hover:text-[var(--bg)]
+                          w-28
                         "
                       >
                         Supprimer
                       </Button>
                     </td>
-                  </tr>
+                  </motion.tr>
                 ))}
               </tbody>
             </table>

@@ -45,7 +45,7 @@ export default function AdminStats() {
 
   if (!stats)
     return (
-      <p className="text-center mt-10 text-[color-mix(in_oklab,red_80%,var(--accent)_20%)]">
+      <p className="text-center mt-10 text-[color-mix(in_oklab,var(--accent)_80%,red_20%)]">
         Impossible de charger les statistiques.
       </p>
     );
@@ -71,7 +71,7 @@ export default function AdminStats() {
         transition-colors duration-700 ease-in-out
       "
     >
-   
+     
       <div
         className="
           absolute inset-0 -z-10
@@ -83,20 +83,18 @@ export default function AdminStats() {
       <div
         className="
           relative w-full max-w-6xl
-          bg-[var(--surface)]
-          border border-[var(--border)]
+          border border-[color-mix(in_oklab,var(--accent)_70%,transparent_30%)]
           rounded-2xl
-          shadow-[0_0_25px_var(--accent)]
-          hover:shadow-[0_0_35px_var(--accent)]
-          hover:border-[var(--accent)]
+          shadow-[0_0_25px_color-mix(in_oklab,var(--accent)_40%,transparent_60%)]
+          hover:shadow-[0_0_40px_color-mix(in_oklab,var(--accent)_60%,transparent_40%)]
+          bg-[color-mix(in_oklab,var(--bg)_96%,var(--accent)_4%)]
           transition-all duration-500
           p-6 sm:p-10
         "
       >
-       
+        
         <div className="absolute -top-20 -right-20 w-80 h-80 bg-[var(--accent)]/25 rounded-full blur-[150px] opacity-60 pointer-events-none"></div>
 
-       
         <h1 className="text-3xl sm:text-4xl font-extrabold text-center text-[var(--accent)] drop-shadow-[0_0_15px_var(--accent)] mb-8 sm:mb-12">
           Statistiques globales
         </h1>
@@ -109,22 +107,22 @@ export default function AdminStats() {
             { label: "Musiques", value: stats.musicsCount },
             {
               label: "Total dons (€)",
-              value: stats.totalDonations.toFixed(2),
+              value: stats.totalDonations?.toFixed(2) || "0.00",
             },
           ].map((stat, i) => (
             <div
               key={i}
               className="
-                bg-[color-mix(in_oklab,var(--bg)_95%,black_5%)]
+                bg-[color-mix(in_oklab,var(--bg)_94%,var(--accent)_6%)]
                 rounded-xl p-3 sm:p-6 text-center
-                border border-[var(--accent)]/30
-                shadow-[0_0_15px_rgba(179,18,45,0.25)]
-                hover:shadow-[0_0_25px_rgba(179,18,45,0.45)]
+                border border-[color-mix(in_oklab,var(--accent)_40%,transparent_60%)]
+                shadow-[0_0_15px_color-mix(in_oklab,var(--accent)_25%,transparent_75%)]
+                hover:shadow-[0_0_25px_color-mix(in_oklab,var(--accent)_45%,transparent_55%)]
                 hover:scale-[1.03]
                 transition-all duration-300
               "
             >
-              <p className="text-[var(--subtext)] text-sm sm:text-base mb-1 sm:mb-2">
+              <p className="text-[color-mix(in_oklab,var(--subtext)_90%,var(--accent)_10%)] text-sm sm:text-base mb-1 sm:mb-2">
                 {stat.label}
               </p>
               <p className="text-2xl sm:text-3xl font-extrabold text-[var(--accent)] tracking-wide">
@@ -136,14 +134,14 @@ export default function AdminStats() {
 
         <div
           className="
-            bg-[color-mix(in_oklab,var(--bg)_95%,black_5%)]
+            bg-[color-mix(in_oklab,var(--bg)_94%,var(--accent)_6%)]
             rounded-2xl p-4 sm:p-6
-            border border-[var(--accent)]/30
-            shadow-[0_0_25px_rgba(179,18,45,0.35)]
+            border border-[color-mix(in_oklab,var(--accent)_40%,transparent_60%)]
+            shadow-[0_0_25px_color-mix(in_oklab,var(--accent)_30%,transparent_70%)]
             transition-all duration-500
           "
         >
-          <h2 className="text-xl sm:text-2xl font-semibold text-[var(--accent)] mb-6 text-center">
+          <h2 className="text-xl sm:text-2xl font-semibold text-[var(--accent)] mb-6 text-center drop-shadow-[0_0_8px_var(--accent)]">
             Répartition des rôles utilisateurs
           </h2>
 
@@ -156,7 +154,7 @@ export default function AdminStats() {
                   cy="50%"
                   outerRadius={90}
                   dataKey="value"
-                  label
+                  label={({ name, value }) => `${name} (${value})`}
                 >
                   {roleData.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index]} />
@@ -181,15 +179,15 @@ export default function AdminStats() {
           </div>
         </div>
 
-        <div className="mt-8 sm:mt-10 text-center">
+        <div className="mt-10 text-center">
           <Button
             onClick={() => navigate("/admin")}
             className="
               border border-[var(--accent)] text-[var(--accent)]
               hover:bg-[var(--accent)] hover:text-[var(--bg)]
               font-semibold px-6 py-2 rounded-xl
-              shadow-[0_0_10px_var(--accent)]/40 transition-all duration-300
-              text-sm sm:text-base
+              shadow-[0_0_10px_var(--accent)]/40
+              transition-all duration-300 text-sm sm:text-base
             "
           >
             ⏎ Retour Dashboard
@@ -208,6 +206,7 @@ export default function AdminStats() {
     </motion.section>
   );
 }
+
 
 
 

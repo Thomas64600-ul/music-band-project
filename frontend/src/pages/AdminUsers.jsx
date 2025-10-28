@@ -42,11 +42,10 @@ export default function AdminUsers() {
 
   async function handleRoleChange(id, newRole) {
     try {
-      const res = await put(`/users/${id}`, { role: newRole });
+      await put(`/users/${id}`, { role: newRole });
       setUsers((prev) =>
         prev.map((u) => (u.id === id ? { ...u, role: newRole } : u))
       );
-      console.log("Rôle mis à jour :", res);
     } catch (e) {
       console.error("Erreur modification rôle :", e);
       alert("Impossible de modifier le rôle");
@@ -82,23 +81,21 @@ export default function AdminUsers() {
         "
       ></div>
 
-     
       <div
         className="
           relative w-full max-w-6xl
-          bg-[var(--surface)]
-          border border-[var(--border)]
+          border border-[color-mix(in_oklab,var(--accent)_70%,transparent_30%)]
           rounded-2xl
-          shadow-[0_0_25px_var(--accent)]
-          hover:shadow-[0_0_35px_var(--accent)]
-          hover:border-[var(--accent)]
+          shadow-[0_0_25px_color-mix(in_oklab,var(--accent)_40%,transparent_60%)]
+          hover:shadow-[0_0_40px_color-mix(in_oklab,var(--accent)_60%,transparent_40%)]
+          bg-[color-mix(in_oklab,var(--bg)_96%,var(--accent)_4%)]
           transition-all duration-500
           p-6 sm:p-10
         "
       >
-       
+      
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-10 text-center sm:text-left">
-          <h1 className="text-3xl font-extrabold text-[var(--accent)] drop-shadow-[0_0_10px_var(--accent)]">
+          <h1 className="text-3xl font-extrabold text-[var(--accent)] drop-shadow-[0_0_12px_var(--accent)]">
             Gestion des utilisateurs
           </h1>
           <Button
@@ -119,159 +116,96 @@ export default function AdminUsers() {
             Aucun utilisateur enregistré.
           </p>
         ) : (
-          <>
-           
-            <div className="grid gap-6 sm:hidden">
-              {users.map((u) => (
-                <div
-                  key={u.id}
-                  className="
-                    bg-[color-mix(in_oklab,var(--bg)_95%,black_5%)]
-                    border border-[var(--accent)]/30 
-                    rounded-2xl p-5
-                    shadow-[0_0_25px_rgba(179,18,45,0.3)]
-                    hover:shadow-[0_0_35px_rgba(179,18,45,0.5)]
-                    transition-all duration-300
-                  "
-                >
-                  <h3 className="text-lg font-semibold text-[var(--text)] mb-1">
-                    {u.firstname} {u.lastname}
-                  </h3>
-                  <p className="text-sm text-[var(--subtext)] mb-2">
-                    {u.email}
-                  </p>
+          <div
+            className="
+              overflow-x-auto rounded-2xl
+              border border-[color-mix(in_oklab,var(--accent)_40%,transparent_60%)]
+              bg-[color-mix(in_oklab,var(--bg)_94%,var(--accent)_6%)]
+              shadow-[0_0_25px_color-mix(in_oklab,var(--accent)_30%,transparent_70%)]
+              transition-all duration-500
+            "
+          >
+            <table className="min-w-full text-sm sm:text-base border-collapse">
+              <thead
+                className="
+                  bg-[color-mix(in_oklab,var(--accent)_10%,var(--bg)_90%)]
+                  text-[var(--accent)] uppercase tracking-wide
+                  border-b border-[color-mix(in_oklab,var(--accent)_40%,transparent_60%)]
+                "
+              >
+                <tr>
+                  <th className="py-3 px-4 text-left">Nom</th>
+                  <th className="py-3 px-4 text-left">Email</th>
+                  <th className="py-3 px-4 text-left">Rôle</th>
+                  <th className="py-3 px-4 text-center">Vérifié</th>
+                  <th className="py-3 px-4 text-center">Actions</th>
+                </tr>
+              </thead>
 
-                  <p className="text-sm text-[var(--subtext)] mb-2">
-                    Rôle :{" "}
-                    <span className="text-[var(--accent)] font-semibold">
-                      {u.role || "—"}
-                    </span>
-                  </p>
-
-                  <p className="text-sm mb-4">
-                    Vérification :{" "}
-                    <span
-                      className={
-                        u.is_verified
-                          ? "text-green-500 font-semibold"
-                          : "text-[var(--accent)] font-semibold"
-                      }
-                    >
-                      {u.is_verified ? "Oui" : "Non"}
-                    </span>
-                  </p>
-
-                  <div className="flex flex-wrap justify-center gap-3">
-                    <select
-                      value={u.role}
-                      onChange={(e) => handleRoleChange(u.id, e.target.value)}
-                      className="
-                        bg-[var(--bg)] border border-[var(--accent)]/50
-                        text-[var(--text)] text-sm rounded-md px-3 py-1
-                        focus:border-[var(--accent)] transition
-                      "
-                    >
-                      <option value="buyer">Utilisateur</option>
-                      <option value="seller">Vendeur</option>
-                      <option value="admin">Admin</option>
-                    </select>
-
-                    <Button
-                      onClick={() => handleDelete(u.id)}
-                      className="
-                        bg-[var(--accent)] text-white 
-                        hover:bg-[var(--gold)] hover:text-[var(--bg)]
-                        text-sm
-                      "
-                    >
-                      Supprimer
-                    </Button>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div
-              className="
-                hidden sm:block overflow-x-auto
-                rounded-2xl border border-[var(--accent)]/30
-                bg-[color-mix(in_oklab,var(--bg)_95%,black_5%)]
-                shadow-[0_0_25px_rgba(179,18,45,0.35)]
-                transition-all duration-500
-              "
-            >
-              <table className="min-w-full text-sm sm:text-base">
-                <thead className="bg-[var(--accent)]/10 border-b border-[var(--accent)]/30">
-                  <tr className="text-[var(--accent)] uppercase tracking-wide">
-                    <th className="py-3 px-4 text-left">Nom</th>
-                    <th className="py-3 px-4 text-left">Email</th>
-                    <th className="py-3 px-4 text-left">Rôle</th>
-                    <th className="py-3 px-4 text-center">Vérifié</th>
-                    <th className="py-3 px-4 text-center">Actions</th>
+              <tbody>
+                {users.map((u, index) => (
+                  <tr
+                    key={u.id}
+                    className={`
+                      ${index !== users.length - 1 ? "border-b" : ""}
+                      border-[color-mix(in_oklab,var(--accent)_25%,transparent_75%)]
+                      hover:bg-[color-mix(in_oklab,var(--accent)_12%,transparent_88%)]
+                      transition-colors duration-300
+                    `}
+                  >
+                    <td className="py-3 px-4 font-semibold text-[color-mix(in_oklab,var(--text)_90%,var(--accent)_10%)]">
+                      {u.firstname} {u.lastname}
+                    </td>
+                    <td className="py-3 px-4 text-[var(--accent)]">
+                      {u.email}
+                    </td>
+                    <td className="py-3 px-4">
+                      <select
+                        value={u.role}
+                        onChange={(e) =>
+                          handleRoleChange(u.id, e.target.value)
+                        }
+                        className="
+                          bg-[color-mix(in_oklab,var(--bg)_94%,black_6%)]
+                          border border-[color-mix(in_oklab,var(--accent)_40%,transparent_60%)]
+                          text-[color-mix(in_oklab,var(--text)_90%,var(--accent)_10%)]
+                          rounded-md px-3 py-1
+                          focus:border-[var(--accent)]
+                          focus:ring-1 focus:ring-[var(--accent)]/40
+                          transition-all duration-300
+                        "
+                      >
+                        <option value="buyer">Utilisateur</option>
+                        <option value="seller">Vendeur</option>
+                        <option value="admin">Admin</option>
+                      </select>
+                    </td>
+                    <td className="py-3 px-4 text-center">
+                      <span
+                        className={`font-semibold ${
+                          u.is_verified ? "text-green-500" : "text-[var(--accent)]"
+                        }`}
+                      >
+                        {u.is_verified ? "Oui" : "Non"}
+                      </span>
+                    </td>
+                    <td className="py-3 px-4 text-center flex flex-col gap-2 items-center justify-center">
+                      <Button
+                        onClick={() => handleDelete(u.id)}
+                        className="
+                          bg-[var(--accent)] text-white 
+                          hover:bg-[var(--gold)] hover:text-[var(--bg)]
+                          w-28
+                        "
+                      >
+                        Supprimer
+                      </Button>
+                    </td>
                   </tr>
-                </thead>
-                <tbody>
-                  {users.map((u) => (
-                    <tr
-                      key={u.id}
-                      className="
-                        border-b border-[var(--accent)]/20 
-                        hover:bg-[var(--accent)]/10
-                        transition-colors duration-300
-                      "
-                    >
-                      <td className="py-3 px-4 font-semibold text-[var(--text)]">
-                        {u.firstname} {u.lastname}
-                      </td>
-                      <td className="py-3 px-4 text-[var(--accent)]">
-                        {u.email}
-                      </td>
-                      <td className="py-3 px-4">
-                        <select
-                          value={u.role}
-                          onChange={(e) =>
-                            handleRoleChange(u.id, e.target.value)
-                          }
-                          className="
-                            bg-[var(--bg)] border border-[var(--accent)]/50
-                            text-[var(--text)] rounded-md px-3 py-1
-                            focus:border-[var(--accent)] transition
-                          "
-                        >
-                          <option value="buyer">Utilisateur</option>
-                          <option value="seller">Vendeur</option>
-                          <option value="admin">Admin</option>
-                        </select>
-                      </td>
-                      <td className="py-3 px-4 text-center">
-                        <span
-                          className={`font-semibold ${
-                            u.is_verified
-                              ? "text-green-500"
-                              : "text-[var(--accent)]"
-                          }`}
-                        >
-                          {u.is_verified ? "Oui" : "Non"}
-                        </span>
-                      </td>
-                      <td className="py-3 px-4 text-center flex flex-col gap-2 items-center justify-center">
-                        <Button
-                          onClick={() => handleDelete(u.id)}
-                          className="
-                            bg-[var(--accent)] text-white 
-                            hover:bg-[var(--gold)] hover:text-[var(--bg)]
-                            w-28
-                          "
-                        >
-                          Supprimer
-                        </Button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </>
+                ))}
+              </tbody>
+            </table>
+          </div>
         )}
       </div>
 
@@ -286,6 +220,7 @@ export default function AdminUsers() {
     </motion.section>
   );
 }
+
 
 
 
