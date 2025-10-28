@@ -54,149 +54,135 @@ export default function Register() {
       ></div>
 
       <form
-        onSubmit={onSubmit}
+  onSubmit={onSubmit}
+  className="
+    relative w-full max-w-md
+    bg-[#0A0A0A]
+    border border-[#B3122D66]
+    rounded-2xl shadow-[0_0_25px_#B3122D55]
+    hover:shadow-[0_0_40px_#B3122D99]
+    hover:border-[#B3122D]
+    transition-all duration-500
+    p-8 sm:p-10
+  "
+>
+  <h1 className="text-3xl font-extrabold text-center text-[#B3122D] mb-8 drop-shadow-[0_0_15px_#B3122D99]">
+    Inscription
+  </h1>
+
+  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
+    <div>
+      <label htmlFor="firstname" className="block text-[#CFCFCF] mb-2 font-medium">
+        Prénom
+      </label>
+      <input
+        id="firstname"
+        type="text"
+        value={form.firstname}
+        onChange={onChange}
+        required
         className="
-          relative w-full max-w-md
-          bg-[color-mix(in_oklab,var(--bg)_95%,black_5%)]
-          border border-[var(--accent)]/30
-          rounded-2xl shadow-[0_0_25px_rgba(179,18,45,0.35)]
-          hover:shadow-[0_0_40px_rgba(179,18,45,0.5)]
-          hover:border-[var(--accent)]
-          transition-all duration-500
-          p-8 sm:p-10
+          w-full p-3 rounded-md
+          bg-[#111]
+          text-[#F2F2F2]
+          border border-[#B3122D66]
+          focus:border-[#B3122D]
+          outline-none transition-all duration-300
         "
-      >
-        <h1 className="text-3xl font-extrabold text-center text-[var(--accent)] mb-8 drop-shadow-[0_0_12px_var(--accent)]">
-          Inscription
-        </h1>
+      />
+    </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
-          <div>
-            <label
-              htmlFor="firstname"
-              className="block text-[var(--subtext)] mb-2 font-medium"
-            >
-              Prénom
-            </label>
-            <input
-              id="firstname"
-              type="text"
-              value={form.firstname}
-              onChange={onChange}
-              required
-              className="
-                w-full p-3 rounded-md
-                bg-[color-mix(in_oklab,var(--bg)_90%,black_10%)]
-                text-[var(--text)]
-                border border-[var(--border)]/40
-                focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/40
-                outline-none transition-all duration-300
-              "
-            />
-          </div>
+    <div>
+      <label htmlFor="lastname" className="block text-[#CFCFCF] mb-2 font-medium">
+        Nom
+      </label>
+      <input
+        id="lastname"
+        type="text"
+        value={form.lastname}
+        onChange={onChange}
+        required
+        className="
+          w-full p-3 rounded-md
+          bg-[#111]
+          text-[#F2F2F2]
+          border border-[#B3122D66]
+          focus:border-[#B3122D]
+          outline-none transition-all duration-300
+        "
+      />
+    </div>
+  </div>
 
-          <div>
-            <label
-              htmlFor="lastname"
-              className="block text-[var(--subtext)] mb-2 font-medium"
-            >
-              Nom
-            </label>
-            <input
-              id="lastname"
-              type="text"
-              value={form.lastname}
-              onChange={onChange}
-              required
-              className="
-                w-full p-3 rounded-md
-                bg-[color-mix(in_oklab,var(--bg)_90%,black_10%)]
-                text-[var(--text)]
-                border border-[var(--border)]/40
-                focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/40
-                outline-none transition-all duration-300
-              "
-            />
-          </div>
-        </div>
+  <div className="mb-5">
+    <label htmlFor="email" className="block text-[#CFCFCF] mb-2 font-medium">
+      Email
+    </label>
+    <input
+      id="email"
+      type="email"
+      value={form.email}
+      onChange={onChange}
+      required
+      className="
+        w-full p-3 rounded-md
+        bg-[#111]
+        text-[#F2F2F2]
+        border border-[#B3122D66]
+        focus:border-[#B3122D]
+        outline-none transition-all duration-300
+      "
+    />
+  </div>
 
-        <div className="mb-5">
-          <label
-            htmlFor="email"
-            className="block text-[var(--subtext)] mb-2 font-medium"
-          >
-            Email
-          </label>
-          <input
-            id="email"
-            type="email"
-            value={form.email}
-            onChange={onChange}
-            required
-            className="
-              w-full p-3 rounded-md
-              bg-[color-mix(in_oklab,var(--bg)_90%,black_10%)]
-              text-[var(--text)]
-              border border-[var(--border)]/40
-              focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/40
-              outline-none transition-all duration-300
-            "
-          />
-        </div>
+  <div className="mb-8">
+    <label htmlFor="password" className="block text-[#CFCFCF] mb-2 font-medium">
+      Mot de passe
+    </label>
+    <input
+      id="password"
+      type="password"
+      value={form.password}
+      onChange={onChange}
+      required
+      className="
+        w-full p-3 rounded-md
+        bg-[#111]
+        text-[#F2F2F2]
+        border border-[#B3122D66]
+        focus:border-[#B3122D]
+        outline-none transition-all duration-300
+      "
+    />
+  </div>
 
-        <div className="mb-8">
-          <label
-            htmlFor="password"
-            className="block text-[var(--subtext)] mb-2 font-medium"
-          >
-            Mot de passe
-          </label>
-          <input
-            id="password"
-            type="password"
-            value={form.password}
-            onChange={onChange}
-            required
-            className="
-              w-full p-3 rounded-md
-              bg-[color-mix(in_oklab,var(--bg)_90%,black_10%)]
-              text-[var(--text)]
-              border border-[var(--border)]/40
-              focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/40
-              outline-none transition-all duration-300
-            "
-          />
-        </div>
+  <div className="text-center">
+    <Button
+      type="submit"
+      disabled={status === 'loading'}
+      className="
+        px-6 py-3 rounded-md 
+        bg-[#B3122D] text-white font-semibold 
+        hover:bg-[#E6B422] hover:text-[#0A0A0A]
+        hover:shadow-[0_0_25px_#B3122D]
+        active:scale-95
+        transition-all duration-300 ease-in-out
+      "
+    >
+      {status === 'loading' ? 'Inscription...' : 'S’inscrire'}
+    </Button>
 
-        <div className="text-center">
-          <Button
-            variant="primary"
-            type="submit"
-            disabled={status === "loading"}
-            className="
-              px-6 py-3 rounded-md 
-              bg-[var(--accent)] text-white font-semibold 
-              hover:bg-[var(--gold)] hover:text-[var(--bg)]
-              hover:shadow-[0_0_25px_var(--accent)]
-              active:scale-95
-              transition-all duration-300 ease-in-out
-            "
-          >
-            {status === "loading" ? "Inscription..." : "S’inscrire"}
-          </Button>
+    {status === 'success' && (
+      <p className="mt-4 text-green-400 animate-pulse">
+        Compte créé — vérifiez votre e-mail
+      </p>
+    )}
+    {status === 'error' && (
+      <p className="mt-4 text-red-400 font-semibold">Échec de l’inscription</p>
+    )}
+  </div>
+</form>
 
-          {status === "success" && (
-            <p className="mt-4 text-green-400 animate-pulse">
-              Compte créé — vérifiez votre e-mail
-            </p>
-          )}
-          {status === "error" && (
-            <p className="mt-4 text-red-400 font-semibold">
-              Échec de l’inscription
-            </p>
-          )}
-        </div>
-      </form>
 
       <div
         className="
