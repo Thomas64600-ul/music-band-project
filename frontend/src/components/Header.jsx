@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom"; // 🆕 ajouté useLocation
 import { useAuth } from "../context/AuthContext";
 import { FaBars, FaTimes, FaSun, FaMoon } from "react-icons/fa";
 import { User, LogOut, Shield, LayoutDashboard } from "lucide-react";
@@ -46,6 +46,9 @@ export default function Header({ logoSrc, links }) {
     return false;
   });
 
+  const location = useLocation(); 
+  const isAdminPage = location.pathname.startsWith("/admin"); 
+
   useEffect(() => {
     const html = document.documentElement;
     if (darkMode) {
@@ -76,16 +79,15 @@ export default function Header({ logoSrc, links }) {
           : "bg-[var(--bg)]"
       }`}
     >
-      
-      {isAdmin && (
+    
+      {isAdmin && !isAdminPage && (
         <div className="bg-[var(--accent)] text-[var(--bg)] text-center text-sm py-1 font-semibold tracking-wide border-b border-[color-mix(in_oklab,var(--accent)_80%,black_20%)] shadow-[0_0_12px_var(--accent)] animate-pulse">
           Mode administrateur activé
         </div>
       )}
 
-    
       <div className="flex items-center justify-between px-4 sm:px-12 py-3 sm:py-5 relative">
-      
+        
         <button
           onClick={toggleTheme}
           className="hidden sm:block text-[var(--accent)] hover:text-[color-mix(in_oklab,var(--accent)_80%,var(--gold)_20%)] hover:scale-110 transition-transform duration-200"
@@ -94,7 +96,7 @@ export default function Header({ logoSrc, links }) {
           {darkMode ? <FaSun size={22} /> : <FaMoon size={22} />}
         </button>
 
-       
+        
         <div className="flex justify-center items-center flex-1 sm:translate-x-[60px] md:translate-x-[80px] relative z-0">
           <motion.img
             src="/logo.png"
@@ -165,7 +167,7 @@ export default function Header({ logoSrc, links }) {
         </button>
       </div>
 
-      
+     
       <div className="hidden sm:flex flex-col items-center">
         <div className="flex justify-center border-t border-[var(--border)] py-2 bg-[var(--bg)] relative w-full">
           <nav className="flex space-x-8 text-sm font-semibold">
@@ -184,7 +186,6 @@ export default function Header({ logoSrc, links }) {
             )}
           </nav>
 
-          
           <motion.div
             initial={{ opacity: 0.4 }}
             animate={{
@@ -205,7 +206,7 @@ export default function Header({ logoSrc, links }) {
         </div>
       </div>
 
-      
+     
       <AnimatePresence>
         {menuOpen && (
           <motion.nav
