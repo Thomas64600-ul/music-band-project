@@ -45,6 +45,7 @@ app.use(
 app.use(
   cors({
     origin: function (origin, callback) {
+     
       const allowedOrigins = [
         "https://music-band-project-five.vercel.app",
         "http://localhost:5173",
@@ -52,7 +53,13 @@ app.use(
       ];
 
      
-      if (!origin || allowedOrigins.includes(origin)) {
+      const vercelRegex = /^https:\/\/music-band-project-[a-z0-9-]+\.vercel\.app$/;
+
+      if (
+        !origin ||
+        allowedOrigins.includes(origin) ||
+        vercelRegex.test(origin)
+      ) {
         callback(null, true);
       } else {
         console.warn("CORS refusé pour :", origin);
@@ -71,6 +78,7 @@ app.use(
     exposedHeaders: ["Set-Cookie"],
   })
 );
+
 
 
 
