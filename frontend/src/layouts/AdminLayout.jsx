@@ -8,7 +8,6 @@ export default function AdminLayout({ children }) {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
 
-  
   const isAdminPage = location.pathname.startsWith("/admin");
 
   return (
@@ -20,7 +19,7 @@ export default function AdminLayout({ children }) {
         pt-[80px] min-h-screen
       "
     >
-      
+      {/* Sidebar Desktop */}
       <div
         className="
           hidden md:block fixed
@@ -31,6 +30,7 @@ export default function AdminLayout({ children }) {
         <AdminSidebar />
       </div>
 
+      {/* Sidebar Mobile */}
       <AnimatePresence>
         {isOpen && (
           <motion.aside
@@ -59,6 +59,7 @@ export default function AdminLayout({ children }) {
         )}
       </AnimatePresence>
 
+      {/* MAIN CONTENT */}
       <main
         className="
           flex-1 md:ml-64
@@ -66,10 +67,11 @@ export default function AdminLayout({ children }) {
           transition-all duration-300
           bg-[var(--bg)] text-[var(--text)]
           min-h-[calc(100vh-80px)]
-          overflow-y-auto
+          overflow-y-auto overflow-x-auto
+          scrollbar-thin scrollbar-thumb-[var(--accent)] scrollbar-track-transparent
         "
       >
-       
+        {/* Bouton ouverture menu mobile */}
         {!isAdminPage && (
           <button
             onClick={() => setIsOpen(true)}
@@ -85,9 +87,11 @@ export default function AdminLayout({ children }) {
           </button>
         )}
 
+        {/* CONTENU */}
         {children}
       </main>
 
+      {/* Overlay Mobile */}
       {isOpen && (
         <div
           className="
@@ -100,4 +104,5 @@ export default function AdminLayout({ children }) {
     </div>
   );
 }
+
 
