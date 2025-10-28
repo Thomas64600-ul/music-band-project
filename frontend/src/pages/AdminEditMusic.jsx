@@ -8,6 +8,8 @@ export default function AdminEditMusic() {
   const { id } = useParams();
   const navigate = useNavigate();
 
+  const isNew = id === "new";
+
   const [formData, setFormData] = useState({
     title: "",
     artist: "",
@@ -15,31 +17,27 @@ export default function AdminEditMusic() {
     cover: null,
   });
 
-  const [music, setMusic] = useState(null);
   const [preview, setPreview] = useState(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [errorMsg, setErrorMsg] = useState("");
-
-  const isEditMode = Boolean(id);
+  const [status, setStatus] = useState(null);
 
   useEffect(() => {
-    if (isEditMode) {
+    if (!isNew) {
       (async () => {
         try {
           const data = await get(`/musics/${id}`);
-          const musicData = data.data || data;
-          setMusic(musicData);
+          const music = data.data || data;
           setFormData({
-            title: musicData.title || "",
-            artist: musicData.artist || "",
-            url: musicData.url || "",
+            title: music.title || "",
+            artist: music.artist || "",
+            url: music.url || "",
             cover: null,
           });
-          setPreview(musicData.cover_url || null);
+          setPreview(music.cover_url || null);
         } catch (error) {
           console.error("Erreur récupération musique :", error);
-          setErrorMsg("Erreur lors du chargement de la musique.");
+          setStatus("error");
         } finally {
           setLoading(false);
         }
@@ -47,11 +45,11 @@ export default function AdminEditMusic() {
     } else {
       setLoading(false);
     }
-  }, [id, isEditMode]);
+  }, [id, isNew]);
 
   function handleChange(e) {
     const { name, value, files } = e.target;
-    if (files) {
+    if (files && files[0]) {
       setFormData((prev) => ({ ...prev, [name]: files[0] }));
       setPreview(URL.createObjectURL(files[0]));
     } else {
@@ -62,7 +60,7 @@ export default function AdminEditMusic() {
   async function handleSubmit(e) {
     e.preventDefault();
     setSaving(true);
-    setErrorMsg("");
+    setStatus(null);
 
     try {
       const data = new FormData();
@@ -70,24 +68,21 @@ export default function AdminEditMusic() {
         if (value) data.append(key, value);
       });
 
-      if (isEditMode) {
-        await put(`/musics/${id}`, data, {
-          headers: { "Content-Type": "multipart/form-data" },
-        });
-        alert("🎵 Musique mise à jour avec succès !");
-      } else {
+      if (isNew) {
         await post("/musics", data, {
           headers: { "Content-Type": "multipart/form-data" },
         });
-        alert("🎶 Nouvelle musique ajoutée !");
+      } else {
+        await put(`/musics/${id}`, data, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
       }
 
-      navigate("/admin/musics");
+      setStatus("success");
+      setTimeout(() => navigate("/admin/musics"), 1000);
     } catch (error) {
-      console.error("Erreur mise à jour musique :", error);
-      setErrorMsg(
-        error.response?.data?.error || "Erreur lors de la sauvegarde."
-      );
+      console.error("Erreur sauvegarde musique :", error);
+      setStatus("error");
     } finally {
       setSaving(false);
     }
@@ -135,14 +130,8 @@ export default function AdminEditMusic() {
         "
       >
         <h1 className="text-3xl font-extrabold text-center text-[var(--accent)] drop-shadow-[0_0_12px_var(--accent)] mb-8">
-          {isEditMode ? "Modifier la musique" : "Ajouter une musique"}
+          {isNew ? "Ajouter une musique" : "Modifier la musique"}
         </h1>
-
-        {errorMsg && (
-          <p className="text-[var(--accent)]/90 bg-[var(--accent)]/10 p-3 rounded mb-6 text-center font-medium">
-            {errorMsg}
-          </p>
-        )}
 
         <div className="mb-5">
           <label className="block mb-2 text-[var(--accent)] font-semibold">
@@ -175,6 +164,7 @@ export default function AdminEditMusic() {
             name="artist"
             value={formData.artist}
             onChange={handleChange}
+            placeholder="Nom de l’artiste"
             className="
               w-full p-3 rounded-md
               bg-[color-mix(in_oklab,var(--bg)_94%,black_6%)]
@@ -197,6 +187,7 @@ export default function AdminEditMusic() {
             value={formData.url}
             onChange={handleChange}
             required
+            placeholder="https://soundcloud.com/reveren/only-god-forgives"
             className="
               w-full p-3 rounded-md
               bg-[color-mix(in_oklab,var(--bg)_94%,black_6%)]
@@ -211,7 +202,7 @@ export default function AdminEditMusic() {
 
         <div className="mb-8">
           <label className="block mb-2 text-[var(--accent)] font-semibold">
-            Pochette de la musique
+            Pochette (image)
           </label>
           <input
             type="file"
@@ -228,11 +219,11 @@ export default function AdminEditMusic() {
             "
           />
 
-          {(preview || music?.cover_url) && (
+          {preview && (
             <div className="mt-4 text-center">
               <p className="text-sm text-[var(--subtext)] mb-2">Aperçu :</p>
               <img
-                src={preview || music?.cover_url}
+                src={preview}
                 alt="Prévisualisation"
                 className="
                   w-full max-w-sm mx-auto rounded-lg
@@ -274,11 +265,22 @@ export default function AdminEditMusic() {
           >
             {saving
               ? "Enregistrement..."
-              : isEditMode
-              ? "Mettre à jour"
-              : "Ajouter"}
+              : isNew
+              ? "Ajouter la musique"
+              : "Mettre à jour"}
           </Button>
         </div>
+
+        {status === "success" && (
+          <p className="mt-4 text-center text-green-400 font-medium">
+            Musique enregistrée avec succès
+          </p>
+        )}
+        {status === "error" && (
+          <p className="mt-4 text-center text-red-400 font-medium">
+            Erreur lors de l’enregistrement
+          </p>
+        )}
       </form>
 
       <div

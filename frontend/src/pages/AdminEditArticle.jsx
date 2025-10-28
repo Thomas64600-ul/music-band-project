@@ -20,13 +20,14 @@ export default function AdminEditArticle() {
   const [preview, setPreview] = useState(null);
   const [status, setStatus] = useState(null);
   const [loading, setLoading] = useState(true);
+  const isNew = id === "new"; 
 
   useEffect(() => {
     if (!isAdmin) navigate("/login");
   }, [isAdmin, navigate]);
 
   useEffect(() => {
-    if (id && id !== "new") {
+    if (!isNew && id) {
       (async () => {
         try {
           const data = await get(`/articles/${id}`);
@@ -46,7 +47,7 @@ export default function AdminEditArticle() {
     } else {
       setLoading(false);
     }
-  }, [id]);
+  }, [id, isNew]);
 
   function onChange(e) {
     setForm((f) => ({ ...f, [e.target.id]: e.target.value }));
@@ -58,6 +59,7 @@ export default function AdminEditArticle() {
     if (file) setPreview(URL.createObjectURL(file));
   }
 
+ 
   async function onSubmit(e) {
     e.preventDefault();
     setStatus("loading");
@@ -85,14 +87,15 @@ export default function AdminEditArticle() {
         withCredentials: true,
       };
 
-      if (id === "new") {
+     
+      if (isNew) {
         await post("/articles", formData, config);
       } else {
         await put(`/articles/${id}`, formData, config);
       }
 
       setStatus("success");
-      navigate("/admin/articles");
+      setTimeout(() => navigate("/admin/articles"), 800);
     } catch (e) {
       console.error("Erreur enregistrement article :", e);
       setStatus("error");
@@ -142,7 +145,7 @@ export default function AdminEditArticle() {
         "
       >
         <h1 className="text-3xl font-extrabold text-center text-[var(--accent)] drop-shadow-[0_0_12px_var(--accent)] mb-8">
-          {id === "new" ? "Créer un article" : "Modifier l’article"}
+          {isNew ? "Créer un article" : "Modifier l’article"}
         </h1>
 
         <div className="mb-5">
@@ -246,7 +249,7 @@ export default function AdminEditArticle() {
           >
             {status === "loading"
               ? "Enregistrement..."
-              : id === "new"
+              : isNew
               ? "Créer l’article"
               : "Mettre à jour"}
           </Button>

@@ -31,13 +31,12 @@ import AdminStats from "./pages/AdminStats";
 import AdminComments from "./pages/AdminComments";
 
 export default function App() {
-  
   return (
     <div
       className="min-h-screen flex flex-col transition-colors duration-500 
       bg-[var(--bg)] text-[var(--text)]"
     >
-    
+      
       <Header
         logoSrc="/src/assets/logo.png"
         links={[
@@ -50,10 +49,9 @@ export default function App() {
         ]}
       />
 
-    
       <main className="flex-grow pt-20 md:pt-28 pb-16 md:pb-18">
         <Routes>
-       
+          
           <Route path="/" element={<Home />} />
           <Route path="/music" element={<Music />} />
           <Route path="/concerts" element={<Concerts />} />
@@ -87,17 +85,7 @@ export default function App() {
             }
           />
           <Route
-            path="/admin/articles/new"
-            element={
-              <ProtectedRoute requireAdmin={true}>
-                <AdminLayout>
-                  <AdminEditArticle />
-                </AdminLayout>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/admin/articles/edit/:id"
+            path="/admin/articles/:id"
             element={
               <ProtectedRoute requireAdmin={true}>
                 <AdminLayout>
@@ -118,17 +106,7 @@ export default function App() {
             }
           />
           <Route
-            path="/admin/concerts/new"
-            element={
-              <ProtectedRoute requireAdmin={true}>
-                <AdminLayout>
-                  <AdminEditConcert />
-                </AdminLayout>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/admin/concerts/edit/:id"
+            path="/admin/concerts/:id"
             element={
               <ProtectedRoute requireAdmin={true}>
                 <AdminLayout>
@@ -149,17 +127,7 @@ export default function App() {
             }
           />
           <Route
-            path="/admin/musics/new"
-            element={
-              <ProtectedRoute requireAdmin={true}>
-                <AdminLayout>
-                  <AdminEditMusic />
-                </AdminLayout>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/admin/musics/edit/:id"
+            path="/admin/musics/:id"
             element={
               <ProtectedRoute requireAdmin={true}>
                 <AdminLayout>

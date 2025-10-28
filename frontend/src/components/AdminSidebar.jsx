@@ -49,13 +49,20 @@ export default function AdminSidebar() {
         hidden md:flex flex-col fixed left-0
         top-[217px] h-[calc(100vh-217px)] w-64
         bg-[var(--bg)] text-[var(--text)]
-        border-r border-[var(--accent)]/30
-        shadow-[0_0_15px_var(--accent)]/15
-        transition-colors duration-700 ease-in-out
+        border-r border-transparent
+        shadow-[inset_-1px_0_12px_rgba(179,18,45,0.3)]
+        transition-all duration-700 ease-in-out
         z-40
       "
     >
-      <div className="py-5 text-center border-b border-[var(--accent)]/30 bg-[var(--bg-secondary)]">
+     
+      <div
+        className="
+          py-5 text-center
+          bg-[color-mix(in_oklab,var(--bg)_96%,var(--accent)_4%)]
+          shadow-[0_2px_15px_rgba(179,18,45,0.25)]
+        "
+      >
         <h1
           onClick={() => navigate("/admin")}
           className="
@@ -92,13 +99,20 @@ export default function AdminSidebar() {
         ))}
       </nav>
 
-      <div className="border-t border-[var(--accent)]/30 p-4 bg-[var(--bg-secondary)]">
+      <div
+        className="
+          mt-auto p-4
+          bg-[color-mix(in_oklab,var(--bg)_96%,var(--accent)_4%)]
+          shadow-[0_-2px_15px_rgba(179,18,45,0.25)]
+        "
+      >
         <button
           onClick={handleLogout}
           className="
             flex items-center gap-2 w-full justify-center
             text-[var(--accent)] font-medium
-            hover:text-[var(--gold)] transition-all duration-300
+            hover:text-[var(--gold)]
+            transition-all duration-300
           "
         >
           <LogOut size={18} />

@@ -10,6 +10,8 @@ export default function AdminEditConcert() {
   const navigate = useNavigate();
   const { isAdmin } = useAuth();
 
+  const isNew = id === "new";
+
   const [form, setForm] = useState({
     title: "",
     date: "",
@@ -27,7 +29,7 @@ export default function AdminEditConcert() {
   }, [isAdmin, navigate]);
 
   useEffect(() => {
-    if (id && id !== "new") {
+    if (!isNew) {
       (async () => {
         try {
           const data = await get(`/concerts/${id}`);
@@ -41,6 +43,7 @@ export default function AdminEditConcert() {
           setPreview(data.image_url || null);
         } catch (e) {
           console.error("Erreur chargement concert :", e);
+          setStatus("error");
         } finally {
           setLoading(false);
         }
@@ -48,7 +51,7 @@ export default function AdminEditConcert() {
     } else {
       setLoading(false);
     }
-  }, [id]);
+  }, [id, isNew]);
 
   function onChange(e) {
     setForm((f) => ({ ...f, [e.target.id]: e.target.value }));
@@ -87,14 +90,14 @@ export default function AdminEditConcert() {
         withCredentials: true,
       };
 
-      if (id === "new") {
+      if (isNew) {
         await post("/concerts", formData, config);
       } else {
         await put(`/concerts/${id}`, formData, config);
       }
 
       setStatus("success");
-      navigate("/admin/concerts");
+      setTimeout(() => navigate("/admin/concerts"), 1000);
     } catch (e) {
       console.error("Erreur enregistrement concert :", e);
       setStatus("error");
@@ -112,14 +115,14 @@ export default function AdminEditConcert() {
     <motion.section
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.7 }}
+      transition={{ duration: 0.8 }}
       className="
         min-h-screen flex justify-center items-start
         bg-[var(--bg)] text-[var(--text)]
         py-12 px-6 sm:px-12 relative overflow-hidden
       "
     >
-      
+     
       <div
         className="
           absolute inset-0 -z-10
@@ -143,7 +146,7 @@ export default function AdminEditConcert() {
         "
       >
         <h1 className="text-3xl font-extrabold text-center text-[var(--accent)] drop-shadow-[0_0_12px_var(--accent)] mb-8">
-          {id === "new" ? "Créer un concert" : "Modifier le concert"}
+          {isNew ? "Créer un concert" : "Modifier le concert"}
         </h1>
 
         <div className="mb-5">
@@ -243,7 +246,14 @@ export default function AdminEditConcert() {
             type="file"
             accept="image/*"
             onChange={onFileChange}
-            className="w-full text-[var(--text)]"
+            className="
+              w-full text-[var(--text)]
+              border border-[color-mix(in_oklab,var(--accent)_40%,transparent_60%)]
+              rounded-md p-2
+              bg-[color-mix(in_oklab,var(--bg)_96%,black_4%)]
+              cursor-pointer transition-all duration-300
+              hover:border-[var(--accent)] hover:shadow-[0_0_15px_var(--accent)]/40
+            "
           />
           {preview && (
             <img
@@ -254,36 +264,50 @@ export default function AdminEditConcert() {
           )}
         </div>
 
-        <div className="text-center mt-8">
+        <div className="flex justify-between mt-8">
+          <Button
+            variant="secondary"
+            onClick={() => navigate("/admin/concerts")}
+            className="
+              border border-[var(--accent)] text-[var(--accent)]
+              hover:bg-[var(--accent)] hover:text-[var(--bg)]
+              px-6 py-2 rounded-xl transition-all duration-300
+              shadow-[0_0_12px_var(--accent)]/30 hover:shadow-[0_0_18px_var(--accent)]/50
+            "
+          >
+            ← Retour
+          </Button>
+
           <Button
             variant="primary"
             type="submit"
             disabled={status === "loading"}
             className="
-              bg-[var(--accent)] hover:bg-[var(--gold)] hover:text-[var(--bg)]
-              text-white font-semibold px-8 py-3 rounded-xl
+              bg-[var(--accent)] hover:bg-[var(--gold)]
+              text-white hover:text-[var(--bg)]
+              px-8 py-3 rounded-xl font-semibold
               shadow-[0_0_20px_var(--accent)] hover:shadow-[0_0_25px_var(--gold)]
               transition-all duration-300
             "
           >
             {status === "loading"
               ? "Enregistrement..."
-              : id === "new"
+              : isNew
               ? "Créer le concert"
               : "Mettre à jour"}
           </Button>
-
-          {status === "success" && (
-            <p className="mt-4 text-green-400 font-medium">
-              Concert enregistré avec succès
-            </p>
-          )}
-          {status === "error" && (
-            <p className="mt-4 text-red-400 font-medium">
-              Erreur lors de l’enregistrement
-            </p>
-          )}
         </div>
+
+        {status === "success" && (
+          <p className="mt-4 text-center text-green-400 font-medium">
+            Concert enregistré avec succès
+          </p>
+        )}
+        {status === "error" && (
+          <p className="mt-4 text-center text-red-400 font-medium">
+            Erreur lors de l’enregistrement
+          </p>
+        )}
       </form>
 
       <div
