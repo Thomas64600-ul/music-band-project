@@ -142,27 +142,28 @@ export async function login(req, res, next) {
 
     const token = generateToken(user);
 
-    res.cookie("token", token, {
-  httpOnly: true,         
-  secure: true,         
-  sameSite: "none",       
-  partitioned: true,       
-  maxAge: 60 * 60 * 1000,  
-  path: "/",               
+   res.cookie("token", token, {
+  httpOnly: true,
+  secure: true,
+  sameSite: "none",
+  partitioned: true,   
+  maxAge: 60 * 60 * 1000,
+  path: "/",
 });
 
     res.status(200).json({
-      success: true,
-      message: "Connexion réussie.",
-      data: {
-        id: user.id,
-        firstname: user.firstname,
-        lastname: user.lastname,
-        email: user.email,
-        role: user.role,
-        image_url: user.image_url,
-      },
-    });
+  success: true,
+  message: "Connexion réussie.",
+  token, 
+  data: {
+    id: user.id,
+    firstname: user.firstname,
+    lastname: user.lastname,
+    email: user.email,
+    role: user.role,
+    image_url: user.image_url,
+  },
+});
   } catch (error) {
     next(error);
   }
@@ -171,11 +172,11 @@ export async function login(req, res, next) {
 export async function logout(req, res, next) {
   try {
     res.clearCookie("token", {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-      path: "/",
-    });
+  httpOnly: true,
+  secure: true,
+  sameSite: "none",
+  path: "/",
+});
     res.status(200).json({ success: true, message: "Déconnexion réussie." });
   } catch (error) {
     next(error);

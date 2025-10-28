@@ -42,38 +42,17 @@ app.use(
   })
 );
 
+import cors from "cors";
+
 app.use(
   cors({
-    origin: function (origin, callback) {
-
-      if (!origin) return callback(null, true);
-
-      const allowedOrigins = [
-        process.env.CLIENT_URL,
-        "http://localhost:5173", 
-        "https://music-band-project-five.vercel.app", 
-        "https://music-band-project.onrender.com", 
-      ];
-
-      if (allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        console.warn("🚫 CORS refusé pour :", origin);
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-    allowedHeaders: [
-      "Content-Type",
-      "Authorization",
-      "Access-Control-Allow-Credentials",
-      "X-Requested-With",
+    origin: [
+      "https://music-band-project-five.vercel.app",
+      "http://localhost:5173"
     ],
-    exposedHeaders: ["Set-Cookie"],
+    credentials: true,
   })
 );
-
 
 
 app.use(express.json({ limit: "10mb" }));
