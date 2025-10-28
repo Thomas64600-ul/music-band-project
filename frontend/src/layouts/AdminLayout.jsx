@@ -2,12 +2,14 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import AdminSidebar from "../components/AdminSidebar";
-import { useLocation } from "react-router-dom"; 
+import { useLocation } from "react-router-dom";
 
 export default function AdminLayout({ children }) {
   const [isOpen, setIsOpen] = useState(false);
-  const location = useLocation(); // 🆕
-  const isDashboard = location.pathname === "/admin"; 
+  const location = useLocation();
+
+  
+  const isAdminPage = location.pathname.startsWith("/admin");
 
   return (
     <div
@@ -18,7 +20,7 @@ export default function AdminLayout({ children }) {
         pt-[80px] min-h-screen
       "
     >
-     
+      
       <div
         className="
           hidden md:block fixed
@@ -67,8 +69,8 @@ export default function AdminLayout({ children }) {
           overflow-y-auto
         "
       >
-      
-        {!isDashboard && (
+       
+        {!isAdminPage && (
           <button
             onClick={() => setIsOpen(true)}
             className="
