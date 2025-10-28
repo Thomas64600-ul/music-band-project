@@ -106,104 +106,115 @@ export default function AdminListMusics() {
           </p>
         ) : (
           <div
-            className="
-              overflow-x-auto rounded-2xl
-              border border-[color-mix(in_oklab,var(--accent)_40%,transparent_60%)]
-              bg-[color-mix(in_oklab,var(--bg)_94%,var(--accent)_6%)]
-              shadow-[0_0_25px_color-mix(in_oklab,var(--accent)_30%,transparent_70%)]
-              transition-all duration-500
-            "
-          >
-            <table className="min-w-full text-sm sm:text-base">
-              <thead className="bg-[var(--accent)]/10 border-b border-[var(--accent)]/30">
-                <tr className="text-[var(--accent)] uppercase tracking-wide">
-                  <th className="py-3 px-4 text-left">Image</th>
-                  <th className="py-3 px-4 text-left">Titre</th>
-                  <th className="py-3 px-4 text-left">Artiste</th>
-                  <th className="py-3 px-4 text-left">Date</th>
-                  <th className="py-3 px-4 text-left">Lien</th>
-                  <th className="py-3 px-4 text-center">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {musics.map((m) => (
-                  <tr
-                    key={m.id}
-                    className="
-                      border-b border-[var(--accent)]/20 
-                      hover:bg-[color-mix(in_oklab,var(--accent)_15%,transparent_85%)]
-                      transition-colors duration-300
-                    "
-                  >
-                    <td className="py-3 px-4">
-                      {m.image_url ? (
-                        <img
-                          src={m.image_url}
-                          alt={m.title}
-                          className="w-20 h-14 object-cover rounded-md border border-[var(--accent)]/30"
-                        />
-                      ) : (
-                        <div className="w-20 h-14 bg-[color-mix(in_oklab,var(--accent)_10%,var(--bg)_90%)] rounded-md flex items-center justify-center text-[var(--subtext)] text-xs">
-                          Aucune
-                        </div>
-                      )}
-                    </td>
-                    <td className="py-3 px-4 font-semibold text-[color-mix(in_oklab,var(--text)_90%,var(--accent)_10%)]">
-                      {m.title}
-                    </td>
-                    <td className="py-3 px-4 text-[color-mix(in_oklab,var(--subtext)_90%,var(--accent)_10%)]">
-                      {m.artist || "—"}
-                    </td>
-                    <td className="py-3 px-4 text-[color-mix(in_oklab,var(--subtext)_90%,var(--accent)_10%)]">
-                      {m.created_at
-                        ? new Date(m.created_at).toLocaleDateString("fr-FR", {
-                            day: "2-digit",
-                            month: "long",
-                            year: "numeric",
-                          })
-                        : "—"}
-                    </td>
-                    <td className="py-3 px-4 text-center">
-                      {m.audio_url ? (
-                        <a
-                          href={m.audio_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-[var(--accent)] hover:text-[var(--gold)] hover:underline"
-                        >
-                          Écouter
-                        </a>
-                      ) : (
-                        <span className="text-[var(--subtext)]">—</span>
-                      )}
-                    </td>
-                    <td className="py-3 px-4 text-center flex flex-col gap-2 items-center justify-center">
-                      <Button
-                        onClick={() => navigate(`/admin/musics/edit/${m.id}`)}
-                        className="
-                          border border-[var(--accent)] text-[var(--accent)]
-                          hover:bg-[var(--accent)] hover:text-[var(--bg)]
-                          w-28
-                        "
-                      >
-                        Modifier
-                      </Button>
-                      <Button
-                        onClick={() => handleDelete(m.id)}
-                        className="
-                          bg-[var(--accent)] text-white 
-                          hover:bg-[var(--gold)] hover:text-[var(--bg)]
-                          w-28
-                        "
-                      >
-                        Supprimer
-                      </Button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+  className="
+    overflow-x-auto rounded-2xl
+    border border-[color-mix(in_oklab,var(--accent)_40%,transparent_60%)]
+    bg-[color-mix(in_oklab,var(--bg)_94%,var(--accent)_6%)]
+    shadow-[0_0_25px_color-mix(in_oklab,var(--accent)_30%,transparent_70%)]
+    transition-all duration-500
+  "
+>
+  <table className="min-w-full text-sm sm:text-base border-collapse">
+    <thead
+      className="
+        bg-[color-mix(in_oklab,var(--accent)_10%,var(--bg)_90%)]
+        text-[var(--accent)] uppercase tracking-wide
+        border-b border-[color-mix(in_oklab,var(--accent)_40%,transparent_60%)]
+      "
+    >
+      <tr>
+        <th className="py-3 px-4 text-left">Image</th>
+        <th className="py-3 px-4 text-left">Titre</th>
+        <th className="py-3 px-4 text-left">Artiste</th>
+        <th className="py-3 px-4 text-left">Date</th>
+        <th className="py-3 px-4 text-left">Lien</th>
+        <th className="py-3 px-4 text-center">Actions</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {musics.map((m, index) => (
+        <tr
+          key={m.id}
+          className={`
+            ${index !== musics.length - 1 ? "border-b" : ""}
+            border-[color-mix(in_oklab,var(--accent)_25%,transparent_75%)]
+            hover:bg-[color-mix(in_oklab,var(--accent)_12%,transparent_88%)]
+            transition-colors duration-300
+          `}
+        >
+          <td className="py-3 px-4">
+            {m.image_url ? (
+              <img
+                src={m.image_url}
+                alt={m.title}
+                className="w-20 h-14 object-cover rounded-md border border-[color-mix(in_oklab,var(--accent)_30%,transparent_70%)]"
+              />
+            ) : (
+              <div className="w-20 h-14 bg-[color-mix(in_oklab,var(--accent)_10%,var(--bg)_90%)] rounded-md flex items-center justify-center text-[var(--subtext)] text-xs">
+                Aucune
+              </div>
+            )}
+          </td>
+
+          <td className="py-3 px-4 font-semibold text-[color-mix(in_oklab,var(--text)_90%,var(--accent)_10%)]">
+            {m.title}
+          </td>
+          <td className="py-3 px-4 text-[color-mix(in_oklab,var(--subtext)_90%,var(--accent)_10%)]">
+            {m.artist || "—"}
+          </td>
+          <td className="py-3 px-4 text-[color-mix(in_oklab,var(--subtext)_90%,var(--accent)_10%)]">
+            {m.created_at
+              ? new Date(m.created_at).toLocaleDateString("fr-FR", {
+                  day: "2-digit",
+                  month: "long",
+                  year: "numeric",
+                })
+              : "—"}
+          </td>
+          <td className="py-3 px-4 text-center">
+            {m.audio_url ? (
+              <a
+                href={m.audio_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[var(--accent)] hover:text-[var(--gold)] hover:underline"
+              >
+                Écouter
+              </a>
+            ) : (
+              <span className="text-[var(--subtext)]">—</span>
+            )}
+          </td>
+
+          <td className="py-3 px-4 text-center flex flex-col gap-2 items-center justify-center">
+            <Button
+              onClick={() => navigate(`/admin/musics/edit/${m.id}`)}
+              className="
+                border border-[var(--accent)] text-[var(--accent)]
+                hover:bg-[var(--accent)] hover:text-[var(--bg)]
+                w-28
+              "
+            >
+              Modifier
+            </Button>
+            <Button
+              onClick={() => handleDelete(m.id)}
+              className="
+                bg-[var(--accent)] text-white 
+                hover:bg-[var(--gold)] hover:text-[var(--bg)]
+                w-28
+              "
+            >
+              Supprimer
+            </Button>
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>
+
         )}
       </div>
 
