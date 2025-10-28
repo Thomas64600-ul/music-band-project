@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { get, post, put } from "../lib/api";
 import { useAuth } from "../context/AuthContext";
 import Button from "../components/Button";
-
+import { motion } from "framer-motion";
 
 export default function AdminEditArticle() {
   const { id } = useParams();

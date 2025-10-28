@@ -5,7 +5,7 @@ import Loader from "../components/Loader";
 import Button from "../components/Button";
 import CommentSection from "../components/CommentSection";
 import { useAuth } from "../context/AuthContext";
-
+import { motion } from "framer-motion";
 
 export default function ArticleDetail() {
   const { id } = useParams();
