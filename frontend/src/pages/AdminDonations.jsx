@@ -19,9 +19,10 @@ export default function AdminDonations() {
     (async () => {
       try {
         const data = await get("/donations");
-        setDonations(data);
+        setDonations(Array.isArray(data.data) ? data.data : data);
       } catch (e) {
         console.error("Erreur chargement dons :", e);
+        setDonations([]);
       } finally {
         setLoading(false);
       }
@@ -64,7 +65,7 @@ export default function AdminDonations() {
         transition-colors duration-700 ease-in-out
       "
     >
-      
+    
       <div
         className="
           absolute inset-0 -z-10
@@ -85,7 +86,7 @@ export default function AdminDonations() {
           p-6 sm:p-10
         "
       >
-       
+      
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-10 text-center sm:text-left">
           <h1 className="text-3xl font-extrabold text-[var(--accent)] drop-shadow-[0_0_12px_var(--accent)]">
             Gestion des dons
@@ -126,85 +127,142 @@ export default function AdminDonations() {
             Aucun don enregistré pour le moment.
           </p>
         ) : (
-          <div
-            className="
-              overflow-x-auto rounded-2xl
-              border border-[color-mix(in_oklab,var(--accent)_40%,transparent_60%)]
-              bg-[color-mix(in_oklab,var(--bg)_94%,var(--accent)_6%)]
-              shadow-[0_0_25px_color-mix(in_oklab,var(--accent)_30%,transparent_70%)]
-              transition-all duration-500
-            "
-          >
-            <table className="min-w-full text-sm sm:text-base border-collapse">
-              <thead
-                className="
-                  bg-[color-mix(in_oklab,var(--accent)_10%,var(--bg)_90%)]
-                  text-[var(--accent)] uppercase tracking-wide
-                  border-b border-[color-mix(in_oklab,var(--accent)_40%,transparent_60%)]
-                "
-              >
-                <tr>
-                  <th className="py-3 px-4 text-left">Utilisateur</th>
-                  <th className="py-3 px-4 text-left">Montant (€)</th>
-                  <th className="py-3 px-4 text-left">Message</th>
-                  <th className="py-3 px-4 text-center">Statut</th>
-                  <th className="py-3 px-4 text-center">Actions</th>
-                </tr>
-              </thead>
+          <>
+           
+            <div className="block sm:hidden space-y-4">
+              {donations.map((d) => (
+                <motion.div
+                  key={d.id}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="
+                    border border-[color-mix(in_oklab,var(--accent)_40%,transparent_60%)]
+                    rounded-xl p-4
+                    bg-[color-mix(in_oklab,var(--bg)_95%,var(--accent)_5%)]
+                    shadow-[0_0_20px_color-mix(in_oklab,var(--accent)_25%,transparent_75%)]
+                    flex flex-col gap-2
+                  "
+                >
+                  <div className="flex justify-between items-center">
+                    <h3 className="text-lg font-semibold text-[var(--accent)]">
+                      {d.user_name || "Anonyme"}
+                    </h3>
+                    <p
+                      className={`font-bold ${
+                        d.status === "succeeded"
+                          ? "text-green-500"
+                          : "text-[var(--accent)]"
+                      } text-sm`}
+                    >
+                      {d.status === "succeeded" ? "Validé" : "En attente"}
+                    </p>
+                  </div>
 
-              <tbody>
-                {donations.map((d, index) => (
-                  <motion.tr
-                    key={d.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.05 }}
+                  <p className="text-[var(--text)] text-sm italic">
+                    {d.message || "—"}
+                  </p>
+
+                  <p className="text-[var(--accent)] font-bold">
+                    {parseFloat(d.amount).toFixed(2)} €
+                  </p>
+
+                  <Button
+                    onClick={() => handleDelete(d.id)}
                     className="
-                      border-b border-[color-mix(in_oklab,var(--accent)_25%,transparent_75%)]
-                      hover:bg-[color-mix(in_oklab,var(--accent)_12%,transparent_88%)]
-                      transition-all duration-300
+                      bg-[var(--accent)] text-white 
+                      hover:bg-[var(--gold)] hover:text-[var(--bg)]
+                      mt-3 w-full
                     "
                   >
-                    <td className="py-3 px-4 font-semibold text-[color-mix(in_oklab,var(--text)_90%,var(--accent)_10%)] whitespace-nowrap">
-                      {d.user_name || "Anonyme"}
-                    </td>
-                    <td className="py-3 px-4 text-[var(--accent)] font-semibold">
-                      {d.amount ? parseFloat(d.amount).toFixed(2) : "—"}
-                    </td>
-                    <td
-                      className="py-3 px-4 text-[var(--subtext)] max-w-sm truncate"
-                      title={d.message}
+                    Supprimer
+                  </Button>
+                </motion.div>
+              ))}
+            </div>
+
+            <div
+  className="
+    hidden sm:block overflow-x-auto rounded-2xl
+    border border-[color-mix(in_oklab,var(--accent)_40%,transparent_60%)]
+    bg-[color-mix(in_oklab,var(--bg)_94%,var(--accent)_6%)]
+    shadow-[0_0_25px_color-mix(in_oklab,var(--accent)_30%,transparent_70%)]
+    transition-all duration-500
+    w-full
+  "
+>
+  <table className="w-full text-sm sm:text-base border-collapse">
+
+                <thead
+                  className="
+                    bg-[color-mix(in_oklab,var(--accent)_10%,var(--bg)_90%)]
+                    text-[var(--accent)] uppercase tracking-wide
+                    border-b border-[color-mix(in_oklab,var(--accent)_40%,transparent_60%)]
+                  "
+                >
+                  <tr>
+                    <th className="py-3 px-4 text-left">Utilisateur</th>
+                    <th className="py-3 px-4 text-left">Montant (€)</th>
+                    <th className="py-3 px-4 text-left">Message</th>
+                    <th className="py-3 px-4 text-center">Statut</th>
+                    <th className="py-3 px-4 text-center">Actions</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {donations.map((d, index) => (
+                    <motion.tr
+                      key={d.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.05 }}
+                      className="
+                        border-b border-[color-mix(in_oklab,var(--accent)_25%,transparent_75%)]
+                        hover:bg-[color-mix(in_oklab,var(--accent)_12%,transparent_88%)]
+                        transition-all duration-300
+                      "
                     >
-                      {d.message || "—"}
-                    </td>
-                    <td className="py-3 px-4 text-center">
-                      <span
-                        className={`font-semibold ${
-                          d.status === "succeeded"
-                            ? "text-green-500"
-                            : "text-[var(--accent)]"
-                        }`}
+                      <td className="py-3 px-4 font-semibold text-[color-mix(in_oklab,var(--text)_90%,var(--accent)_10%)] whitespace-nowrap">
+                        {d.user_name || "Anonyme"}
+                      </td>
+                      <td className="py-3 px-4 text-[var(--accent)] font-semibold">
+                        {d.amount ? parseFloat(d.amount).toFixed(2) : "—"}
+                      </td>
+                      <td
+                        className="py-3 px-4 text-[var(--subtext)] max-w-sm truncate"
+                        title={d.message}
                       >
-                        {d.status === "succeeded" ? "Validé" : "En attente"}
-                      </span>
-                    </td>
-                    <td className="py-3 px-4 text-center">
-                      <Button
-                        onClick={() => handleDelete(d.id)}
-                        className="
-                          bg-[var(--accent)] text-white 
-                          hover:bg-[var(--gold)] hover:text-[var(--bg)]
-                          w-28
-                        "
-                      >
-                        Supprimer
-                      </Button>
-                    </td>
-                  </motion.tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                        {d.message || "—"}
+                      </td>
+                      <td className="py-3 px-4 text-center">
+                        <span
+                          className={`font-semibold ${
+                            d.status === "succeeded"
+                              ? "text-green-500"
+                              : "text-[var(--accent)]"
+                          }`}
+                        >
+                          {d.status === "succeeded" ? "Validé" : "En attente"}
+                        </span>
+                      </td>
+                      <td className="py-3 px-4 text-center">
+                        <Button
+                          onClick={() => handleDelete(d.id)}
+                          className="
+                            bg-[var(--accent)] text-white 
+                            hover:bg-[var(--gold)] hover:text-[var(--bg)]
+                            w-28
+                          "
+                        >
+                          Supprimer
+                        </Button>
+                      </td>
+                    </motion.tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </>
         )}
       </div>
 
@@ -219,6 +277,4 @@ export default function AdminDonations() {
     </motion.section>
   );
 }
-
-
 

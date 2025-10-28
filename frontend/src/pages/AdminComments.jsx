@@ -216,15 +216,17 @@ export default function AdminComments() {
             </div>
 
             <div
-              className="
-                hidden sm:block overflow-x-auto rounded-2xl
-                border border-[color-mix(in_oklab,var(--accent)_40%,transparent_60%)]
-                bg-[color-mix(in_oklab,var(--bg)_94%,var(--accent)_6%)]
-                shadow-[0_0_25px_color-mix(in_oklab,var(--accent)_30%,transparent_70%)]
-                transition-all duration-500
-              "
-            >
-              <table className="min-w-[800px] text-sm sm:text-base border-collapse">
+     className="
+    hidden sm:block overflow-x-auto rounded-2xl
+    border border-[color-mix(in_oklab,var(--accent)_40%,transparent_60%)]
+    bg-[color-mix(in_oklab,var(--bg)_94%,var(--accent)_6%)]
+    shadow-[0_0_25px_color-mix(in_oklab,var(--accent)_30%,transparent_70%)]
+    transition-all duration-500
+    w-full
+  "
+>
+  <table className="w-full text-sm sm:text-base border-collapse">
+
                 <thead
                   className="
                     bg-[color-mix(in_oklab,var(--accent)_10%,var(--bg)_90%)]
