@@ -72,29 +72,27 @@ export default function AdminListMusics() {
       <div
         className="
           relative w-full max-w-6xl
-          bg-[var(--surface)]
-          border border-[var(--border)]
+          border border-[color-mix(in_oklab,var(--accent)_70%,transparent_30%)]
           rounded-2xl
-          shadow-[0_0_25px_var(--accent)]
-          hover:shadow-[0_0_35px_var(--accent)]
-          hover:border-[var(--accent)]
+          shadow-[0_0_25px_color-mix(in_oklab,var(--accent)_40%,transparent_60%)]
+          hover:shadow-[0_0_40px_color-mix(in_oklab,var(--accent)_60%,transparent_40%)]
+          bg-[color-mix(in_oklab,var(--bg)_96%,var(--accent)_4%)]
           transition-all duration-500
           p-6 sm:p-10
         "
       >
        
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-10 text-center sm:text-left">
-          <h1 className="text-3xl font-extrabold text-[var(--accent)] drop-shadow-[0_0_10px_var(--accent)]">
+          <h1 className="text-3xl font-extrabold text-[var(--accent)] drop-shadow-[0_0_12px_var(--accent)]">
             Gestion des musiques
           </h1>
-
           <Button
             onClick={() => navigate("/admin/musics/new")}
             className="
               bg-[var(--accent)] hover:bg-[var(--gold)]
               text-white hover:text-[var(--bg)]
               font-semibold px-6 py-2 rounded-xl 
-              shadow-[0_0_12px_var(--accent)]
+              shadow-[0_0_15px_var(--accent)]
               transition-all duration-300
             "
           >
@@ -110,9 +108,9 @@ export default function AdminListMusics() {
           <div
             className="
               overflow-x-auto rounded-2xl
-              border border-[var(--accent)]/30
-              bg-[color-mix(in_oklab,var(--bg)_95%,black_5%)]
-              shadow-[0_0_25px_rgba(179,18,45,0.35)]
+              border border-[color-mix(in_oklab,var(--accent)_40%,transparent_60%)]
+              bg-[color-mix(in_oklab,var(--bg)_94%,var(--accent)_6%)]
+              shadow-[0_0_25px_color-mix(in_oklab,var(--accent)_30%,transparent_70%)]
               transition-all duration-500
             "
           >
@@ -133,7 +131,7 @@ export default function AdminListMusics() {
                     key={m.id}
                     className="
                       border-b border-[var(--accent)]/20 
-                      hover:bg-[var(--accent)]/10
+                      hover:bg-[color-mix(in_oklab,var(--accent)_15%,transparent_85%)]
                       transition-colors duration-300
                     "
                   >
@@ -145,18 +143,18 @@ export default function AdminListMusics() {
                           className="w-20 h-14 object-cover rounded-md border border-[var(--accent)]/30"
                         />
                       ) : (
-                        <div className="w-20 h-14 bg-[var(--accent)]/5 rounded-md flex items-center justify-center text-[var(--subtext)] text-xs">
+                        <div className="w-20 h-14 bg-[color-mix(in_oklab,var(--accent)_10%,var(--bg)_90%)] rounded-md flex items-center justify-center text-[var(--subtext)] text-xs">
                           Aucune
                         </div>
                       )}
                     </td>
-                    <td className="py-3 px-4 font-semibold text-[var(--text)]">
+                    <td className="py-3 px-4 font-semibold text-[color-mix(in_oklab,var(--text)_90%,var(--accent)_10%)]">
                       {m.title}
                     </td>
-                    <td className="py-3 px-4 text-[var(--subtext)]">
+                    <td className="py-3 px-4 text-[color-mix(in_oklab,var(--subtext)_90%,var(--accent)_10%)]">
                       {m.artist || "—"}
                     </td>
-                    <td className="py-3 px-4 text-[var(--subtext)]">
+                    <td className="py-3 px-4 text-[color-mix(in_oklab,var(--subtext)_90%,var(--accent)_10%)]">
                       {m.created_at
                         ? new Date(m.created_at).toLocaleDateString("fr-FR", {
                             day: "2-digit",
@@ -220,6 +218,7 @@ export default function AdminListMusics() {
     </motion.section>
   );
 }
+
 
 
 
