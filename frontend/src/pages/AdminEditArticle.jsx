@@ -119,7 +119,7 @@ export default function AdminEditArticle() {
         relative overflow-hidden
       "
     >
-     
+      
       <div
         className="
           absolute inset-0 -z-10
@@ -135,8 +135,8 @@ export default function AdminEditArticle() {
           relative w-full max-w-3xl
           border border-[color-mix(in_oklab,var(--accent)_70%,transparent_30%)]
           rounded-2xl
-          shadow-[0_0_25px_color-mix(in_oklab,var(--accent)_40%,transparent_60%)]
-          hover:shadow-[0_0_40px_color-mix(in_oklab,var(--accent)_60%,transparent_40%)]
+          shadow-[0_0_25px_var(--accent)]
+          hover:shadow-[0_0_40px_var(--accent)]
           bg-[color-mix(in_oklab,var(--bg)_96%,var(--accent)_4%)]
           p-8 sm:p-10
           transition-all duration-500
@@ -146,50 +146,44 @@ export default function AdminEditArticle() {
           {isNew ? "Créer un article" : "Modifier l’article"}
         </h1>
 
-    
-        <div className="mb-5">
-          <label htmlFor="title" className="block text-[var(--accent)] mb-2 font-semibold">
-            Titre
-          </label>
-          <input
-            id="title"
-            type="text"
-            value={form.title}
-            onChange={onChange}
-            required
-            className="
-              w-full p-3 rounded-md
-              bg-[color-mix(in_oklab,var(--bg)_94%,black_6%)]
-              border border-[color-mix(in_oklab,var(--accent)_40%,transparent_60%)]
-              text-[color-mix(in_oklab,var(--text)_90%,var(--accent)_10%)]
-              focus:ring-2 focus:ring-[var(--accent)]/40
-              focus:border-[var(--accent)]
-              transition-all duration-300
-            "
-          />
-        </div>
-
-        <div className="mb-5">
-          <label htmlFor="description" className="block text-[var(--accent)] mb-2 font-semibold">
-            Description courte
-          </label>
-          <input
-            id="description"
-            type="text"
-            value={form.description}
-            onChange={onChange}
-            required
-            className="
-              w-full p-3 rounded-md
-              bg-[color-mix(in_oklab,var(--bg)_94%,black_6%)]
-              border border-[color-mix(in_oklab,var(--accent)_40%,transparent_60%)]
-              text-[color-mix(in_oklab,var(--text)_90%,var(--accent)_10%)]
-              focus:ring-2 focus:ring-[var(--accent)]/40
-              focus:border-[var(--accent)]
-              transition-all duration-300
-            "
-          />
-        </div>
+        {[
+          {
+            id: "title",
+            label: "Titre",
+            type: "text",
+            value: form.title,
+            required: true,
+          },
+          {
+            id: "description",
+            label: "Description courte",
+            type: "text",
+            value: form.description,
+            required: true,
+          },
+        ].map(({ id, label, type, value, required }) => (
+          <div key={id} className="mb-5">
+            <label htmlFor={id} className="block text-[var(--accent)] mb-2 font-semibold">
+              {label}
+            </label>
+            <input
+              id={id}
+              type={type}
+              value={value}
+              onChange={onChange}
+              required={required}
+              className="
+                w-full p-3 rounded-md
+                bg-[color-mix(in_oklab,var(--bg)_94%,black_6%)]
+                border border-[color-mix(in_oklab,var(--accent)_40%,transparent_60%)]
+                text-[color-mix(in_oklab,var(--text)_90%,var(--accent)_10%)]
+                focus:ring-2 focus:ring-[var(--accent)]/40
+                focus:border-[var(--accent)]
+                transition-all duration-300
+              "
+            />
+          </div>
+        ))}
 
         <div className="mb-5">
           <label htmlFor="content" className="block text-[var(--accent)] mb-2 font-semibold">
@@ -228,14 +222,14 @@ export default function AdminEditArticle() {
               rounded-md p-2
               bg-[color-mix(in_oklab,var(--bg)_96%,black_4%)]
               cursor-pointer transition-all duration-300
-              hover:border-[var(--accent)] hover:shadow-[0_0_15px_var(--accent)]/40
+              hover:border-[var(--accent)] hover:shadow-[0_0_15px_var(--accent)]
             "
           />
           {preview && (
             <img
               src={preview}
               alt="Aperçu"
-              className="mt-3 rounded-lg max-h-48 mx-auto border border-[var(--accent)]/40 shadow-[0_0_15px_rgba(179,18,45,0.3)]"
+              className="mt-3 rounded-lg max-h-48 mx-auto border border-[var(--accent)]/40 shadow-[0_0_15px_var(--accent)]"
             />
           )}
         </div>
@@ -247,14 +241,13 @@ export default function AdminEditArticle() {
           "
         >
           <Button
-            variant="secondary"
-            onClick={() => navigate('/admin/articles')}
+            onClick={() => navigate("/admin/articles")}
             className="
               border border-[var(--accent)] text-[var(--accent)]
               hover:bg-[var(--accent)] hover:text-[var(--bg)]
               px-6 py-3 rounded-xl transition-all duration-300
-              shadow-[0_0_12px_color-mix(in_oklab,var(--accent)_40%,transparent_60%)]
-              hover:shadow-[0_0_20px_color-mix(in_oklab,var(--accent)_70%,transparent_30%)]
+              shadow-[0_0_12px_var(--accent)]
+              hover:shadow-[0_0_20px_var(--accent)]
               w-full sm:w-auto font-semibold
             "
           >
@@ -262,15 +255,14 @@ export default function AdminEditArticle() {
           </Button>
 
           <Button
-            variant="primary"
             type="submit"
-            disabled={status === 'loading'}
+            disabled={status === "loading"}
             className="
               bg-[var(--accent)] hover:bg-[var(--gold)]
               text-white hover:text-[var(--bg)]
               px-8 py-3 rounded-xl font-semibold
-              shadow-[0_0_20px_color-mix(in_oklab,var(--accent)_50%,transparent_50%)]
-              hover:shadow-[0_0_25px_color-mix(in_oklab,var(--gold)_70%,transparent_30%)]
+              shadow-[0_0_20px_var(--accent)]
+              hover:shadow-[0_0_25px_var(--gold)]
               w-full sm:w-auto
               transition-all duration-300 relative overflow-hidden
               active:scale-[0.97]
@@ -307,5 +299,6 @@ export default function AdminEditArticle() {
     </motion.section>
   );
 }
+
 
 

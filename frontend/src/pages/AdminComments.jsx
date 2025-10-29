@@ -78,7 +78,7 @@ export default function AdminComments() {
         transition-colors duration-700 ease-in-out
       "
     >
-    
+ 
       <div
         className="
           absolute inset-0 -z-10
@@ -92,14 +92,13 @@ export default function AdminComments() {
           relative w-full max-w-7xl
           border border-[color-mix(in_oklab,var(--accent)_70%,transparent_30%)]
           rounded-2xl
-          shadow-[0_0_25px_color-mix(in_oklab,var(--accent)_40%,transparent_60%)]
-          hover:shadow-[0_0_40px_color-mix(in_oklab,var(--accent)_60%,transparent_40%)]
+          shadow-[0_0_25px_var(--accent)]
+          hover:shadow-[0_0_40px_var(--accent)]
           bg-[color-mix(in_oklab,var(--bg)_96%,var(--accent)_4%)]
           transition-all duration-500
           p-6 sm:p-10
         "
       >
-        
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-10 text-center sm:text-left">
           <h1 className="text-3xl font-extrabold text-[var(--accent)] drop-shadow-[0_0_12px_var(--accent)]">
             Gestion des commentaires
@@ -116,7 +115,7 @@ export default function AdminComments() {
             bg-[color-mix(in_oklab,var(--bg)_94%,var(--accent)_6%)]
             border border-[color-mix(in_oklab,var(--accent)_40%,transparent_60%)]
             rounded-xl p-4
-            shadow-[0_0_20px_color-mix(in_oklab,var(--accent)_25%,transparent_75%)]
+            shadow-[0_0_20px_var(--accent)]
             transition-all duration-500
           "
         >
@@ -160,13 +159,14 @@ export default function AdminComments() {
           <p className="text-center text-red-500 font-medium mb-6">{error}</p>
         )}
 
+       
         {filteredComments.length === 0 ? (
           <p className="text-[var(--subtext)] text-center mt-10 italic">
             Aucun commentaire ne correspond à votre recherche.
           </p>
         ) : (
           <>
-         
+          
             <div className="block sm:hidden space-y-4">
               {filteredComments.map((c) => (
                 <motion.div
@@ -178,7 +178,7 @@ export default function AdminComments() {
                     border border-[color-mix(in_oklab,var(--accent)_40%,transparent_60%)]
                     rounded-xl p-4
                     bg-[color-mix(in_oklab,var(--bg)_95%,var(--accent)_5%)]
-                    shadow-[0_0_20px_color-mix(in_oklab,var(--accent)_25%,transparent_75%)]
+                    shadow-[0_0_20px_var(--accent)]
                     flex flex-col gap-2
                   "
                 >
@@ -216,17 +216,16 @@ export default function AdminComments() {
             </div>
 
             <div
-     className="
-    hidden sm:block overflow-x-auto rounded-2xl
-    border border-[color-mix(in_oklab,var(--accent)_40%,transparent_60%)]
-    bg-[color-mix(in_oklab,var(--bg)_94%,var(--accent)_6%)]
-    shadow-[0_0_25px_color-mix(in_oklab,var(--accent)_30%,transparent_70%)]
-    transition-all duration-500
-    w-full
-  "
->
-  <table className="w-full text-sm sm:text-base border-collapse">
-
+              className="
+                hidden sm:block overflow-x-auto rounded-2xl
+                border border-[color-mix(in_oklab,var(--accent)_40%,transparent_60%)]
+                bg-[color-mix(in_oklab,var(--bg)_94%,var(--accent)_6%)]
+                shadow-[0_0_25px_var(--accent)]
+                transition-all duration-500
+                w-full
+              "
+            >
+              <table className="w-full text-sm sm:text-base border-collapse">
                 <thead
                   className="
                     bg-[color-mix(in_oklab,var(--accent)_10%,var(--bg)_90%)]

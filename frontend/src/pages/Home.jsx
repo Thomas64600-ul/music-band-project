@@ -10,19 +10,19 @@ export default function Home() {
 
   return (
     <main
+      role="main"
       className="
         relative overflow-hidden 
+        flex flex-col
         bg-[var(--bg)] text-[var(--text)]
         transition-colors duration-700 ease-in-out
-        flex flex-col
       "
     >
      
       <section className="relative h-[70vh] md:h-[90vh] overflow-hidden">
-        
         <motion.img
           src={groupImage}
-          alt="Groupe REVEREN"
+          alt="Photo du groupe REVEREN sur scène"
           initial={{ scale: 1 }}
           animate={{ scale: 1.08 }}
           transition={{
@@ -39,23 +39,30 @@ export default function Home() {
           "
         />
 
-       
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[var(--bg)]/80 to-[var(--bg)]"></div>
-        </div>
+        <div
+          className="
+            absolute inset-0 pointer-events-none
+            bg-gradient-to-b from-transparent via-[var(--bg)]/80 to-[var(--bg)]
+          "
+          aria-hidden="true"
+        ></div>
 
-        
         <div
           className="
             absolute inset-0
             dark:bg-[radial-gradient(circle_at_center,var(--accent)_15%,transparent_70%)]
             blur-[120px] opacity-30 pointer-events-none
           "
+          aria-hidden="true"
         ></div>
       </section>
 
-      
-      <section className="relative z-10 text-center max-w-3xl mx-auto px-6 py-16 md:py-20 flex-grow">
+      <section
+        className="
+          relative z-10 text-center max-w-3xl mx-auto px-6 
+          py-16 md:py-20 flex-grow
+        "
+      >
         <div className="relative inline-block mb-10">
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[var(--accent)]/30 to-transparent blur-xl opacity-80 animate-pulse-slow"></div>
           <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-48 h-[2px] bg-gradient-to-r from-transparent via-[var(--gold)] to-transparent animate-glow-line"></div>
@@ -78,15 +85,20 @@ export default function Home() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.4, duration: 1 }}
-          className="text-[var(--subtext)] leading-relaxed text-sm md:text-base mb-10"
+          className="
+            text-[var(--subtext)] leading-relaxed text-sm md:text-base mb-10
+          "
         >
-          <strong className="text-[var(--accent)]">REVEREN</strong>, c’est la fusion brute du rock électrique et de la vibration électronique.  
+          <strong className="text-[var(--accent)]">REVEREN</strong>, c’est la
+          fusion brute du rock électrique et de la vibration électronique.
           Un duo singulier composé de{" "}
-          <strong className="text-[var(--accent)]">Louis</strong>, guitariste à l’énergie débordante et aux solos envoûtants,  
-          et de{" "}
-          <strong className="text-[var(--accent)]">Antoine</strong>, architecte du son numérique, maître des machines et des rythmes électro.  
-          Ensemble, ils repoussent les frontières du genre pour créer une expérience scénique intense,  
-          où la guitare vibre au rythme des synthés et où chaque note résonne comme une onde lumineuse.
+          <strong className="text-[var(--accent)]">Louis</strong>, guitariste à
+          l’énergie débordante et aux solos envoûtants, et de{" "}
+          <strong className="text-[var(--accent)]">Antoine</strong>, architecte
+          du son numérique, maître des machines et des rythmes électro.
+          Ensemble, ils repoussent les frontières du genre pour créer une
+          expérience scénique intense, où la guitare vibre au rythme des synthés
+          et où chaque note résonne comme une onde lumineuse.
         </motion.p>
 
         <motion.div
@@ -109,19 +121,19 @@ export default function Home() {
         </motion.div>
       </section>
 
-      
       <div
-  className="
-    absolute bottom-[-10%] left-1/2 -translate-x-1/2 
-    w-[60vw] h-[60vw]
-    bg-[radial-gradient(circle_at_center,var(--accent)_0%,transparent_75%)]
-    opacity-15 blur-[180px] -z-10 pointer-events-none
-  "
-></div>
-
+        className="
+          absolute bottom-[-10%] left-1/2 -translate-x-1/2 
+          w-[60vw] h-[60vw]
+          bg-[radial-gradient(circle_at_center,var(--accent)_0%,transparent_75%)]
+          opacity-15 blur-[180px] -z-10 pointer-events-none
+        "
+        aria-hidden="true"
+      ></div>
     </main>
   );
 }
+
 
 
 

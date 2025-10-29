@@ -13,12 +13,15 @@ export default function ConcertCard({ city, date, location, image, ticketLink })
         hover:shadow-[0_0_25px_var(--accent)]
         sm:max-w-none w-full
       "
+      aria-label={`Concert ${city ? `à ${city}` : "à venir"}`}
     >
-     
+    
       <div className="relative w-full h-52 sm:h-56 md:h-64 overflow-hidden group">
         <img
           src={image}
-          alt={`Concert à ${city}`}
+          alt={city ? `Affiche du concert à ${city}` : "Affiche du concert"}
+          loading="lazy"
+          decoding="async"
           className="
             w-full h-full object-cover transform
             transition-transform duration-700
@@ -28,6 +31,7 @@ export default function ConcertCard({ city, date, location, image, ticketLink })
         />
 
         <div
+          aria-hidden="true"
           className="
             absolute inset-0 bg-gradient-to-t 
             from-[var(--bg)]/90 via-[var(--bg)]/40 to-transparent
@@ -36,8 +40,8 @@ export default function ConcertCard({ city, date, location, image, ticketLink })
           "
         ></div>
 
-      
         <div
+          aria-hidden="true"
           className="
             absolute inset-0 bg-gradient-to-tr 
             from-transparent via-[var(--accent)]/25 to-transparent
@@ -46,13 +50,17 @@ export default function ConcertCard({ city, date, location, image, ticketLink })
           "
         ></div>
 
-       
-        <div className="absolute top-3 left-3 bg-[var(--accent)] text-[var(--surface)] font-semibold text-xs px-3 py-1 rounded shadow-md">
-          {date}
-        </div>
+        <time
+          dateTime={date}
+          className="
+            absolute top-3 left-3 bg-[var(--accent)] text-[var(--surface)] 
+            font-semibold text-xs px-3 py-1 rounded shadow-md
+          "
+        >
+          {date || "Date à venir"}
+        </time>
       </div>
 
-      
       <div className="flex flex-col flex-grow p-5 sm:p-6 text-center sm:text-left">
         <h3
           className="
@@ -68,7 +76,19 @@ export default function ConcertCard({ city, date, location, image, ticketLink })
         </p>
 
         <div className="flex justify-center sm:justify-start">
-          <Button variant="primary" as="a" href={ticketLink} target="_blank">
+          <Button
+            variant="primary"
+            as="a"
+            href={ticketLink || "#"}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={
+              ticketLink
+                ? `Réserver une place pour le concert à ${city}`
+                : "Lien de réservation indisponible"
+            }
+            disabled={!ticketLink}
+          >
             Réserver
           </Button>
         </div>

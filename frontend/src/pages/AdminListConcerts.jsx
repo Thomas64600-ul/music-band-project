@@ -60,7 +60,7 @@ export default function AdminListConcerts() {
         transition-colors duration-700 ease-in-out
       "
     >
-    
+      
       <div
         className="
           absolute inset-0 -z-10
@@ -72,16 +72,15 @@ export default function AdminListConcerts() {
       <div
         className="
           relative w-full max-w-6xl
-          border border-[color-mix(in_oklab,var(--accent)_70%,transparent_30%)]
+          border border-[var(--accent)]/40
           rounded-2xl
-          shadow-[0_0_25px_color-mix(in_oklab,var(--accent)_40%,transparent_60%)]
-          hover:shadow-[0_0_40px_color-mix(in_oklab,var(--accent)_60%,transparent_40%)]
+          shadow-[0_0_25px_var(--accent)]
+          hover:shadow-[0_0_40px_var(--accent)]
           bg-[color-mix(in_oklab,var(--bg)_96%,var(--accent)_4%)]
           transition-all duration-500
           p-6 sm:p-10
         "
       >
-       
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-10 text-center sm:text-left">
           <h1 className="text-3xl font-extrabold text-[var(--accent)] drop-shadow-[0_0_12px_var(--accent)]">
             Gestion des concerts
@@ -106,7 +105,7 @@ export default function AdminListConcerts() {
           </p>
         ) : (
           <>
-         
+          
             <div className="block sm:hidden space-y-4">
               {concerts.map((c) => (
                 <motion.div
@@ -115,10 +114,10 @@ export default function AdminListConcerts() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.3 }}
                   className="
-                    border border-[color-mix(in_oklab,var(--accent)_40%,transparent_60%)]
+                    border border-[var(--accent)]/40
                     rounded-xl p-4
                     bg-[color-mix(in_oklab,var(--bg)_95%,var(--accent)_5%)]
-                    shadow-[0_0_20px_color-mix(in_oklab,var(--accent)_25%,transparent_75%)]
+                    shadow-[0_0_20px_var(--accent)]
                     flex flex-col gap-2
                   "
                 >
@@ -130,7 +129,7 @@ export default function AdminListConcerts() {
                         className="w-16 h-16 object-cover rounded-md border border-[var(--accent)]/40"
                       />
                     ) : (
-                      <div className="w-16 h-16 flex items-center justify-center bg-[color-mix(in_oklab,var(--accent)_10%,var(--bg)_90%)] text-[var(--subtext)] rounded-md text-xs">
+                      <div className="w-16 h-16 flex items-center justify-center bg-[var(--accent)]/10 text-[var(--subtext)] rounded-md text-xs">
                         Aucune
                       </div>
                     )}
@@ -154,7 +153,7 @@ export default function AdminListConcerts() {
                       rel="noopener noreferrer"
                       className="text-[var(--accent)] hover:text-[var(--gold)] mt-2 text-sm underline"
                     >
-                      🎟️ Billetterie
+                      Billetterie
                     </a>
                   )}
 
@@ -165,8 +164,8 @@ export default function AdminListConcerts() {
                         border border-[var(--accent)] text-[var(--accent)]
                         hover:bg-[var(--accent)] hover:text-[var(--bg)]
                         flex-1 transition-all duration-300
-                        shadow-[0_0_10px_color-mix(in_oklab,var(--accent)_30%,transparent_70%)]
-                        hover:shadow-[0_0_18px_color-mix(in_oklab,var(--accent)_50%,transparent_50%)]
+                        shadow-[0_0_10px_var(--accent)]
+                        hover:shadow-[0_0_15px_var(--accent)]
                       "
                     >
                       Modifier
@@ -177,8 +176,8 @@ export default function AdminListConcerts() {
                         bg-[var(--accent)] text-white 
                         hover:bg-[var(--gold)] hover:text-[var(--bg)]
                         flex-1 transition-all duration-300
-                        shadow-[0_0_10px_color-mix(in_oklab,var(--accent)_30%,transparent_70%)]
-                        hover:shadow-[0_0_18px_color-mix(in_oklab,var(--accent)_50%,transparent_50%)]
+                        shadow-[0_0_10px_var(--accent)]
+                        hover:shadow-[0_0_18px_var(--gold)]
                       "
                     >
                       Supprimer
@@ -191,9 +190,9 @@ export default function AdminListConcerts() {
             <div
               className="
                 hidden sm:block overflow-x-auto rounded-2xl
-                border border-[color-mix(in_oklab,var(--accent)_40%,transparent_60%)]
+                border border-[var(--accent)]/40
                 bg-[color-mix(in_oklab,var(--bg)_94%,var(--accent)_6%)]
-                shadow-[0_0_25px_color-mix(in_oklab,var(--accent)_30%,transparent_70%)]
+                shadow-[0_0_25px_var(--accent)]
                 transition-all duration-500
               "
             >
@@ -202,7 +201,7 @@ export default function AdminListConcerts() {
                   className="
                     bg-[color-mix(in_oklab,var(--accent)_10%,var(--bg)_90%)]
                     text-[var(--accent)] uppercase tracking-wide
-                    border-b border-[color-mix(in_oklab,var(--accent)_40%,transparent_60%)]
+                    border-b border-[var(--accent)]/40
                   "
                 >
                   <tr>
@@ -222,34 +221,32 @@ export default function AdminListConcerts() {
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: index * 0.05 }}
-                      className={`
-                        ${index !== concerts.length - 1 ? "border-b" : ""}
-                        border-[color-mix(in_oklab,var(--accent)_25%,transparent_75%)]
+                      className="
+                        border-b border-[var(--accent)]/25
                         hover:bg-[color-mix(in_oklab,var(--accent)_12%,transparent_88%)]
                         transition-colors duration-300
-                      `}
+                      "
                     >
                       <td className="py-3 px-4">
                         {c.image_url ? (
                           <img
                             src={c.image_url}
                             alt={c.title || c.city}
-                            className="w-20 h-14 object-cover rounded-md border border-[color-mix(in_oklab,var(--accent)_30%,transparent_70%)]"
+                            className="w-20 h-14 object-cover rounded-md border border-[var(--accent)]/40"
                           />
                         ) : (
-                          <div className="w-20 h-14 bg-[color-mix(in_oklab,var(--accent)_10%,var(--bg)_90%)] rounded-md flex items-center justify-center text-[var(--subtext)] text-xs">
+                          <div className="w-20 h-14 bg-[var(--accent)]/10 rounded-md flex items-center justify-center text-[var(--subtext)] text-xs">
                             Aucune
                           </div>
                         )}
                       </td>
-
                       <td className="py-3 px-4 font-semibold text-[color-mix(in_oklab,var(--text)_90%,var(--accent)_10%)]">
                         {c.title || c.city}
                       </td>
-                      <td className="py-3 px-4 text-[color-mix(in_oklab,var(--subtext)_90%,var(--accent)_10%)]">
+                      <td className="py-3 px-4 text-[var(--subtext)]">
                         {c.location || "—"}
                       </td>
-                      <td className="py-3 px-4 text-[color-mix(in_oklab,var(--subtext)_90%,var(--accent)_10%)]">
+                      <td className="py-3 px-4 text-[var(--subtext)]">
                         {c.date
                           ? new Date(c.date).toLocaleDateString("fr-FR", {
                               day: "2-digit",
@@ -272,7 +269,6 @@ export default function AdminListConcerts() {
                           <span className="text-[var(--subtext)]">—</span>
                         )}
                       </td>
-
                       <td className="py-3 px-4 text-center flex flex-col gap-2 items-center justify-center">
                         <Button
                           onClick={() => navigate(`/admin/concerts/${c.id}`)}
@@ -280,8 +276,8 @@ export default function AdminListConcerts() {
                             border border-[var(--accent)] text-[var(--accent)]
                             hover:bg-[var(--accent)] hover:text-[var(--bg)]
                             w-28 transition-all duration-300
-                            shadow-[0_0_10px_color-mix(in_oklab,var(--accent)_30%,transparent_70%)]
-                            hover:shadow-[0_0_18px_color-mix(in_oklab,var(--accent)_50%,transparent_50%)]
+                            shadow-[0_0_10px_var(--accent)]
+                            hover:shadow-[0_0_18px_var(--accent)]
                           "
                         >
                           Modifier
@@ -292,8 +288,8 @@ export default function AdminListConcerts() {
                             bg-[var(--accent)] text-white 
                             hover:bg-[var(--gold)] hover:text-[var(--bg)]
                             w-28 transition-all duration-300
-                            shadow-[0_0_10px_color-mix(in_oklab,var(--accent)_30%,transparent_70%)]
-                            hover:shadow-[0_0_18px_color-mix(in_oklab,var(--accent)_50%,transparent_50%)]
+                            shadow-[0_0_10px_var(--accent)]
+                            hover:shadow-[0_0_18px_var(--gold)]
                           "
                         >
                           Supprimer
@@ -319,6 +315,8 @@ export default function AdminListConcerts() {
     </motion.section>
   );
 }
+
+
 
 
 

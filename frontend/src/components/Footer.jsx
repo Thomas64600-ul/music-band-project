@@ -6,6 +6,8 @@ export default function Footer() {
 
   return (
     <motion.footer
+      role="contentinfo"
+      aria-label="Pied de page du site REVEREN"
       className="
         relative overflow-hidden select-none text-center
         bg-[var(--bg)] text-[var(--text)]
@@ -17,8 +19,9 @@ export default function Footer() {
       viewport={{ once: true, amount: 0.2 }}
       transition={{ duration: 1.2, ease: 'easeOut' }}
     >
-     
+    
       <motion.div
+        aria-hidden="true"
         initial={{ opacity: 0.4 }}
         animate={{
           opacity: [0.4, 0.8, 0.4],
@@ -41,8 +44,8 @@ export default function Footer() {
         "
       />
 
-     
       <div
+        aria-hidden="true"
         className="
           absolute top-0 left-0 w-full h-[80px]
           bg-gradient-to-b from-[var(--accent)]/20 via-transparent to-transparent
@@ -50,10 +53,12 @@ export default function Footer() {
         "
       ></div>
 
-     
       <div className="max-w-6xl mx-auto flex flex-col items-center py-8 md:py-10 gap-5 relative z-10">
-        
-        <div className="flex justify-center gap-6 text-lg sm:text-xl">
+    
+        <nav
+          aria-label="Liens vers les réseaux sociaux du groupe REVEREN"
+          className="flex justify-center gap-6 text-lg sm:text-xl"
+        >
           {[
             { Icon: FaInstagram, href: "https://instagram.com", label: "Instagram" },
             { Icon: FaYoutube, href: "https://youtube.com", label: "YouTube" },
@@ -64,18 +69,22 @@ export default function Footer() {
               href={href}
               target="_blank"
               rel="noopener noreferrer"
-              aria-label={label}
+              aria-label={`Ouvrir la page ${label} de REVEREN dans un nouvel onglet`}
+              title={`REVEREN sur ${label}`}
               className="
-                relative group transition-transform duration-300 hover:scale-110
+                relative group transition-transform duration-300 hover:scale-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]/50 rounded-full p-1
               "
             >
               <Icon
+                aria-hidden="true"
+                focusable="false"
                 className="
                   text-[var(--accent)] group-hover:text-[var(--gold)]
                   transition-colors duration-300
                 "
               />
               <span
+                aria-hidden="true"
                 className="
                   absolute -inset-2 rounded-full bg-[var(--accent)]/20 blur-md 
                   opacity-0 group-hover:opacity-100 
@@ -84,10 +93,12 @@ export default function Footer() {
               ></span>
             </a>
           ))}
-        </div>
+        </nav>
 
-       
-        <p className="text-xs text-[var(--subtext)] tracking-wide">
+        <p
+          className="text-xs text-[var(--subtext)] tracking-wide"
+          role="contentinfo"
+        >
           © {year}{" "}
           <span className="text-[var(--accent)] font-semibold">REVEREN</span> — Tous droits réservés.
         </p>
@@ -95,7 +106,6 @@ export default function Footer() {
     </motion.footer>
   );
 }
-
 
 
 

@@ -1,8 +1,27 @@
 export default function DonationSuccess() {
   return (
-    <section className="min-h-screen flex flex-col justify-center items-center bg-[#0A0A0A] text-[#F2F2F2] text-center">
-      <h1 className="text-3xl font-bold text-[#B3122D] mb-4">Merci pour votre soutien </h1>
-      <p className="text-gray-400">Votre don aide REVEREN à créer encore plus de musique !</p>
-    </section>
+    <main
+      className="
+        min-h-screen flex flex-col justify-center items-center text-center
+        bg-[#0A0A0A] text-[#F2F2F2]
+        transition-colors duration-700 ease-in-out
+      "
+      role="main"
+    >
+      <h1
+        className="
+          text-3xl md:text-4xl font-extrabold text-[#B3122D]
+          mb-4 drop-shadow-[0_0_10px_#B3122D55]
+        "
+      >
+        Merci pour votre soutien 
+      </h1>
+
+      <p className="text-gray-400 max-w-md leading-relaxed">
+        Votre don aide{" "}
+        <span className="text-[#FFD700] font-semibold">REVEREN</span> à créer
+        encore plus de musique et à partager sa passion avec le monde 🎶
+      </p>
+    </main>
   );
 }

@@ -13,7 +13,7 @@ function LinkItem({ to, children, onClick, className = "" }) {
       end
       className={({ isActive }) =>
         [
-          "relative group inline-block transition-colors duration-300",
+          "relative group inline-block transition-colors duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]/50 rounded-md px-1 py-0.5",
           isActive
             ? "text-[var(--accent)]"
             : "text-[var(--text)] opacity-90 hover:text-[var(--accent)]",
@@ -31,7 +31,7 @@ function LinkItem({ to, children, onClick, className = "" }) {
   );
 }
 
-export default function Header({ logoSrc, links }) {
+export default function Header({ logoSrc = "/logo.png", links = [] }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const { user, isAdmin, logout } = useAuth();
@@ -48,17 +48,9 @@ export default function Header({ logoSrc, links }) {
 
   useEffect(() => {
     const html = document.documentElement;
-    if (darkMode) {
-      html.classList.add("dark");
-      localStorage.setItem("theme", "dark");
-    } else {
-      html.classList.remove("dark");
-      localStorage.setItem("theme", "light");
-    }
+    html.classList.toggle("dark", darkMode);
+    localStorage.setItem("theme", darkMode ? "dark" : "light");
   }, [darkMode]);
-
-  const toggleTheme = () => setDarkMode((v) => !v);
-  const toggleMenu = () => setMenuOpen((v) => !v);
 
   useEffect(() => {
     const onScroll = () => setIsScrolled(window.scrollY > 20);
@@ -66,8 +58,12 @@ export default function Header({ logoSrc, links }) {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  const toggleTheme = () => setDarkMode((v) => !v);
+  const toggleMenu = () => setMenuOpen((v) => !v);
+
   return (
     <header
+      role="banner"
       className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 border-b border-[var(--border)] ${
         isScrolled
           ? darkMode
@@ -76,29 +72,31 @@ export default function Header({ logoSrc, links }) {
           : "bg-[var(--bg)]"
       }`}
     >
-      
+   
       {isAdmin && (
-        <div className="bg-[var(--accent)] text-[var(--bg)] text-center text-sm py-1 font-semibold tracking-wide border-b border-[color-mix(in_oklab,var(--accent)_80%,black_20%)] shadow-[0_0_12px_var(--accent)] animate-pulse">
+        <div
+          className="bg-[var(--accent)] text-[var(--bg)] text-center text-sm py-1 font-semibold tracking-wide border-b border-[color-mix(in_oklab,var(--accent)_80%,black_20%)] shadow-[0_0_12px_var(--accent)] animate-pulse"
+          role="status"
+          aria-live="polite"
+        >
           Mode administrateur activé
         </div>
       )}
 
-    
       <div className="flex items-center justify-between px-4 sm:px-12 py-3 sm:py-5 relative">
-      
+   
         <button
           onClick={toggleTheme}
           className="hidden sm:block text-[var(--accent)] hover:text-[color-mix(in_oklab,var(--accent)_80%,var(--gold)_20%)] hover:scale-110 transition-transform duration-200"
-          aria-label="Basculer le thème clair/sombre"
+          aria-label="Basculer entre le mode clair et sombre"
         >
           {darkMode ? <FaSun size={22} /> : <FaMoon size={22} />}
         </button>
 
-       
         <div className="flex justify-center items-center flex-1 sm:translate-x-[60px] md:translate-x-[80px] relative z-0">
           <motion.img
-            src="/logo.png"
-            alt="Logo REVEREN"
+            src={logoSrc}
+            alt="Logo du groupe REVEREN"
             animate={{
               boxShadow: [
                 "0 0 20px var(--accent)",
@@ -117,16 +115,15 @@ export default function Header({ logoSrc, links }) {
           />
         </div>
 
-       
         <div className="hidden sm:flex items-center gap-4 text-sm ml-auto relative z-10">
           {user ? (
             <>
               <span className="text-[var(--accent)] flex items-center gap-2 font-semibold">
-                <User size={16} />
-                {user.firstname || user.email}
+                <User size={16} aria-hidden="true" />
+                <span>{user.firstname || user.email}</span>
                 {isAdmin && (
                   <span className="bg-[var(--accent)] text-[var(--bg)] text-xs px-2 py-1 rounded-md flex items-center gap-1">
-                    <Shield size={12} /> Admin
+                    <Shield size={12} aria-hidden="true" /> Admin
                   </span>
                 )}
               </span>
@@ -134,7 +131,7 @@ export default function Header({ logoSrc, links }) {
                 onClick={logout}
                 className="text-[var(--accent)] hover:text-[color-mix(in_oklab,var(--accent)_80%,var(--gold)_20%)] flex items-center gap-1"
               >
-                <LogOut size={14} /> Déconnexion
+                <LogOut size={14} aria-hidden="true" /> Déconnexion
               </button>
             </>
           ) : (
@@ -155,37 +152,42 @@ export default function Header({ logoSrc, links }) {
           )}
         </div>
 
-       
         <button
           onClick={toggleMenu}
+          aria-expanded={menuOpen}
+          aria-controls="mobile-menu"
           className="text-[var(--accent)] hover:text-[color-mix(in_oklab,var(--accent)_80%,var(--gold)_20%)] hover:scale-110 transition-transform duration-200 sm:hidden z-20"
-          aria-label={menuOpen ? "Fermer le menu" : "Ouvrir le menu"}
+          aria-label={menuOpen ? "Fermer le menu de navigation" : "Ouvrir le menu de navigation"}
         >
           {menuOpen ? <FaTimes size={22} /> : <FaBars size={22} />}
         </button>
       </div>
 
-      
-      <div className="hidden sm:flex flex-col items-center">
+      <nav
+        aria-label="Navigation principale du site"
+        className="hidden sm:flex flex-col items-center"
+      >
         <div className="flex justify-center border-t border-[var(--border)] py-2 bg-[var(--bg)] relative w-full">
-          <nav className="flex space-x-8 text-sm font-semibold">
+          <ul className="flex space-x-8 text-sm font-semibold">
             {links.map((l) => (
-              <LinkItem key={l.name} to={l.path}>
-                {l.name}
-              </LinkItem>
+              <li key={l.name}>
+                <LinkItem to={l.path}>{l.name}</LinkItem>
+              </li>
             ))}
             {isAdmin && (
-              <LinkItem
-                to="/admin"
-                className="text-[var(--accent)] hover:text-[color-mix(in_oklab,var(--accent)_80%,var(--gold)_20%)]"
-              >
-                Dashboard
-              </LinkItem>
+              <li>
+                <LinkItem
+                  to="/admin"
+                  className="text-[var(--accent)] hover:text-[color-mix(in_oklab,var(--accent)_80%,var(--gold)_20%)]"
+                >
+                  Dashboard
+                </LinkItem>
+              </li>
             )}
-          </nav>
+          </ul>
 
-          
           <motion.div
+            aria-hidden="true"
             initial={{ opacity: 0.4 }}
             animate={{
               opacity: [0.4, 0.8, 0.4],
@@ -203,12 +205,14 @@ export default function Header({ logoSrc, links }) {
             className="absolute bottom-0 left-0 w-full h-[2px] bg-[var(--accent)]"
           />
         </div>
-      </div>
+      </nav>
 
-      
       <AnimatePresence>
         {menuOpen && (
           <motion.nav
+            id="mobile-menu"
+            role="navigation"
+            aria-label="Menu mobile du site"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
@@ -225,35 +229,38 @@ export default function Header({ logoSrc, links }) {
                 {l.name}
               </LinkItem>
             ))}
+
             {isAdmin && (
               <LinkItem
                 to="/admin"
                 onClick={() => setMenuOpen(false)}
                 className="block w-full text-center py-3 text-[var(--accent)] font-semibold"
               >
-                <LayoutDashboard size={18} className="inline-block mr-2" />
+                <LayoutDashboard size={18} className="inline-block mr-2" aria-hidden="true" />
                 Dashboard
               </LinkItem>
             )}
+
             <div className="flex justify-center mt-4">
               <button
                 onClick={toggleTheme}
-                className="text-[var(--accent)] hover:text-[color-mix(in_oklab,var(--accent)_80%,var(--gold)_20%)] hover:scale-110 transition-transform duration-200"
                 aria-label="Basculer le thème"
+                className="text-[var(--accent)] hover:text-[color-mix(in_oklab,var(--accent)_80%,var(--gold)_20%)] hover:scale-110 transition-transform duration-200"
               >
                 {darkMode ? <FaSun size={22} /> : <FaMoon size={22} />}
               </button>
             </div>
+
             <div className="flex flex-col items-center gap-3 mt-6 text-sm">
               {user ? (
                 <>
                   <span className="text-[var(--accent)] flex items-center gap-2">
-                    <User size={16} />
+                    <User size={16} aria-hidden="true" />
                     {user.firstname || user.email}
                   </span>
                   {isAdmin && (
                     <span className="bg-[var(--accent)] text-[var(--bg)] text-xs px-2 py-1 rounded-md flex items-center gap-1">
-                      <Shield size={12} /> Admin
+                      <Shield size={12} aria-hidden="true" /> Admin
                     </span>
                   )}
                   <button
@@ -263,7 +270,7 @@ export default function Header({ logoSrc, links }) {
                     }}
                     className="text-[var(--accent)] hover:text-[color-mix(in_oklab,var(--accent)_80%,var(--gold)_20%)] flex items-center gap-1 mt-2"
                   >
-                    <LogOut size={14} /> Déconnexion
+                    <LogOut size={14} aria-hidden="true" /> Déconnexion
                   </button>
                 </>
               ) : (

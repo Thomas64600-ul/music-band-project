@@ -14,7 +14,6 @@ export default function Player({
   const [volume, setVolume] = useState(1);
   const [isMuted, setIsMuted] = useState(false);
 
- 
   const togglePlay = () => {
     const audio = audioRef.current;
     if (!audio) return;
@@ -23,7 +22,6 @@ export default function Player({
     setIsPlaying(!isPlaying);
   };
 
-  
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
@@ -35,7 +33,6 @@ export default function Player({
     audio.addEventListener("timeupdate", updateProgress);
     return () => audio.removeEventListener("timeupdate", updateProgress);
   }, []);
-
 
   const toggleMute = () => {
     const audio = audioRef.current;
@@ -51,7 +48,6 @@ export default function Player({
     setIsMuted(value === 0);
   };
 
-  
   useEffect(() => {
     if (autoplay && audioRef.current) {
       audioRef.current.play();
@@ -60,7 +56,9 @@ export default function Player({
   }, [autoplay]);
 
   return (
-    <div
+    <section
+      role="group"
+      aria-label={`Lecteur audio — ${title} par ${artist}`}
       className="
         w-full
         bg-[color-mix(in_oklab,var(--bg)_95%,black_5%)]
@@ -72,54 +70,66 @@ export default function Player({
         hover:shadow-[0_0_20px_var(--accent)]
       "
     >
- 
+    
       {cover && (
         <div className="relative w-full h-40 sm:h-48 overflow-hidden rounded-lg mb-4">
           <img
             src={cover}
-            alt={title}
+            alt={`Pochette de l'album ou du titre ${title}`}
             className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
           />
           {isPlaying && (
-            <div className="absolute inset-0 bg-[var(--accent)]/30 backdrop-blur-[2px] flex items-center justify-center">
+            <div
+              className="absolute inset-0 bg-[var(--accent)]/30 backdrop-blur-[2px] flex items-center justify-center"
+              aria-hidden="true"
+            >
               <FaPlay size={40} className="text-[var(--gold)] animate-pulse" />
             </div>
           )}
         </div>
       )}
 
-     
+      
       <div className="mb-3">
-        <h3 className="text-lg font-semibold text-[var(--accent)]">
-          {title}
-        </h3>
+        <h3 className="text-lg font-semibold text-[var(--accent)]">{title}</h3>
         <p className="text-sm text-[var(--subtext)] italic">{artist}</p>
       </div>
 
-  
-      <div className="flex items-center justify-center gap-6 py-2">
-    
+      <div
+        className="flex items-center justify-center gap-6 py-2"
+        role="group"
+        aria-label="Contrôles du lecteur"
+      >
+      
         <button
           onClick={togglePlay}
-          className={`relative text-[var(--accent)] hover:text-[var(--gold)] transition-transform duration-300 ${
+          aria-label={isPlaying ? "Mettre en pause" : "Lire le morceau"}
+          className={`relative text-[var(--accent)] hover:text-[var(--gold)] focus-visible:ring-2 focus-visible:ring-[var(--accent)]/60 focus:outline-none rounded-full transition-transform duration-300 ${
             isPlaying ? "scale-110" : "hover:scale-110"
           }`}
         >
           {isPlaying ? <FaPause size={28} /> : <FaPlay size={28} />}
           {isPlaying && (
-            <span className="absolute inset-0 rounded-full bg-[var(--accent)]/30 blur-md animate-pulse"></span>
+            <span
+              aria-hidden="true"
+              className="absolute inset-0 rounded-full bg-[var(--accent)]/30 blur-md animate-pulse"
+            ></span>
           )}
         </button>
 
-       
         <button
           onClick={toggleMute}
-          className="text-[var(--subtext)] hover:text-[var(--gold)] transition-colors duration-300"
+          aria-label={isMuted ? "Activer le son" : "Couper le son"}
+          className="text-[var(--subtext)] hover:text-[var(--gold)] focus-visible:ring-2 focus-visible:ring-[var(--accent)]/60 focus:outline-none rounded-md transition-colors duration-300"
         >
           {isMuted ? <FaVolumeMute size={20} /> : <FaVolumeUp size={20} />}
         </button>
 
+        <label htmlFor={`volume-${title}`} className="sr-only">
+          Volume
+        </label>
         <input
+          id={`volume-${title}`}
           type="range"
           min="0"
           max="1"
@@ -127,11 +137,21 @@ export default function Player({
           value={volume}
           onChange={handleVolume}
           className="w-20 accent-[var(--accent)] cursor-pointer"
+          aria-valuemin="0"
+          aria-valuemax="1"
+          aria-valuenow={volume}
+          aria-label={`Volume : ${Math.round(volume * 100)} %`}
         />
       </div>
 
-     
-      <div className="w-full bg-[var(--border)] h-1 rounded-full mt-2 mb-1 relative overflow-hidden">
+      <div
+        className="w-full bg-[var(--border)] h-1 rounded-full mt-2 mb-1 relative overflow-hidden"
+        role="progressbar"
+        aria-valuemin="0"
+        aria-valuemax="100"
+        aria-valuenow={progress}
+        aria-label="Progression du morceau"
+      >
         <div
           className={`absolute top-0 left-0 h-1 
             bg-gradient-to-r from-[var(--accent)] to-[var(--gold)] 
@@ -142,8 +162,14 @@ export default function Player({
         ></div>
       </div>
 
-      <audio ref={audioRef} src={src} preload="metadata" />
-    </div>
+      <audio
+        ref={audioRef}
+        src={src}
+        preload="metadata"
+        aria-hidden="true"
+        tabIndex={-1}
+      />
+    </section>
   );
 }
 

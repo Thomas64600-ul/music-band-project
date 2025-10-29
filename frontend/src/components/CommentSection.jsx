@@ -85,7 +85,11 @@ export default function CommentSection({ type, relatedId, user }) {
 
   if (loading)
     return (
-      <p className="text-[var(--subtext)] text-sm animate-pulse">
+      <p
+        role="status"
+        aria-live="polite"
+        className="text-[var(--subtext)] text-sm animate-pulse"
+      >
         Chargement des commentaires...
       </p>
     );
@@ -95,6 +99,7 @@ export default function CommentSection({ type, relatedId, user }) {
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
+      aria-label="Section des commentaires"
       className="
         mt-4 p-5 rounded-xl
         bg-[color-mix(in_oklab,var(--bg)_96%,black_4%)]
@@ -109,14 +114,18 @@ export default function CommentSection({ type, relatedId, user }) {
         Commentaires ({comments.length})
       </h3>
 
-      <div className="flex flex-col gap-3 mb-5 max-h-[280px] overflow-y-auto no-scrollbar">
+      <ul
+        className="flex flex-col gap-3 mb-5 max-h-[280px] overflow-y-auto no-scrollbar"
+        aria-live="polite"
+        aria-relevant="additions removals"
+      >
         {comments.length === 0 ? (
-          <p className="text-[var(--subtext)] text-sm italic">
+          <li className="text-[var(--subtext)] text-sm italic">
             Aucun commentaire pour le moment.
-          </p>
+          </li>
         ) : (
           comments.map((comment) => (
-            <motion.div
+            <motion.li
               key={comment.id}
               initial={{ opacity: 0, y: 8 }}
               animate={{
@@ -139,11 +148,20 @@ export default function CommentSection({ type, relatedId, user }) {
               "
             >
               {editingId === comment.id ? (
-                <form onSubmit={handleEdit} className="flex flex-col gap-2">
+                <form
+                  onSubmit={handleEdit}
+                  className="flex flex-col gap-2"
+                  aria-label="Formulaire de modification du commentaire"
+                >
+                  <label htmlFor={`edit-${comment.id}`} className="sr-only">
+                    Modifier votre commentaire
+                  </label>
                   <textarea
+                    id={`edit-${comment.id}`}
                     value={editedContent}
                     onChange={(e) => setEditedContent(e.target.value)}
                     rows={2}
+                    required
                     className="w-full p-2 rounded-md border border-[var(--accent)]/50 bg-[var(--bg)] text-[var(--text)] focus:ring-2 focus:ring-[var(--accent)]/70 transition-all"
                   />
                   <div className="flex justify-end gap-2">
@@ -163,8 +181,10 @@ export default function CommentSection({ type, relatedId, user }) {
                   </div>
                 </form>
               ) : (
-                <>
-                  <p className="text-sm leading-snug break-words">{comment.content}</p>
+                <article aria-label={`Commentaire de ${comment.firstname || "Utilisateur"}`}>
+                  <p className="text-sm leading-snug break-words">
+                    {comment.content}
+                  </p>
                   <p className="text-xs text-[var(--subtext)] mt-2">
                     Par{" "}
                     <span className="text-[var(--accent)] font-medium">
@@ -185,31 +205,42 @@ export default function CommentSection({ type, relatedId, user }) {
                       <button
                         onClick={() => startEdit(comment)}
                         className="text-[var(--accent)] hover:text-[var(--gold)] font-medium transition"
+                        aria-label={`Modifier le commentaire de ${comment.firstname}`}
                       >
                         Modifier
                       </button>
                       <button
                         onClick={() => handleDelete(comment.id)}
                         className="text-red-500 hover:text-red-400 font-medium transition"
+                        aria-label={`Supprimer le commentaire de ${comment.firstname}`}
                       >
                         Supprimer
                       </button>
                     </div>
                   )}
-                </>
+                </article>
               )}
-            </motion.div>
+            </motion.li>
           ))
         )}
-      </div>
+      </ul>
 
       {user ? (
-        <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+        <form
+          onSubmit={handleSubmit}
+          className="flex flex-col gap-3"
+          aria-label="Formulaire de publication d’un commentaire"
+        >
+          <label htmlFor="newComment" className="sr-only">
+            Écrire un commentaire
+          </label>
           <textarea
+            id="newComment"
             value={newComment}
             onChange={(e) => setNewComment(e.target.value)}
             placeholder="Écrire un commentaire..."
             rows={2}
+            required
             className="
               w-full p-3 rounded-md border border-[var(--border)]
               bg-[color-mix(in_oklab,var(--bg)_96%,black_4%)] text-[var(--text)]
@@ -237,7 +268,12 @@ export default function CommentSection({ type, relatedId, user }) {
       )}
 
       {error && (
-        <p className="text-[var(--accent)] text-sm mt-3 italic">{error}</p>
+        <p
+          role="alert"
+          className="text-[var(--accent)] text-sm mt-3 italic"
+        >
+          {error}
+        </p>
       )}
     </motion.section>
   );

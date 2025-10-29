@@ -54,7 +54,7 @@ export default function ArticleDetail() {
         transition-colors duration-700 ease-in-out
       "
     >
-    
+   
       <div
         className="
           absolute top-[25%] left-1/2 -translate-x-1/2 
@@ -64,14 +64,16 @@ export default function ArticleDetail() {
         "
       ></div>
 
-      <h1 className="
+      <h1
+        className="
         text-4xl md:text-5xl font-extrabold text-center
         text-[var(--accent)] mb-6
         drop-shadow-[0_0_18px_var(--accent)]
         hover:text-[var(--gold)] hover:drop-shadow-[0_0_20px_var(--gold)]
         transition-all duration-500 ease-in-out
         max-w-3xl leading-tight
-      ">
+      "
+      >
         {article.title}
       </h1>
 
@@ -88,25 +90,23 @@ export default function ArticleDetail() {
         </span>
       </p>
 
-    
       <motion.article
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
         className="
           relative max-w-3xl w-full
-          bg-[color-mix(in_oklab,var(--bg)_96%,var(--accent)_4%)]
-          border border-[color-mix(in_oklab,var(--accent)_50%,transparent_50%)]
+          bg-[var(--surface)]
+          border border-[var(--accent)]/40
           rounded-2xl
-          shadow-[0_0_25px_rgba(179,18,45,0.35)]
-          hover:shadow-[0_0_40px_rgba(179,18,45,0.5)]
+          shadow-[0_0_25px_var(--accent)]
+          hover:shadow-[0_0_40px_var(--accent)]
           hover:border-[var(--accent)]
           p-8 sm:p-10
           text-[var(--text)] leading-relaxed
           transition-all duration-700 ease-in-out
         "
       >
-   
         {article.image_url && (
           <img
             src={article.image_url}
@@ -114,8 +114,8 @@ export default function ArticleDetail() {
             className="
               w-full h-80 object-cover rounded-xl mb-8
               border border-[var(--accent)]/40
-              shadow-[0_0_25px_rgba(179,18,45,0.3)]
-              hover:shadow-[0_0_40px_rgba(179,18,45,0.5)]
+              shadow-[0_0_25px_var(--accent)]
+              hover:shadow-[0_0_40px_var(--accent)]
               transition-all duration-500
             "
             loading="lazy"
@@ -138,8 +138,8 @@ export default function ArticleDetail() {
       <div
         className="
           w-full max-w-3xl mt-12 p-6 rounded-xl
-          bg-[color-mix(in_oklab,var(--bg)_96%,black_4%)]
-          border border-[var(--border)]
+          bg-[var(--surface)]
+          border border-[var(--accent)]/30
           hover:border-[var(--accent)]
           hover:shadow-[0_0_20px_var(--accent)]
           transition-all duration-500

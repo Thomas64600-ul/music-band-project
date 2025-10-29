@@ -87,6 +87,7 @@ export default function Articles() {
         <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-40 h-[2px] bg-gradient-to-r from-transparent via-[var(--gold)] to-transparent animate-glow-line"></div>
       </div>
 
+
       <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 w-full max-w-6xl mb-20">
         {articles.map((a) => (
           <motion.article
@@ -98,7 +99,7 @@ export default function Articles() {
             className="
               relative rounded-2xl overflow-hidden
               bg-[var(--surface)] text-[var(--text)]
-              border border-[var(--border)]
+              border border-[var(--accent)]/30
               hover:border-[var(--accent)]
               hover:shadow-[0_0_25px_var(--accent)]
               transition-all duration-500 flex flex-col

@@ -25,7 +25,7 @@ export default function AdminDashboard() {
         transition-colors duration-700 ease-in-out
       "
     >
-      
+     
       <div
         className="
           absolute inset-0 -z-10
@@ -67,93 +67,29 @@ export default function AdminDashboard() {
         </p>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 text-center">
-          <Button
-            onClick={() => navigate("/admin/articles")}
-            className="
-              bg-[var(--accent)] text-white py-3 rounded-lg font-semibold
-              hover:bg-[var(--gold)] hover:text-[var(--bg)]
-              hover:shadow-[0_0_15px_var(--accent)] transition-all duration-300
-            "
-          >
-            GÉRER LES ARTICLES
-          </Button>
-
-          <Button
-            onClick={() => navigate("/admin/concerts")}
-            className="
-              bg-[var(--accent)] text-white py-3 rounded-lg font-semibold
-              hover:bg-[var(--gold)] hover:text-[var(--bg)]
-              hover:shadow-[0_0_15px_var(--accent)] transition-all duration-300
-            "
-          >
-            GÉRER LES CONCERTS
-          </Button>
-
-          <Button
-            onClick={() => navigate("/admin/musics")}
-            className="
-              bg-[var(--accent)] text-white py-3 rounded-lg font-semibold
-              hover:bg-[var(--gold)] hover:text-[var(--bg)]
-              hover:shadow-[0_0_15px_var(--accent)] transition-all duration-300
-            "
-          >
-            GÉRER LES MUSIQUES
-          </Button>
-
-          <Button
-            onClick={() => navigate("/admin/donations")}
-            className="
-              bg-[var(--accent)] text-white py-3 rounded-lg font-semibold
-              hover:bg-[var(--gold)] hover:text-[var(--bg)]
-              hover:shadow-[0_0_15px_var(--accent)] transition-all duration-300
-            "
-          >
-            GÉRER LES DONS
-          </Button>
-
-          <Button
-            onClick={() => navigate("/admin/messages")}
-            className="
-              bg-[var(--accent)] text-white py-3 rounded-lg font-semibold
-              hover:bg-[var(--gold)] hover:text-[var(--bg)]
-              hover:shadow-[0_0_15px_var(--accent)] transition-all duration-300
-            "
-          >
-            GÉRER LES MESSAGES
-          </Button>
-
-          <Button
-            onClick={() => navigate("/admin/comments")}
-            className="
-              bg-[var(--accent)] text-white py-3 rounded-lg font-semibold
-              hover:bg-[var(--gold)] hover:text-[var(--bg)]
-              hover:shadow-[0_0_15px_var(--accent)] transition-all duration-300
-            "
-          >
-            GÉRER LES COMMENTAIRES
-          </Button>
-
-          <Button
-            onClick={() => navigate("/admin/users")}
-            className="
-              bg-[var(--accent)] text-white py-3 rounded-lg font-semibold
-              hover:bg-[var(--gold)] hover:text-[var(--bg)]
-              hover:shadow-[0_0_15px_var(--accent)] transition-all duration-300
-            "
-          >
-            GÉRER LES UTILISATEURS
-          </Button>
-
-          <Button
-            onClick={() => navigate("/admin/stats")}
-            className="
-              bg-[var(--accent)] text-white py-3 rounded-lg font-semibold
-              hover:bg-[var(--gold)] hover:text-[var(--bg)]
-              hover:shadow-[0_0_15px_var(--accent)] transition-all duration-300
-            "
-          >
-            STATISTIQUES GLOBALES
-          </Button>
+          {[
+            { label: "GÉRER LES ARTICLES", path: "/admin/articles" },
+            { label: "GÉRER LES CONCERTS", path: "/admin/concerts" },
+            { label: "GÉRER LES MUSIQUES", path: "/admin/musics" },
+            { label: "GÉRER LES DONS", path: "/admin/donations" },
+            { label: "GÉRER LES MESSAGES", path: "/admin/messages" },
+            { label: "GÉRER LES COMMENTAIRES", path: "/admin/comments" },
+            { label: "GÉRER LES UTILISATEURS", path: "/admin/users" },
+            { label: "STATISTIQUES GLOBALES", path: "/admin/stats" },
+          ].map(({ label, path }, index) => (
+            <Button
+              key={index}
+              onClick={() => navigate(path)}
+              className="
+                bg-[var(--accent)] text-white py-3 rounded-lg font-semibold
+                hover:bg-[var(--gold)] hover:text-[var(--bg)]
+                hover:shadow-[0_0_15px_var(--accent)]
+                transition-all duration-300
+              "
+            >
+              {label}
+            </Button>
+          ))}
         </div>
       </div>
 

@@ -22,13 +22,14 @@ export default function Login() {
       setStatus("success");
       navigate("/");
     } catch (e) {
-      console.error(e);
+      console.error("Erreur connexion :", e);
       setStatus("error");
     }
   }
 
   return (
-    <motion.div
+    <motion.main
+      role="main"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.8 }}
@@ -41,6 +42,7 @@ export default function Login() {
     >
      
       <div
+        aria-hidden="true"
         className="
           absolute inset-0 -z-10
           bg-[radial-gradient(circle_at_center,#B3122D33_0%,transparent_70%)]
@@ -50,6 +52,7 @@ export default function Login() {
 
       <form
         onSubmit={onSubmit}
+        aria-label="Formulaire de connexion"
         className="
           relative w-full max-w-md
           bg-[color-mix(in_oklab,var(--bg)_95%,black_5%)]
@@ -61,7 +64,13 @@ export default function Login() {
           p-8 sm:p-10
         "
       >
-        <h1 className="text-3xl font-extrabold text-center text-[var(--accent)] mb-8 drop-shadow-[0_0_12px_var(--accent)]">
+        <h1
+          className="
+            text-3xl font-extrabold text-center
+            text-[var(--accent)] mb-8
+            drop-shadow-[0_0_12px_var(--accent)]
+          "
+        >
           Connexion
         </h1>
 
@@ -70,20 +79,23 @@ export default function Login() {
             htmlFor="email"
             className="block text-[var(--subtext)] mb-2 font-medium"
           >
-            Email
+            Adresse email
           </label>
           <input
             id="email"
             type="email"
             value={form.email}
             onChange={onChange}
+            autoComplete="email"
             required
+            placeholder="exemple@mail.com"
             className="
               w-full p-3 rounded-md
               bg-[color-mix(in_oklab,var(--bg)_90%,black_10%)]
               text-[var(--text)]
               border border-[var(--border)]/40
-              focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/40
+              focus:border-[var(--accent)]
+              focus:ring-2 focus:ring-[var(--accent)]/40
               outline-none transition-all duration-300
             "
           />
@@ -101,13 +113,16 @@ export default function Login() {
             type="password"
             value={form.password}
             onChange={onChange}
+            autoComplete="current-password"
             required
+            placeholder="Votre mot de passe"
             className="
               w-full p-3 rounded-md
               bg-[color-mix(in_oklab,var(--bg)_90%,black_10%)]
               text-[var(--text)]
               border border-[var(--border)]/40
-              focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/40
+              focus:border-[var(--accent)]
+              focus:ring-2 focus:ring-[var(--accent)]/40
               outline-none transition-all duration-300
             "
           />
@@ -115,7 +130,6 @@ export default function Login() {
 
         <div className="text-center">
           <Button
-            variant="primary"
             type="submit"
             disabled={status === "loading"}
             className="
@@ -125,20 +139,25 @@ export default function Login() {
               hover:shadow-[0_0_25px_var(--accent)]
               active:scale-95
               transition-all duration-300 ease-in-out
+              w-full
             "
           >
             {status === "loading" ? "Connexion..." : "Se connecter"}
           </Button>
 
           {status === "error" && (
-            <p className="mt-4 text-red-400 font-semibold">
-              ⚠️ Échec de la connexion
+            <p
+              role="alert"
+              className="mt-4 text-red-400 font-semibold"
+            >
+              Échec de la connexion. Vérifiez vos identifiants.
             </p>
           )}
         </div>
       </form>
 
       <div
+        aria-hidden="true"
         className="
           absolute bottom-0 left-1/2 -translate-x-1/2
           w-[60vw] h-[60vw]
@@ -146,6 +165,7 @@ export default function Login() {
           blur-[120px] opacity-60 pointer-events-none
         "
       ></div>
-    </motion.div>
+    </motion.main>
   );
 }
+

@@ -20,6 +20,7 @@ export default function Cagnotte() {
     const duration = 1.5 * 1000;
     const end = Date.now() + duration;
     const colors = ["#B3122D", "#FFD700", "#FF4C4C"];
+
     (function frame() {
       confetti({
         particleCount: 4,
@@ -40,17 +41,22 @@ export default function Cagnotte() {
   };
 
   const handleStripeDonation = async (amount) => {
-    if (!amount || isNaN(amount)) return alert("Veuillez saisir un montant valide.");
+    if (!amount || isNaN(amount))
+      return alert("Veuillez saisir un montant valide.");
     if (!email) return alert("Veuillez saisir votre adresse email.");
 
     try {
       setLoading(true);
+      setLastAmount(amount);
       await createStripeSession({
         amount: parseFloat(amount),
         message,
         email,
         user_id: localStorage.getItem("userId") || null,
       });
+
+      setShowModal(true); 
+      launchConfetti(); 
     } catch (error) {
       console.error("Erreur Stripe:", error);
       alert("Erreur lors de la création du paiement.");
@@ -82,18 +88,18 @@ export default function Cagnotte() {
         text-center relative overflow-hidden transition-colors duration-700
       "
     >
-      
+   
       <div
         className="
           absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
-          w-[80vw] h-[80vw]
+          w-[80vw] sm:w-[60vw] h-[80vw] sm:h-[60vw]
           bg-[radial-gradient(circle_at_center,#FFD1A133_0%,transparent_70%)]
           dark:bg-[radial-gradient(circle_at_center,#B3122D44_0%,transparent_70%)]
           blur-[150px] opacity-60 pointer-events-none -z-10
         "
       ></div>
 
-     
+   
       <div className="relative inline-block mb-12">
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#B3122D33] to-transparent blur-md"></div>
         <h2 className="relative text-3xl md:text-4xl font-extrabold text-[#B3122D] drop-shadow-[0_0_10px_#B3122D55] tracking-wider">
@@ -106,7 +112,7 @@ export default function Cagnotte() {
         Aidez-nous à financer notre prochain album et nos tournées !
       </p>
 
-      
+    
       <div className="max-w-md mx-auto mb-14">
         <div className="bg-gray-200 dark:bg-[#1A1A1A] rounded-full h-4 overflow-hidden shadow-inner">
           <div
@@ -114,12 +120,15 @@ export default function Cagnotte() {
             style={{ width: `${percentage}%` }}
           ></div>
         </div>
-        <p className="text-sm text-gray-600 dark:text-gray-400 mt-3 font-medium">
-          {collected.toLocaleString()} € collectés sur {goal.toLocaleString()} € ({percentage}%)
+        <p className="text-sm text-gray-600 dark:text-gray-400 mt-3 font-medium transition-all">
+          {collected.toLocaleString()} € collectés sur {goal.toLocaleString()} €
+          {"  "}
+          <span className="text-[#B3122D] font-semibold">
+            ({percentage}%)
+          </span>
         </p>
       </div>
 
-      
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
         {donations.map((d, i) => (
           <DonationCard
@@ -131,7 +140,6 @@ export default function Cagnotte() {
         ))}
       </div>
 
-      
       <div
         className="
           max-w-md mx-auto bg-white dark:bg-[#111] 
@@ -195,13 +203,13 @@ export default function Cagnotte() {
             bg-[#B3122D] hover:bg-[#A01025]
             text-white font-semibold py-2 px-6 rounded-full 
             transition-all duration-300 w-full disabled:opacity-50
+            hover:shadow-[0_0_25px_#B3122D88] active:scale-[0.97]
           "
         >
           {loading ? "Redirection..." : "Faire un don"}
         </button>
       </div>
 
-      
       <AnimatePresence>
         {showModal && (
           <>
@@ -224,7 +232,9 @@ export default function Cagnotte() {
                 </h3>
                 <p className="text-gray-700 dark:text-gray-300">
                   Vous venez de contribuer à hauteur de{" "}
-                  <span className="text-[#B3122D] font-semibold">{lastAmount} €</span>{" "}
+                  <span className="text-[#B3122D] font-semibold">
+                    {lastAmount} €
+                  </span>{" "}
                   à l’aventure REVEREN.
                 </p>
                 <button
@@ -241,5 +251,6 @@ export default function Cagnotte() {
     </section>
   );
 }
+
 
 

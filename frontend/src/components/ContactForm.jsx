@@ -26,6 +26,8 @@ export default function ContactForm() {
   return (
     <form
       onSubmit={onSubmit}
+      aria-labelledby="contact-title"
+      aria-describedby="contact-infos"
       className="
         bg-[var(--surface)]
         border border-[var(--border)]
@@ -36,7 +38,14 @@ export default function ContactForm() {
         hover:border-[var(--accent)]
       "
     >
-      
+     
+      <h2 id="contact-title" className="sr-only">
+        Formulaire de contact
+      </h2>
+      <p id="contact-infos" className="sr-only">
+        Utilisez ce formulaire pour envoyer un message au groupe REVEREN.
+      </p>
+
       <div>
         <label
           htmlFor="name"
@@ -50,19 +59,21 @@ export default function ContactForm() {
           onChange={onChange}
           type="text"
           placeholder="Votre nom"
+          autoComplete="name"
+          aria-required="true"
           className="
             w-full p-3 rounded-md 
             bg-[color-mix(in_oklab,var(--surface)_90%,black_10%)]
             text-[var(--text)]
             border border-[var(--border)]
             focus:border-[var(--accent)]
+            focus:ring-2 focus:ring-[var(--accent)]/40
             outline-none transition-all duration-200
           "
           required
         />
       </div>
 
-      
       <div>
         <label
           htmlFor="email"
@@ -76,19 +87,21 @@ export default function ContactForm() {
           onChange={onChange}
           type="email"
           placeholder="vous@exemple.com"
+          autoComplete="email"
+          aria-required="true"
           className="
             w-full p-3 rounded-md 
             bg-[color-mix(in_oklab,var(--surface)_90%,black_10%)]
             text-[var(--text)]
             border border-[var(--border)]
             focus:border-[var(--accent)]
+            focus:ring-2 focus:ring-[var(--accent)]/40
             outline-none transition-all duration-200
           "
           required
         />
       </div>
 
-      
       <div>
         <label
           htmlFor="message"
@@ -102,24 +115,28 @@ export default function ContactForm() {
           onChange={onChange}
           rows="5"
           placeholder="Votre message..."
+          aria-required="true"
+          maxLength="1000"
           className="
             w-full p-3 rounded-md 
             bg-[color-mix(in_oklab,var(--surface)_90%,black_10%)]
             text-[var(--text)]
             border border-[var(--border)]
             focus:border-[var(--accent)]
+            focus:ring-2 focus:ring-[var(--accent)]/40
             outline-none transition-all duration-200
           "
           required
         />
       </div>
 
-     
       <div className="text-center">
         <Button
           variant="primary"
           type="submit"
           disabled={status === "loading"}
+          aria-busy={status === "loading"}
+          aria-live="polite"
           className="
             font-semibold py-2 px-8 rounded-full 
             bg-[var(--accent)] text-[var(--bg)]
@@ -133,12 +150,21 @@ export default function ContactForm() {
         </Button>
 
         {status === "success" && (
-          <p className="mt-3 text-[var(--cyan)] font-medium animate-pulse">
-            Message envoyé avec succès 🎉
+          <p
+            role="status"
+            aria-live="polite"
+            className="mt-3 text-[var(--cyan)] font-medium animate-pulse"
+          >
+            Message envoyé avec succès 
           </p>
         )}
+
         {status === "error" && (
-          <p className="mt-3 text-[color-mix(in_oklab,red_80%,var(--accent)_20%)] font-medium animate-pulse">
+          <p
+            role="alert"
+            aria-live="assertive"
+            className="mt-3 text-[color-mix(in_oklab,red_80%,var(--accent)_20%)] font-medium animate-pulse"
+          >
             Échec de l’envoi. Réessayez.
           </p>
         )}

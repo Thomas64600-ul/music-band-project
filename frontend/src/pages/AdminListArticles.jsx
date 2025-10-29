@@ -60,7 +60,7 @@ export default function AdminListArticles() {
         transition-colors duration-700 ease-in-out
       "
     >
-      
+     
       <div
         className="
           absolute inset-0 -z-10
@@ -74,8 +74,8 @@ export default function AdminListArticles() {
           relative w-full max-w-7xl
           border border-[color-mix(in_oklab,var(--accent)_70%,transparent_30%)]
           rounded-2xl
-          shadow-[0_0_25px_color-mix(in_oklab,var(--accent)_40%,transparent_60%)]
-          hover:shadow-[0_0_40px_color-mix(in_oklab,var(--accent)_60%,transparent_40%)]
+          shadow-[0_0_25px_var(--accent)]
+          hover:shadow-[0_0_40px_var(--accent)]
           bg-[color-mix(in_oklab,var(--bg)_96%,var(--accent)_4%)]
           transition-all duration-500
           p-6 sm:p-10
@@ -117,11 +117,10 @@ export default function AdminListArticles() {
                     border border-[color-mix(in_oklab,var(--accent)_40%,transparent_60%)]
                     rounded-xl p-4 relative
                     bg-[color-mix(in_oklab,var(--bg)_95%,var(--accent)_5%)]
-                    shadow-[0_0_25px_color-mix(in_oklab,var(--accent)_25%,transparent_75%)]
+                    shadow-[0_0_25px_var(--accent)]
                     flex flex-col gap-3 overflow-hidden
                   "
                 >
-               
                   <div
                     className="
                       absolute inset-0 -z-10
@@ -168,8 +167,8 @@ export default function AdminListArticles() {
                         hover:bg-[var(--accent)] hover:text-[var(--bg)]
                         flex-1 min-w-[90px]
                         py-2 text-sm font-semibold rounded-lg
-                        shadow-[0_0_8px_color-mix(in_oklab,var(--accent)_40%,transparent_60%)]
-                        hover:shadow-[0_0_15px_color-mix(in_oklab,var(--accent)_70%,transparent_30%)]
+                        shadow-[0_0_10px_var(--accent)]
+                        hover:shadow-[0_0_15px_var(--accent)]
                         transition-all duration-300
                       "
                     >
@@ -183,8 +182,8 @@ export default function AdminListArticles() {
                         hover:bg-[var(--gold)] hover:text-[var(--bg)]
                         flex-1 min-w-[90px]
                         py-2 text-sm font-semibold rounded-lg
-                        shadow-[0_0_8px_color-mix(in_oklab,var(--accent)_40%,transparent_60%)]
-                        hover:shadow-[0_0_15px_color-mix(in_oklab,var(--accent)_70%,transparent_30%)]
+                        shadow-[0_0_10px_var(--accent)]
+                        hover:shadow-[0_0_15px_var(--gold)]
                         transition-all duration-300
                       "
                     >
@@ -198,8 +197,8 @@ export default function AdminListArticles() {
                         hover:text-[var(--accent)] hover:border-[var(--accent)]
                         flex-1 min-w-[90px]
                         py-2 text-sm font-semibold rounded-lg
-                        shadow-[0_0_8px_color-mix(in_oklab,var(--accent)_20%,transparent_80%)]
-                        hover:shadow-[0_0_12px_color-mix(in_oklab,var(--accent)_50%,transparent_50%)]
+                        shadow-[0_0_8px_var(--accent)]
+                        hover:shadow-[0_0_12px_var(--accent)]
                         transition-all duration-300
                       "
                     >
@@ -215,7 +214,7 @@ export default function AdminListArticles() {
                 hidden sm:block overflow-x-auto rounded-2xl
                 border border-[color-mix(in_oklab,var(--accent)_40%,transparent_60%)]
                 bg-[color-mix(in_oklab,var(--bg)_94%,var(--accent)_6%)]
-                shadow-[0_0_25px_color-mix(in_oklab,var(--accent)_30%,transparent_70%)]
+                shadow-[0_0_25px_var(--accent)]
                 transition-all duration-500
                 w-full
               "
@@ -255,7 +254,7 @@ export default function AdminListArticles() {
                           <img
                             src={a.image_url}
                             alt={a.title}
-                            className="w-20 h-14 object-cover rounded-md border border-[color-mix(in_oklab,var(--accent)_30%,transparent_70%)]"
+                            className="w-20 h-14 object-cover rounded-md border border-[var(--accent)]/40"
                           />
                         ) : (
                           <div className="w-20 h-14 bg-[color-mix(in_oklab,var(--accent)_10%,var(--bg)_90%)] rounded-md flex items-center justify-center text-[var(--subtext)] text-xs">
@@ -285,8 +284,8 @@ export default function AdminListArticles() {
                             border border-[var(--accent)] text-[var(--accent)]
                             hover:bg-[var(--accent)] hover:text-[var(--bg)]
                             w-28 transition-all duration-300
-                            shadow-[0_0_10px_color-mix(in_oklab,var(--accent)_30%,transparent_70%)]
-                            hover:shadow-[0_0_18px_color-mix(in_oklab,var(--accent)_50%,transparent_50%)]
+                            shadow-[0_0_10px_var(--accent)]
+                            hover:shadow-[0_0_18px_var(--accent)]
                           "
                         >
                           Modifier
@@ -297,8 +296,8 @@ export default function AdminListArticles() {
                             bg-[var(--accent)] text-white 
                             hover:bg-[var(--gold)] hover:text-[var(--bg)]
                             w-28 transition-all duration-300
-                            shadow-[0_0_10px_color-mix(in_oklab,var(--accent)_30%,transparent_70%)]
-                            hover:shadow-[0_0_18px_color-mix(in_oklab,var(--accent)_50%,transparent_50%)]
+                            shadow-[0_0_10px_var(--accent)]
+                            hover:shadow-[0_0_18px_var(--gold)]
                           "
                         >
                           Supprimer

@@ -33,30 +33,37 @@ export default function Music() {
 
   if (loading)
     return (
-      <p className="text-center text-[var(--subtext)] mt-20 animate-pulse">
+      <p
+        role="status"
+        className="text-center text-[var(--subtext)] mt-20 animate-pulse"
+      >
         Chargement des morceaux...
       </p>
     );
 
   if (!musics.length)
     return (
-      <section className="bg-[var(--bg)] text-center py-24 text-[var(--text)] transition-colors duration-700 ease-in-out">
+      <main
+        role="main"
+        className="bg-[var(--bg)] text-center py-24 text-[var(--text)] transition-colors duration-700 ease-in-out"
+      >
         <h1 className="text-3xl font-bold text-[var(--accent)] mb-4 drop-shadow-[0_0_10px_var(--accent)]">
           Aucune musique publiée
         </h1>
         <p className="text-[var(--subtext)] max-w-md mx-auto">
           Restez à l’écoute —{" "}
-          <span className="text-[var(--accent)]">REVEREN</span> prépare du lourd 🔥
+          <span className="text-[var(--accent)] font-semibold">REVEREN</span> prépare du lourd 🔥
         </p>
 
         <div className="max-w-4xl mx-auto mt-16 px-6">
           <CommentSection type="music" relatedId={0} user={user} />
         </div>
-      </section>
+      </main>
     );
 
   return (
     <motion.main
+      role="main"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.8 }}
@@ -69,8 +76,9 @@ export default function Music() {
         overflow-hidden
       "
     >
-   
+ 
       <div
+        aria-hidden="true"
         className="
           absolute top-[35%] left-1/2 -translate-x-1/2 
           w-[70vw] h-[70vw]
@@ -79,17 +87,24 @@ export default function Music() {
         "
       ></div>
 
-     
       <div className="relative inline-block mb-10 text-center">
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[var(--accent)]/30 to-transparent blur-md"></div>
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 bg-gradient-to-r from-transparent via-[var(--accent)]/30 to-transparent blur-md"
+        ></div>
         <h1 className="relative text-4xl md:text-5xl font-extrabold text-[var(--accent)] drop-shadow-[0_0_12px_var(--accent)] tracking-wide">
           Musiques
         </h1>
-        <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-40 h-[2px] bg-gradient-to-r from-transparent via-[var(--gold)] to-transparent animate-glow-line"></div>
+        <div
+          aria-hidden="true"
+          className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-40 h-[2px] bg-gradient-to-r from-transparent via-[var(--gold)] to-transparent animate-glow-line"
+        ></div>
       </div>
 
-    
-      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 w-full max-w-6xl mb-20">
+      <section
+        aria-label="Liste des morceaux disponibles"
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 w-full max-w-6xl mb-20"
+      >
         {musics.map((m) => (
           <motion.article
             key={m.id}
@@ -106,7 +121,6 @@ export default function Music() {
               transition-all duration-500 flex flex-col
             "
           >
-          
             <div className="flex flex-col flex-grow p-5 sm:p-6 text-center">
               <Player
                 src={m.url}
@@ -123,7 +137,10 @@ export default function Music() {
         ))}
       </section>
 
-      <section className="text-center max-w-xl mt-12 mb-32">
+      <section
+        aria-label="Dernier EP de REVEREN"
+        className="text-center max-w-xl mt-12 mb-32"
+      >
         <h2 className="text-2xl font-semibold mb-3 text-[var(--gold)] tracking-wide">
           Nouvel EP –{" "}
           <span className="text-[var(--accent)] italic">Electric Sunrise</span>
@@ -137,6 +154,8 @@ export default function Music() {
           variant="primary"
           as="a"
           href="https://spotify.com"
+          target="_blank"
+          rel="noopener noreferrer"
           className="
             mt-2 px-6 py-3 rounded-md 
             bg-[var(--accent)] text-white font-semibold 
@@ -151,6 +170,7 @@ export default function Music() {
       </section>
 
       <div
+        aria-hidden="true"
         className="
           absolute bottom-0 left-1/2 -translate-x-1/2 
           w-[45vw] h-[45vw]

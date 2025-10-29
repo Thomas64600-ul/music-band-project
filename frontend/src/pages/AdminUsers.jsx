@@ -72,7 +72,7 @@ export default function AdminUsers() {
         transition-colors duration-700 ease-in-out
       "
     >
-    
+   
       <div
         className="
           absolute inset-0 -z-10
@@ -81,20 +81,18 @@ export default function AdminUsers() {
         "
       ></div>
 
-   
       <div
         className="
           relative w-full max-w-7xl
-          border border-[color-mix(in_oklab,var(--accent)_70%,transparent_30%)]
+          border border-[var(--accent)]/40
           rounded-2xl
-          shadow-[0_0_25px_color-mix(in_oklab,var(--accent)_40%,transparent_60%)]
-          hover:shadow-[0_0_40px_color-mix(in_oklab,var(--accent)_60%,transparent_40%)]
-          bg-[color-mix(in_oklab,var(--bg)_96%,var(--accent)_4%)]
+          shadow-[0_0_25px_var(--accent)]
+          hover:shadow-[0_0_40px_var(--accent)]
+          bg-[var(--surface)]
           transition-all duration-500
           p-6 sm:p-10
         "
       >
-      
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-10 text-center sm:text-left">
           <h1 className="text-3xl font-extrabold text-[var(--accent)] drop-shadow-[0_0_12px_var(--accent)]">
             Gestion des utilisateurs
@@ -105,7 +103,8 @@ export default function AdminUsers() {
               border border-[var(--accent)] text-[var(--accent)]
               hover:bg-[var(--accent)] hover:text-[var(--bg)]
               font-semibold px-6 py-2 rounded-xl
-              shadow-[0_0_12px_var(--accent)]/40 transition-all duration-300
+              shadow-[0_0_12px_var(--accent)]
+              transition-all duration-300
             "
           >
             ⏎ Retour Dashboard
@@ -118,7 +117,7 @@ export default function AdminUsers() {
           </p>
         ) : (
           <>
-           
+          
             <div className="block sm:hidden space-y-4">
               {users.map((u) => (
                 <motion.div
@@ -127,10 +126,10 @@ export default function AdminUsers() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.3 }}
                   className="
-                    border border-[color-mix(in_oklab,var(--accent)_40%,transparent_60%)]
+                    border border-[var(--accent)]/40
                     rounded-xl p-4
-                    bg-[color-mix(in_oklab,var(--bg)_95%,var(--accent)_5%)]
-                    shadow-[0_0_20px_color-mix(in_oklab,var(--accent)_25%,transparent_75%)]
+                    bg-[var(--surface)]
+                    shadow-[0_0_20px_var(--accent)]
                     flex flex-col gap-2
                   "
                 >
@@ -150,17 +149,13 @@ export default function AdminUsers() {
                   <p className="text-[var(--subtext)] text-sm">{u.email}</p>
 
                   <div className="flex items-center gap-2 mt-2">
-                    <label className="text-sm text-[var(--subtext)]">
-                      Rôle :
-                    </label>
+                    <label className="text-sm text-[var(--subtext)]">Rôle :</label>
                     <select
                       value={u.role}
                       onChange={(e) => handleRoleChange(u.id, e.target.value)}
                       className="
-                        flex-1 bg-[color-mix(in_oklab,var(--bg)_94%,black_6%)]
-                        border border-[color-mix(in_oklab,var(--accent)_40%,transparent_60%)]
-                        text-[color-mix(in_oklab,var(--text)_90%,var(--accent)_10%)]
-                        rounded-md px-2 py-1
+                        flex-1 bg-[var(--bg)] border border-[var(--accent)]/40
+                        text-[var(--text)] rounded-md px-2 py-1
                         focus:border-[var(--accent)]
                         focus:ring-1 focus:ring-[var(--accent)]/40
                         transition-all duration-300
@@ -189,9 +184,9 @@ export default function AdminUsers() {
             <div
               className="
                 hidden sm:block overflow-x-auto rounded-2xl
-                border border-[color-mix(in_oklab,var(--accent)_40%,transparent_60%)]
-                bg-[color-mix(in_oklab,var(--bg)_94%,var(--accent)_6%)]
-                shadow-[0_0_25px_color-mix(in_oklab,var(--accent)_30%,transparent_70%)]
+                border border-[var(--accent)]/40
+                bg-[var(--surface)]
+                shadow-[0_0_25px_var(--accent)]
                 transition-all duration-500
                 w-full
               "
@@ -199,9 +194,8 @@ export default function AdminUsers() {
               <table className="w-full text-sm sm:text-base border-collapse">
                 <thead
                   className="
-                    bg-[color-mix(in_oklab,var(--accent)_10%,var(--bg)_90%)]
-                    text-[var(--accent)] uppercase tracking-wide
-                    border-b border-[color-mix(in_oklab,var(--accent)_40%,transparent_60%)]
+                    bg-[var(--accent)]/10 text-[var(--accent)] uppercase tracking-wide
+                    border-b border-[var(--accent)]/40
                   "
                 >
                   <tr>
@@ -221,12 +215,12 @@ export default function AdminUsers() {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: index * 0.05 }}
                       className="
-                        border-b border-[color-mix(in_oklab,var(--accent)_25%,transparent_75%)]
-                        hover:bg-[color-mix(in_oklab,var(--accent)_12%,transparent_88%)]
+                        border-b border-[var(--accent)]/25
+                        hover:bg-[var(--accent)]/10
                         transition-all duration-300
                       "
                     >
-                      <td className="py-3 px-4 font-semibold text-[color-mix(in_oklab,var(--text)_90%,var(--accent)_10%)] whitespace-nowrap">
+                      <td className="py-3 px-4 font-semibold text-[var(--text)] whitespace-nowrap">
                         {u.firstname} {u.lastname}
                       </td>
                       <td className="py-3 px-4 text-[var(--accent)] whitespace-nowrap">
@@ -235,14 +229,10 @@ export default function AdminUsers() {
                       <td className="py-3 px-4">
                         <select
                           value={u.role}
-                          onChange={(e) =>
-                            handleRoleChange(u.id, e.target.value)
-                          }
+                          onChange={(e) => handleRoleChange(u.id, e.target.value)}
                           className="
-                            bg-[color-mix(in_oklab,var(--bg)_94%,black_6%)]
-                            border border-[color-mix(in_oklab,var(--accent)_40%,transparent_60%)]
-                            text-[color-mix(in_oklab,var(--text)_90%,var(--accent)_10%)]
-                            rounded-md px-3 py-1
+                            bg-[var(--bg)] border border-[var(--accent)]/40
+                            text-[var(--text)] rounded-md px-3 py-1
                             focus:border-[var(--accent)]
                             focus:ring-1 focus:ring-[var(--accent)]/40
                             transition-all duration-300
