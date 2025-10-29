@@ -162,7 +162,7 @@ export default function AdminListMusics() {
                       rel="noopener noreferrer"
                       className="text-[var(--accent)] hover:text-[var(--gold)] mt-2 text-sm underline"
                     >
-                      🎧 Écouter
+                      Écouter
                     </a>
                   )}
 

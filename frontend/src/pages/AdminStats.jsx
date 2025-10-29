@@ -71,7 +71,7 @@ export default function AdminStats() {
         transition-colors duration-700 ease-in-out
       "
     >
-     
+      
       <div
         className="
           absolute inset-0 -z-10
@@ -92,7 +92,7 @@ export default function AdminStats() {
           p-6 sm:p-10
         "
       >
-        
+       
         <div className="absolute -top-20 -right-20 w-80 h-80 bg-[var(--accent)]/25 rounded-full blur-[150px] opacity-60 pointer-events-none"></div>
 
         <h1 className="text-3xl sm:text-4xl font-extrabold text-center text-[var(--accent)] drop-shadow-[0_0_15px_var(--accent)] mb-8 sm:mb-12">
@@ -110,8 +110,11 @@ export default function AdminStats() {
               value: stats.totalDonations?.toFixed(2) || "0.00",
             },
           ].map((stat, i) => (
-            <div
+            <motion.div
               key={i}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.1, duration: 0.5 }}
               className="
                 bg-[color-mix(in_oklab,var(--bg)_94%,var(--accent)_6%)]
                 rounded-xl p-3 sm:p-6 text-center
@@ -128,11 +131,14 @@ export default function AdminStats() {
               <p className="text-2xl sm:text-3xl font-extrabold text-[var(--accent)] tracking-wide">
                 {stat.value}
               </p>
-            </div>
+            </motion.div>
           ))}
         </div>
 
-        <div
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
           className="
             bg-[color-mix(in_oklab,var(--bg)_94%,var(--accent)_6%)]
             rounded-2xl p-4 sm:p-6
@@ -145,14 +151,20 @@ export default function AdminStats() {
             Répartition des rôles utilisateurs
           </h2>
 
-          <div className="w-full h-[250px] sm:h-[320px]">
+          <div className="w-full h-[180px] sm:h-[250px] md:h-[320px]">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
                   data={roleData}
                   cx="50%"
                   cy="50%"
-                  outerRadius={90}
+                  outerRadius={
+                    window.innerWidth < 640
+                      ? 65
+                      : window.innerWidth < 1024
+                      ? 90
+                      : 110
+                  }
                   dataKey="value"
                   label={({ name, value }) => `${name} (${value})`}
                 >
@@ -177,7 +189,7 @@ export default function AdminStats() {
               </PieChart>
             </ResponsiveContainer>
           </div>
-        </div>
+        </motion.div>
 
         <div className="mt-10 text-center">
           <Button
@@ -188,6 +200,7 @@ export default function AdminStats() {
               font-semibold px-6 py-2 rounded-xl
               shadow-[0_0_10px_var(--accent)]/40
               transition-all duration-300 text-sm sm:text-base
+              active:scale-[0.97]
             "
           >
             ⏎ Retour Dashboard
@@ -206,6 +219,7 @@ export default function AdminStats() {
     </motion.section>
   );
 }
+
 
 
 

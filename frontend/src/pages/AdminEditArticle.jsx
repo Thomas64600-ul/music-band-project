@@ -20,7 +20,7 @@ export default function AdminEditArticle() {
   const [preview, setPreview] = useState(null);
   const [status, setStatus] = useState(null);
   const [loading, setLoading] = useState(true);
-  const isNew = id === "new"; 
+  const isNew = id === "new";
 
   useEffect(() => {
     if (!isAdmin) navigate("/login");
@@ -59,7 +59,6 @@ export default function AdminEditArticle() {
     if (file) setPreview(URL.createObjectURL(file));
   }
 
- 
   async function onSubmit(e) {
     e.preventDefault();
     setStatus("loading");
@@ -87,7 +86,6 @@ export default function AdminEditArticle() {
         withCredentials: true,
       };
 
-     
       if (isNew) {
         await post("/articles", formData, config);
       } else {
@@ -148,6 +146,7 @@ export default function AdminEditArticle() {
           {isNew ? "Créer un article" : "Modifier l’article"}
         </h1>
 
+    
         <div className="mb-5">
           <label htmlFor="title" className="block text-[var(--accent)] mb-2 font-semibold">
             Titre
@@ -223,7 +222,14 @@ export default function AdminEditArticle() {
             type="file"
             accept="image/*"
             onChange={onFileChange}
-            className="w-full text-[var(--text)]"
+            className="
+              w-full text-[var(--text)]
+              border border-[color-mix(in_oklab,var(--accent)_40%,transparent_60%)]
+              rounded-md p-2
+              bg-[color-mix(in_oklab,var(--bg)_96%,black_4%)]
+              cursor-pointer transition-all duration-300
+              hover:border-[var(--accent)] hover:shadow-[0_0_15px_var(--accent)]/40
+            "
           />
           {preview && (
             <img
@@ -234,17 +240,40 @@ export default function AdminEditArticle() {
           )}
         </div>
 
-        <div className="text-center">
+        <div
+          className="
+            flex flex-col sm:flex-row justify-center sm:justify-between
+            gap-4 sm:gap-0 mt-10 text-center
+          "
+        >
+          <Button
+            variant="secondary"
+            onClick={() => navigate('/admin/articles')}
+            className="
+              border border-[var(--accent)] text-[var(--accent)]
+              hover:bg-[var(--accent)] hover:text-[var(--bg)]
+              px-6 py-3 rounded-xl transition-all duration-300
+              shadow-[0_0_12px_color-mix(in_oklab,var(--accent)_40%,transparent_60%)]
+              hover:shadow-[0_0_20px_color-mix(in_oklab,var(--accent)_70%,transparent_30%)]
+              w-full sm:w-auto font-semibold
+            "
+          >
+            ← Retour
+          </Button>
+
           <Button
             variant="primary"
             type="submit"
-            disabled={status === "loading"}
+            disabled={status === 'loading'}
             className="
               bg-[var(--accent)] hover:bg-[var(--gold)]
               text-white hover:text-[var(--bg)]
               px-8 py-3 rounded-xl font-semibold
-              shadow-[0_0_20px_var(--accent)] hover:shadow-[0_0_25px_var(--gold)]
-              transition-all duration-300
+              shadow-[0_0_20px_color-mix(in_oklab,var(--accent)_50%,transparent_50%)]
+              hover:shadow-[0_0_25px_color-mix(in_oklab,var(--gold)_70%,transparent_30%)]
+              w-full sm:w-auto
+              transition-all duration-300 relative overflow-hidden
+              active:scale-[0.97]
             "
           >
             {status === "loading"
@@ -253,18 +282,18 @@ export default function AdminEditArticle() {
               ? "Créer l’article"
               : "Mettre à jour"}
           </Button>
-
-          {status === "success" && (
-            <p className="mt-4 text-green-400 font-medium">
-              Article enregistré avec succès
-            </p>
-          )}
-          {status === "error" && (
-            <p className="mt-4 text-red-400 font-medium">
-              Erreur lors de l’enregistrement
-            </p>
-          )}
         </div>
+
+        {status === "success" && (
+          <p className="mt-4 text-center text-green-400 font-medium">
+            Article enregistré avec succès
+          </p>
+        )}
+        {status === "error" && (
+          <p className="mt-4 text-center text-red-400 font-medium">
+            Erreur lors de l’enregistrement
+          </p>
+        )}
       </form>
 
       <div
