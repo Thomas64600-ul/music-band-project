@@ -60,7 +60,7 @@ export default function AdminListMusics() {
         transition-colors duration-700 ease-in-out
       "
     >
-   
+      
       <div
         className="
           absolute inset-0 -z-10
@@ -81,6 +81,7 @@ export default function AdminListMusics() {
           p-6 sm:p-10
         "
       >
+       
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-10 text-center sm:text-left">
           <h1 className="text-3xl font-extrabold text-[var(--accent)] drop-shadow-[0_0_12px_var(--accent)]">
             Gestion des musiques
@@ -99,111 +100,102 @@ export default function AdminListMusics() {
           </Button>
         </div>
 
+      
         {musics.length === 0 ? (
           <p className="text-[var(--subtext)] text-center mt-10 italic">
             Aucune musique pour le moment.
           </p>
         ) : (
           <>
-           
+    
             <div className="block sm:hidden space-y-6 px-2">
-              {musics.map((m) => (
-                <motion.div
-                  key={m.id}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="
-                    border border-[color-mix(in_oklab,var(--accent)_40%,transparent_60%)]
-                    rounded-xl p-4 relative
-                    bg-[color-mix(in_oklab,var(--bg)_95%,var(--accent)_5%)]
-                    shadow-[0_0_25px_color-mix(in_oklab,var(--accent)_25%,transparent_75%)]
-                    flex flex-col gap-3 overflow-hidden
-                  "
-                >
-                
-                  <div
+              {musics.map((m) => {
+                const imageSrc = m.image_url || m.cover_url;
+
+                return (
+                  <motion.div
+                    key={m.id}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3 }}
                     className="
-                      absolute inset-0 -z-10
-                      bg-[radial-gradient(circle_at_center,#B3122D22_0%,transparent_70%)]
-                      blur-[120px]
-                    "
-                  ></div>
-
-                  <div className="flex items-center gap-3">
-                    {m.image_url ? (
-                      <img
-                        src={m.image_url}
-                        alt={m.title}
-                        className="w-16 h-16 object-cover rounded-md border border-[var(--accent)]/40"
-                      />
-                    ) : (
-                      <div className="w-16 h-16 flex items-center justify-center bg-[color-mix(in_oklab,var(--accent)_10%,var(--bg)_90%)] text-[var(--subtext)] rounded-md text-xs">
-                        Aucune
-                      </div>
-                    )}
-                    <div>
-                      <h3 className="text-lg font-bold text-[var(--accent)]">
-                        {m.title}
-                      </h3>
-                      <p className="text-[var(--subtext)] text-sm">
-                        {m.artist || "—"} —{" "}
-                        {m.created_at
-                          ? new Date(m.created_at).toLocaleDateString("fr-FR")
-                          : "—"}
-                      </p>
-                    </div>
-                  </div>
-
-                  {m.audio_url && (
-                    <a
-                      href={m.audio_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-[var(--accent)] hover:text-[var(--gold)] mt-2 text-sm underline"
-                    >
-                      Écouter
-                    </a>
-                  )}
-
-                  <div
-                    className="
-                      flex flex-wrap justify-center gap-2 mt-3
-                      sm:justify-start
+                      border border-[color-mix(in_oklab,var(--accent)_40%,transparent_60%)]
+                      rounded-xl p-4 relative
+                      bg-[color-mix(in_oklab,var(--bg)_95%,var(--accent)_5%)]
+                      shadow-[0_0_25px_color-mix(in_oklab,var(--accent)_25%,transparent_75%)]
+                      flex flex-col gap-3 overflow-hidden
                     "
                   >
-                    <Button
-                      onClick={() => navigate(`/admin/musics/${m.id}`)}
-                      className="
-                        border border-[var(--accent)] text-[var(--accent)]
-                        hover:bg-[var(--accent)] hover:text-[var(--bg)]
-                        flex-1 min-w-[90px]
-                        py-2 text-sm font-semibold rounded-lg
-                        shadow-[0_0_8px_color-mix(in_oklab,var(--accent)_40%,transparent_60%)]
-                        hover:shadow-[0_0_15px_color-mix(in_oklab,var(--accent)_70%,transparent_30%)]
-                        transition-all duration-300
-                      "
-                    >
-                      Modifier
-                    </Button>
+                    <div className="flex items-center gap-3">
+                      {imageSrc ? (
+                        <img
+                          src={imageSrc}
+                          alt={m.title}
+                          className="w-16 h-16 object-cover rounded-md border border-[var(--accent)]/40"
+                        />
+                      ) : (
+                        <div className="w-16 h-16 flex items-center justify-center bg-[color-mix(in_oklab,var(--accent)_10%,var(--bg)_90%)] text-[var(--subtext)] rounded-md text-xs">
+                          Aucune
+                        </div>
+                      )}
+                      <div>
+                        <h3 className="text-lg font-bold text-[var(--accent)]">
+                          {m.title}
+                        </h3>
+                        <p className="text-[var(--subtext)] text-sm">
+                          {m.artist || "—"} —{" "}
+                          {m.created_at
+                            ? new Date(m.created_at).toLocaleDateString("fr-FR")
+                            : "—"}
+                        </p>
+                      </div>
+                    </div>
 
-                    <Button
-                      onClick={() => handleDelete(m.id)}
-                      className="
-                        bg-[var(--accent)] text-white
-                        hover:bg-[var(--gold)] hover:text-[var(--bg)]
-                        flex-1 min-w-[90px]
-                        py-2 text-sm font-semibold rounded-lg
-                        shadow-[0_0_8px_color-mix(in_oklab,var(--accent)_40%,transparent_60%)]
-                        hover:shadow-[0_0_15px_color-mix(in_oklab,var(--accent)_70%,transparent_30%)]
-                        transition-all duration-300
-                      "
-                    >
-                      Supprimer
-                    </Button>
-                  </div>
-                </motion.div>
-              ))}
+                    {m.audio_url && (
+                      <a
+                        href={m.audio_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-[var(--accent)] hover:text-[var(--gold)] mt-2 text-sm underline"
+                      >
+                        Écouter
+                      </a>
+                    )}
+
+                    <div className="flex flex-wrap justify-center gap-2 mt-3 sm:justify-start">
+                      <Button
+                        onClick={() => navigate(`/admin/musics/${m.id}`)}
+                        className="
+                          border border-[var(--accent)] text-[var(--accent)]
+                          hover:bg-[var(--accent)] hover:text-[var(--bg)]
+                          flex-1 min-w-[90px]
+                          py-2 text-sm font-semibold rounded-lg
+                          shadow-[0_0_8px_color-mix(in_oklab,var(--accent)_40%,transparent_60%)]
+                          hover:shadow-[0_0_15px_color-mix(in_oklab,var(--accent)_70%,transparent_30%)]
+                          transition-all duration-300
+                        "
+                      >
+                        Modifier
+                      </Button>
+
+                      <Button
+                        onClick={() => handleDelete(m.id)}
+                        className="
+                          bg-[var(--accent)] text-white
+                          hover:bg-[var(--gold)] hover:text-[var(--bg)]
+                          flex-1 min-w-[90px]
+                          py-2 text-sm font-semibold rounded-lg
+                          shadow-[0_0_8px_color-mix(in_oklab,var(--accent)_40%,transparent_60%)]
+                          hover:shadow-[0_0_15px_color-mix(in_oklab,var(--accent)_70%,transparent_30%)]
+                          transition-all duration-300
+                        "
+                      >
+                        Supprimer
+                      </Button>
+                    </div>
+                  </motion.div>
+                );
+              })}
             </div>
 
             <div
@@ -235,91 +227,95 @@ export default function AdminListMusics() {
                 </thead>
 
                 <tbody>
-                  {musics.map((m, index) => (
-                    <motion.tr
-                      key={m.id}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * 0.05 }}
-                      className={`
-                        ${index !== musics.length - 1 ? "border-b" : ""}
-                        border-[color-mix(in_oklab,var(--accent)_25%,transparent_75%)]
-                        hover:bg-[color-mix(in_oklab,var(--accent)_12%,transparent_88%)]
-                        transition-colors duration-300
-                      `}
-                    >
-                      <td className="py-3 px-4">
-                        {m.image_url ? (
-                          <img
-                            src={m.image_url}
-                            alt={m.title}
-                            className="w-20 h-14 object-cover rounded-md border border-[color-mix(in_oklab,var(--accent)_30%,transparent_70%)]"
-                          />
-                        ) : (
-                          <div className="w-20 h-14 bg-[color-mix(in_oklab,var(--accent)_10%,var(--bg)_90%)] rounded-md flex items-center justify-center text-[var(--subtext)] text-xs">
-                            Aucune
-                          </div>
-                        )}
-                      </td>
+                  {musics.map((m, index) => {
+                    const imageSrc = m.image_url || m.cover_url;
 
-                      <td className="py-3 px-4 font-semibold text-[color-mix(in_oklab,var(--text)_90%,var(--accent)_10%)]">
-                        {m.title}
-                      </td>
-                      <td className="py-3 px-4 text-[color-mix(in_oklab,var(--subtext)_90%,var(--accent)_10%)]">
-                        {m.artist || "—"}
-                      </td>
-                      <td className="py-3 px-4 text-[color-mix(in_oklab,var(--subtext)_90%,var(--accent)_10%)]">
-                        {m.created_at
-                          ? new Date(m.created_at).toLocaleDateString("fr-FR", {
-                              day: "2-digit",
-                              month: "long",
-                              year: "numeric",
-                            })
-                          : "—"}
-                      </td>
-                      <td className="py-3 px-4 text-center">
-                        {m.audio_url ? (
-                          <a
-                            href={m.audio_url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-[var(--accent)] hover:text-[var(--gold)] hover:underline"
+                    return (
+                      <motion.tr
+                        key={m.id}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: index * 0.05 }}
+                        className={`
+                          ${index !== musics.length - 1 ? "border-b" : ""}
+                          border-[color-mix(in_oklab,var(--accent)_25%,transparent_75%)]
+                          hover:bg-[color-mix(in_oklab,var(--accent)_12%,transparent_88%)]
+                          transition-colors duration-300
+                        `}
+                      >
+                        <td className="py-3 px-4">
+                          {imageSrc ? (
+                            <img
+                              src={imageSrc}
+                              alt={m.title}
+                              className="w-20 h-14 object-cover rounded-md border border-[color-mix(in_oklab,var(--accent)_30%,transparent_70%)]"
+                            />
+                          ) : (
+                            <div className="w-20 h-14 bg-[color-mix(in_oklab,var(--accent)_10%,var(--bg)_90%)] rounded-md flex items-center justify-center text-[var(--subtext)] text-xs">
+                              Aucune
+                            </div>
+                          )}
+                        </td>
+
+                        <td className="py-3 px-4 font-semibold text-[color-mix(in_oklab,var(--text)_90%,var(--accent)_10%)]">
+                          {m.title}
+                        </td>
+                        <td className="py-3 px-4 text-[color-mix(in_oklab,var(--subtext)_90%,var(--accent)_10%)]">
+                          {m.artist || "—"}
+                        </td>
+                        <td className="py-3 px-4 text-[color-mix(in_oklab,var(--subtext)_90%,var(--accent)_10%)]">
+                          {m.created_at
+                            ? new Date(m.created_at).toLocaleDateString("fr-FR", {
+                                day: "2-digit",
+                                month: "long",
+                                year: "numeric",
+                              })
+                            : "—"}
+                        </td>
+                        <td className="py-3 px-4 text-center">
+                          {m.audio_url ? (
+                            <a
+                              href={m.audio_url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-[var(--accent)] hover:text-[var(--gold)] hover:underline"
+                            >
+                              Écouter
+                            </a>
+                          ) : (
+                            <span className="text-[var(--subtext)]">—</span>
+                          )}
+                        </td>
+
+                        <td className="py-3 px-4 text-center flex flex-col gap-2 items-center justify-center">
+                          <Button
+                            onClick={() => navigate(`/admin/musics/${m.id}`)}
+                            className="
+                              border border-[var(--accent)] text-[var(--accent)]
+                              hover:bg-[var(--accent)] hover:text-[var(--bg)]
+                              w-28 transition-all duration-300
+                              shadow-[0_0_10px_color-mix(in_oklab,var(--accent)_30%,transparent_70%)]
+                              hover:shadow-[0_0_18px_color-mix(in_oklab,var(--accent)_50%,transparent_50%)]
+                            "
                           >
-                            Écouter
-                          </a>
-                        ) : (
-                          <span className="text-[var(--subtext)]">—</span>
-                        )}
-                      </td>
-
-                      <td className="py-3 px-4 text-center flex flex-col gap-2 items-center justify-center">
-                        <Button
-                          onClick={() => navigate(`/admin/musics/${m.id}`)}
-                          className="
-                            border border-[var(--accent)] text-[var(--accent)]
-                            hover:bg-[var(--accent)] hover:text-[var(--bg)]
-                            w-28 transition-all duration-300
-                            shadow-[0_0_10px_color-mix(in_oklab,var(--accent)_30%,transparent_70%)]
-                            hover:shadow-[0_0_18px_color-mix(in_oklab,var(--accent)_50%,transparent_50%)]
-                          "
-                        >
-                          Modifier
-                        </Button>
-                        <Button
-                          onClick={() => handleDelete(m.id)}
-                          className="
-                            bg-[var(--accent)] text-white 
-                            hover:bg-[var(--gold)] hover:text-[var(--bg)]
-                            w-28 transition-all duration-300
-                            shadow-[0_0_10px_color-mix(in_oklab,var(--accent)_30%,transparent_70%)]
-                            hover:shadow-[0_0_18px_color-mix(in_oklab,var(--accent)_50%,transparent_50%)]
-                          "
-                        >
-                          Supprimer
-                        </Button>
-                      </td>
-                    </motion.tr>
-                  ))}
+                            Modifier
+                          </Button>
+                          <Button
+                            onClick={() => handleDelete(m.id)}
+                            className="
+                              bg-[var(--accent)] text-white 
+                              hover:bg-[var(--gold)] hover:text-[var(--bg)]
+                              w-28 transition-all duration-300
+                              shadow-[0_0_10px_color-mix(in_oklab,var(--accent)_30%,transparent_70%)]
+                              hover:shadow-[0_0_18px_color-mix(in_oklab,var(--accent)_50%,transparent_50%)]
+                            "
+                          >
+                            Supprimer
+                          </Button>
+                        </td>
+                      </motion.tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
@@ -338,6 +334,7 @@ export default function AdminListMusics() {
     </motion.section>
   );
 }
+
 
 
 

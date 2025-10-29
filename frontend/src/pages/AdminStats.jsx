@@ -151,44 +151,42 @@ export default function AdminStats() {
             Répartition des rôles utilisateurs
           </h2>
 
-          <div className="w-full h-[180px] sm:h-[250px] md:h-[320px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={roleData}
-                  cx="50%"
-                  cy="50%"
-                  outerRadius={
-                    window.innerWidth < 640
-                      ? 65
-                      : window.innerWidth < 1024
-                      ? 90
-                      : 110
-                  }
-                  dataKey="value"
-                  label={({ name, value }) => `${name} (${value})`}
-                >
-                  {roleData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index]} />
-                  ))}
-                </Pie>
-                <Tooltip
-                  contentStyle={{
-                    backgroundColor: "var(--bg)",
-                    border: "1px solid var(--accent)",
-                    color: "var(--text)",
-                    fontSize: "0.8rem",
-                  }}
-                />
-                <Legend
-                  wrapperStyle={{
-                    color: "var(--text)",
-                    fontSize: "0.8rem",
-                  }}
-                />
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
+        
+<div className="w-full flex justify-center">
+  <div className="w-[200px] h-[200px] sm:w-[280px] sm:h-[280px] md:w-[340px] md:h-[340px]">
+    <ResponsiveContainer width="100%" height="100%">
+      <PieChart>
+        <Pie
+          data={roleData}
+          cx="50%"
+          cy="50%"
+          outerRadius="70%"
+          dataKey="value"
+          label={({ name, value }) => `${name} (${value})`}
+        >
+          {roleData.map((entry, index) => (
+            <Cell key={`cell-${index}`} fill={COLORS[index]} />
+          ))}
+        </Pie>
+        <Tooltip
+          contentStyle={{
+            backgroundColor: "var(--bg)",
+            border: "1px solid var(--accent)",
+            color: "var(--text)",
+            fontSize: "0.8rem",
+          }}
+        />
+        <Legend
+          wrapperStyle={{
+            color: "var(--text)",
+            fontSize: "0.8rem",
+          }}
+        />
+      </PieChart>
+    </ResponsiveContainer>
+  </div>
+</div>
+
         </motion.div>
 
         <div className="mt-10 text-center">
