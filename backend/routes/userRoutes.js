@@ -34,7 +34,7 @@ import { protectAdminRoute } from "../middlewares/protectAdminRoute.js";
 const router = express.Router();
 
 router.post("/register", registerLimiter, validate(registerSchema), register);
-router.get("/verify-email/:token", verifyEmail); 
+router.get("/verify/:token", verifyEmail); 
 router.post("/login", loginLimiter, validate(loginSchema), login);
 router.post("/logout", protect, logout);
 
