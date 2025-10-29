@@ -5,8 +5,8 @@ import { useNavigate } from "react-router-dom";
 import Button from "../components/Button";
 import { motion } from "framer-motion";
 
-export default function AdminListArticles() {
-  const [articles, setArticles] = useState([]);
+export default function AdminListMusics() {
+  const [musics, setMusics] = useState([]);
   const [loading, setLoading] = useState(true);
   const { isAdmin } = useAuth();
   const navigate = useNavigate();
@@ -18,11 +18,11 @@ export default function AdminListArticles() {
   useEffect(() => {
     (async () => {
       try {
-        const data = await get("/articles");
-        setArticles(data.data || []);
+        const data = await get("/musics");
+        setMusics(Array.isArray(data.data) ? data.data : data);
       } catch (e) {
-        console.error("Erreur chargement articles :", e);
-        setArticles([]);
+        console.error("Erreur chargement musiques :", e);
+        setMusics([]);
       } finally {
         setLoading(false);
       }
@@ -30,12 +30,12 @@ export default function AdminListArticles() {
   }, []);
 
   async function handleDelete(id) {
-    if (!window.confirm("Supprimer cet article ?")) return;
+    if (!window.confirm("Supprimer cette musique ?")) return;
     try {
-      await del(`/articles/${id}`);
-      setArticles((prev) => prev.filter((a) => a.id !== id));
+      await del(`/musics/${id}`);
+      setMusics((prev) => prev.filter((m) => m.id !== id));
     } catch (e) {
-      console.error("Erreur suppression article:", e);
+      console.error("Erreur suppression musique:", e);
       alert("Erreur lors de la suppression");
     }
   }
@@ -43,7 +43,7 @@ export default function AdminListArticles() {
   if (loading)
     return (
       <p className="text-center mt-10 text-[var(--subtext)] animate-pulse">
-        Chargement des articles...
+        Chargement des musiques...
       </p>
     );
 
@@ -53,14 +53,14 @@ export default function AdminListArticles() {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.8 }}
       className="
-        min-h-screen py-12 px-6 sm:px-12
+        min-h-screen py-12 px-6 sm:px-12 
         flex flex-col items-center
         bg-[var(--bg)] text-[var(--text)]
         relative overflow-hidden
         transition-colors duration-700 ease-in-out
       "
     >
-     
+   
       <div
         className="
           absolute inset-0 -z-10
@@ -71,7 +71,7 @@ export default function AdminListArticles() {
 
       <div
         className="
-          relative w-full max-w-7xl
+          relative w-full max-w-6xl
           border border-[color-mix(in_oklab,var(--accent)_70%,transparent_30%)]
           rounded-2xl
           shadow-[0_0_25px_color-mix(in_oklab,var(--accent)_40%,transparent_60%)]
@@ -83,10 +83,10 @@ export default function AdminListArticles() {
       >
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-10 text-center sm:text-left">
           <h1 className="text-3xl font-extrabold text-[var(--accent)] drop-shadow-[0_0_12px_var(--accent)]">
-            Gestion des articles
+            Gestion des musiques
           </h1>
           <Button
-            onClick={() => navigate("/admin/articles/new")}
+            onClick={() => navigate("/admin/musics/new")}
             className="
               bg-[var(--accent)] hover:bg-[var(--gold)]
               text-white hover:text-[var(--bg)]
@@ -95,21 +95,21 @@ export default function AdminListArticles() {
               transition-all duration-300
             "
           >
-            + Nouvel article
+            + Nouvelle musique
           </Button>
         </div>
 
-        {articles.length === 0 ? (
+        {musics.length === 0 ? (
           <p className="text-[var(--subtext)] text-center mt-10 italic">
-            Aucun article publié pour le moment.
+            Aucune musique pour le moment.
           </p>
         ) : (
           <>
-          
+           
             <div className="block sm:hidden space-y-6 px-2">
-              {articles.map((a) => (
+              {musics.map((m) => (
                 <motion.div
-                  key={a.id}
+                  key={m.id}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.3 }}
@@ -131,10 +131,10 @@ export default function AdminListArticles() {
                   ></div>
 
                   <div className="flex items-center gap-3">
-                    {a.image_url ? (
+                    {m.image_url ? (
                       <img
-                        src={a.image_url}
-                        alt={a.title}
+                        src={m.image_url}
+                        alt={m.title}
                         className="w-16 h-16 object-cover rounded-md border border-[var(--accent)]/40"
                       />
                     ) : (
@@ -144,16 +144,27 @@ export default function AdminListArticles() {
                     )}
                     <div>
                       <h3 className="text-lg font-bold text-[var(--accent)]">
-                        {a.title}
+                        {m.title}
                       </h3>
                       <p className="text-[var(--subtext)] text-sm">
-                        {a.author_name || a.author || "—"} —{" "}
-                        {a.created_at
-                          ? new Date(a.created_at).toLocaleDateString("fr-FR")
+                        {m.artist || "—"} —{" "}
+                        {m.created_at
+                          ? new Date(m.created_at).toLocaleDateString("fr-FR")
                           : "—"}
                       </p>
                     </div>
                   </div>
+
+                  {m.audio_url && (
+                    <a
+                      href={m.audio_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-[var(--accent)] hover:text-[var(--gold)] mt-2 text-sm underline"
+                    >
+                      🎧 Écouter
+                    </a>
+                  )}
 
                   <div
                     className="
@@ -162,7 +173,7 @@ export default function AdminListArticles() {
                     "
                   >
                     <Button
-                      onClick={() => navigate(`/admin/articles/${a.id}`)}
+                      onClick={() => navigate(`/admin/musics/${m.id}`)}
                       className="
                         border border-[var(--accent)] text-[var(--accent)]
                         hover:bg-[var(--accent)] hover:text-[var(--bg)]
@@ -177,7 +188,7 @@ export default function AdminListArticles() {
                     </Button>
 
                     <Button
-                      onClick={() => handleDelete(a.id)}
+                      onClick={() => handleDelete(m.id)}
                       className="
                         bg-[var(--accent)] text-white
                         hover:bg-[var(--gold)] hover:text-[var(--bg)]
@@ -190,21 +201,6 @@ export default function AdminListArticles() {
                     >
                       Supprimer
                     </Button>
-
-                    <Button
-                      onClick={() => navigate(`/blog/${a.id}`)}
-                      className="
-                        border border-[var(--accent)]/50 text-[var(--subtext)]
-                        hover:text-[var(--accent)] hover:border-[var(--accent)]
-                        flex-1 min-w-[90px]
-                        py-2 text-sm font-semibold rounded-lg
-                        shadow-[0_0_8px_color-mix(in_oklab,var(--accent)_20%,transparent_80%)]
-                        hover:shadow-[0_0_12px_color-mix(in_oklab,var(--accent)_50%,transparent_50%)]
-                        transition-all duration-300
-                      "
-                    >
-                      Voir
-                    </Button>
                   </div>
                 </motion.div>
               ))}
@@ -212,12 +208,12 @@ export default function AdminListArticles() {
 
             <div
               className="
-                hidden sm:block overflow-x-auto rounded-2xl
-                border border-[color-mix(in_oklab,var(--accent)_40%,transparent_60%)]
+                hidden sm:block w-full overflow-x-auto
+                rounded-2xl border
+                border-[color-mix(in_oklab,var(--accent)_40%,transparent_60%)]
                 bg-[color-mix(in_oklab,var(--bg)_94%,var(--accent)_6%)]
                 shadow-[0_0_25px_color-mix(in_oklab,var(--accent)_30%,transparent_70%)]
                 transition-all duration-500
-                w-full
               "
             >
               <table className="w-full text-sm sm:text-base border-collapse">
@@ -231,30 +227,32 @@ export default function AdminListArticles() {
                   <tr>
                     <th className="py-3 px-4 text-left">Image</th>
                     <th className="py-3 px-4 text-left">Titre</th>
+                    <th className="py-3 px-4 text-left">Artiste</th>
                     <th className="py-3 px-4 text-left">Date</th>
-                    <th className="py-3 px-4 text-left">Auteur</th>
+                    <th className="py-3 px-4 text-left">Lien</th>
                     <th className="py-3 px-4 text-center">Actions</th>
                   </tr>
                 </thead>
 
                 <tbody>
-                  {articles.map((a, index) => (
+                  {musics.map((m, index) => (
                     <motion.tr
-                      key={a.id}
-                      initial={{ opacity: 0, y: 10 }}
+                      key={m.id}
+                      initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: index * 0.05 }}
-                      className="
-                        border-b border-[color-mix(in_oklab,var(--accent)_25%,transparent_75%)]
+                      className={`
+                        ${index !== musics.length - 1 ? "border-b" : ""}
+                        border-[color-mix(in_oklab,var(--accent)_25%,transparent_75%)]
                         hover:bg-[color-mix(in_oklab,var(--accent)_12%,transparent_88%)]
-                        transition-all duration-300
-                      "
+                        transition-colors duration-300
+                      `}
                     >
                       <td className="py-3 px-4">
-                        {a.image_url ? (
+                        {m.image_url ? (
                           <img
-                            src={a.image_url}
-                            alt={a.title}
+                            src={m.image_url}
+                            alt={m.title}
                             className="w-20 h-14 object-cover rounded-md border border-[color-mix(in_oklab,var(--accent)_30%,transparent_70%)]"
                           />
                         ) : (
@@ -263,24 +261,40 @@ export default function AdminListArticles() {
                           </div>
                         )}
                       </td>
+
                       <td className="py-3 px-4 font-semibold text-[color-mix(in_oklab,var(--text)_90%,var(--accent)_10%)]">
-                        {a.title}
+                        {m.title}
                       </td>
-                      <td className="py-3 px-4 text-[color-mix(in_oklab,var(--subtext)_90%,var(--accent)_10%)] whitespace-nowrap">
-                        {a.created_at
-                          ? new Date(a.created_at).toLocaleDateString("fr-FR", {
+                      <td className="py-3 px-4 text-[color-mix(in_oklab,var(--subtext)_90%,var(--accent)_10%)]">
+                        {m.artist || "—"}
+                      </td>
+                      <td className="py-3 px-4 text-[color-mix(in_oklab,var(--subtext)_90%,var(--accent)_10%)]">
+                        {m.created_at
+                          ? new Date(m.created_at).toLocaleDateString("fr-FR", {
                               day: "2-digit",
                               month: "long",
                               year: "numeric",
                             })
                           : "—"}
                       </td>
-                      <td className="py-3 px-4 text-[color-mix(in_oklab,var(--subtext)_90%,var(--accent)_10%)] whitespace-nowrap">
-                        {a.author_name || a.author || "—"}
+                      <td className="py-3 px-4 text-center">
+                        {m.audio_url ? (
+                          <a
+                            href={m.audio_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-[var(--accent)] hover:text-[var(--gold)] hover:underline"
+                          >
+                            Écouter
+                          </a>
+                        ) : (
+                          <span className="text-[var(--subtext)]">—</span>
+                        )}
                       </td>
+
                       <td className="py-3 px-4 text-center flex flex-col gap-2 items-center justify-center">
                         <Button
-                          onClick={() => navigate(`/admin/articles/edit/${a.id}`)}
+                          onClick={() => navigate(`/admin/musics/${m.id}`)}
                           className="
                             border border-[var(--accent)] text-[var(--accent)]
                             hover:bg-[var(--accent)] hover:text-[var(--bg)]
@@ -292,7 +306,7 @@ export default function AdminListArticles() {
                           Modifier
                         </Button>
                         <Button
-                          onClick={() => handleDelete(a.id)}
+                          onClick={() => handleDelete(m.id)}
                           className="
                             bg-[var(--accent)] text-white 
                             hover:bg-[var(--gold)] hover:text-[var(--bg)]
@@ -302,16 +316,6 @@ export default function AdminListArticles() {
                           "
                         >
                           Supprimer
-                        </Button>
-                        <Button
-                          onClick={() => navigate(`/blog/${a.id}`)}
-                          className="
-                            border border-[var(--accent)]/50 text-[var(--subtext)]
-                            hover:text-[var(--accent)] hover:border-[var(--accent)]
-                            w-28 transition-all duration-300
-                          "
-                        >
-                          Voir
                         </Button>
                       </td>
                     </motion.tr>
@@ -334,6 +338,7 @@ export default function AdminListArticles() {
     </motion.section>
   );
 }
+
 
 
 

@@ -122,7 +122,7 @@ export default function AdminEditConcert() {
         py-12 px-6 sm:px-12 relative overflow-hidden
       "
     >
-     
+    
       <div
         className="
           absolute inset-0 -z-10
@@ -264,15 +264,22 @@ export default function AdminEditConcert() {
           )}
         </div>
 
-        <div className="flex justify-between mt-8">
+        <div
+          className="
+            flex flex-col sm:flex-row justify-center sm:justify-between
+            gap-4 sm:gap-0 mt-10 text-center
+          "
+        >
           <Button
             variant="secondary"
             onClick={() => navigate("/admin/concerts")}
             className="
               border border-[var(--accent)] text-[var(--accent)]
               hover:bg-[var(--accent)] hover:text-[var(--bg)]
-              px-6 py-2 rounded-xl transition-all duration-300
-              shadow-[0_0_12px_var(--accent)]/30 hover:shadow-[0_0_18px_var(--accent)]/50
+              px-6 py-3 rounded-xl transition-all duration-300
+              shadow-[0_0_12px_color-mix(in_oklab,var(--accent)_40%,transparent_60%)]
+              hover:shadow-[0_0_20px_color-mix(in_oklab,var(--accent)_70%,transparent_30%)]
+              w-full sm:w-auto font-semibold
             "
           >
             ← Retour
@@ -286,8 +293,11 @@ export default function AdminEditConcert() {
               bg-[var(--accent)] hover:bg-[var(--gold)]
               text-white hover:text-[var(--bg)]
               px-8 py-3 rounded-xl font-semibold
-              shadow-[0_0_20px_var(--accent)] hover:shadow-[0_0_25px_var(--gold)]
-              transition-all duration-300
+              shadow-[0_0_20px_color-mix(in_oklab,var(--accent)_50%,transparent_50%)]
+              hover:shadow-[0_0_25px_color-mix(in_oklab,var(--gold)_70%,transparent_30%)]
+              w-full sm:w-auto
+              transition-all duration-300 relative overflow-hidden
+              active:scale-[0.97]
             "
           >
             {status === "loading"
@@ -321,3 +331,4 @@ export default function AdminEditConcert() {
     </motion.section>
   );
 }
+
