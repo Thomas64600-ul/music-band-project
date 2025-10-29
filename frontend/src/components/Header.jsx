@@ -72,23 +72,22 @@ export default function Header({ logoSrc = "/logo.png", links = [] }) {
           : "bg-[var(--bg)]"
       }`}
     >
-   
       {isAdmin && (
         <div
           className="bg-[var(--accent)] text-[var(--bg)] text-center text-sm py-1 font-semibold tracking-wide border-b border-[color-mix(in_oklab,var(--accent)_80%,black_20%)] shadow-[0_0_12px_var(--accent)] animate-pulse"
           role="status"
-          aria-live="polite"
         >
           Mode administrateur activé
         </div>
       )}
 
+     
       <div className="flex items-center justify-between px-4 sm:px-12 py-3 sm:py-5 relative">
-   
+        
         <button
           onClick={toggleTheme}
           className="hidden sm:block text-[var(--accent)] hover:text-[color-mix(in_oklab,var(--accent)_80%,var(--gold)_20%)] hover:scale-110 transition-transform duration-200"
-          aria-label="Basculer entre le mode clair et sombre"
+          aria-label="Basculer le thème clair/sombre"
         >
           {darkMode ? <FaSun size={22} /> : <FaMoon size={22} />}
         </button>
@@ -99,9 +98,9 @@ export default function Header({ logoSrc = "/logo.png", links = [] }) {
             alt="Logo du groupe REVEREN"
             animate={{
               boxShadow: [
-                "0 0 20px var(--accent)",
-                "0 0 35px var(--gold)",
-                "0 0 20px var(--accent)",
+                "0 0 15px var(--gold)",
+                "0 0 25px var(--accent)",
+                "0 0 15px var(--gold)",
               ],
             }}
             transition={{
@@ -111,7 +110,13 @@ export default function Header({ logoSrc = "/logo.png", links = [] }) {
             }}
             className={`object-contain transition-all duration-500 pointer-events-none ${
               isScrolled ? "h-16 sm:h-[95px]" : "h-20 sm:h-[110px]"
-            } drop-shadow-[0_0_20px_var(--accent)] hover:drop-shadow-[0_0_30px_var(--gold)]`}
+            } 
+            drop-shadow-[0_0_12px_var(--gold)] 
+            hover:drop-shadow-[0_0_25px_var(--accent)]
+            rounded-lg bg-[rgba(255,255,255,0.03)] p-2`}
+            style={{
+              filter: "brightness(1.25) contrast(1.05)",
+            }}
           />
         </div>
 
@@ -119,32 +124,32 @@ export default function Header({ logoSrc = "/logo.png", links = [] }) {
           {user ? (
             <>
               <span className="text-[var(--accent)] flex items-center gap-2 font-semibold">
-                <User size={16} aria-hidden="true" />
-                <span>{user.firstname || user.email}</span>
+                <User size={16} />
+                {user.firstname || user.email}
                 {isAdmin && (
                   <span className="bg-[var(--accent)] text-[var(--bg)] text-xs px-2 py-1 rounded-md flex items-center gap-1">
-                    <Shield size={12} aria-hidden="true" /> Admin
+                    <Shield size={12} /> Admin
                   </span>
                 )}
               </span>
               <button
                 onClick={logout}
-                className="text-[var(--accent)] hover:text-[color-mix(in_oklab,var(--accent)_80%,var(--gold)_20%)] flex items-center gap-1"
+                className="text-[var(--accent)] hover:text-[var(--gold)] flex items-center gap-1 transition-all"
               >
-                <LogOut size={14} aria-hidden="true" /> Déconnexion
+                <LogOut size={14} /> Déconnexion
               </button>
             </>
           ) : (
             <>
               <NavLink
                 to="/register"
-                className="relative z-20 text-[#1A1A1A] dark:text-[#F2F2F2] hover:text-[var(--accent)] transition-colors"
+                className="text-[var(--text)] hover:text-[var(--accent)] transition-colors"
               >
                 Inscription
               </NavLink>
               <NavLink
                 to="/login"
-                className="relative z-20 text-[#1A1A1A] dark:text-[#F2F2F2] hover:text-[var(--accent)] transition-colors"
+                className="text-[var(--text)] hover:text-[var(--accent)] transition-colors"
               >
                 Connexion
               </NavLink>
@@ -155,16 +160,14 @@ export default function Header({ logoSrc = "/logo.png", links = [] }) {
         <button
           onClick={toggleMenu}
           aria-expanded={menuOpen}
-          aria-controls="mobile-menu"
-          className="text-[var(--accent)] hover:text-[color-mix(in_oklab,var(--accent)_80%,var(--gold)_20%)] hover:scale-110 transition-transform duration-200 sm:hidden z-20"
-          aria-label={menuOpen ? "Fermer le menu de navigation" : "Ouvrir le menu de navigation"}
+          className="text-[var(--accent)] hover:text-[var(--gold)] hover:scale-110 transition-transform duration-200 sm:hidden z-20"
         >
           {menuOpen ? <FaTimes size={22} /> : <FaBars size={22} />}
         </button>
       </div>
 
       <nav
-        aria-label="Navigation principale du site"
+        aria-label="Navigation principale"
         className="hidden sm:flex flex-col items-center"
       >
         <div className="flex justify-center border-t border-[var(--border)] py-2 bg-[var(--bg)] relative w-full">
@@ -176,10 +179,7 @@ export default function Header({ logoSrc = "/logo.png", links = [] }) {
             ))}
             {isAdmin && (
               <li>
-                <LinkItem
-                  to="/admin"
-                  className="text-[var(--accent)] hover:text-[color-mix(in_oklab,var(--accent)_80%,var(--gold)_20%)]"
-                >
+                <LinkItem to="/admin" className="text-[var(--accent)]">
                   Dashboard
                 </LinkItem>
               </li>
@@ -210,9 +210,6 @@ export default function Header({ logoSrc = "/logo.png", links = [] }) {
       <AnimatePresence>
         {menuOpen && (
           <motion.nav
-            id="mobile-menu"
-            role="navigation"
-            aria-label="Menu mobile du site"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
@@ -236,62 +233,10 @@ export default function Header({ logoSrc = "/logo.png", links = [] }) {
                 onClick={() => setMenuOpen(false)}
                 className="block w-full text-center py-3 text-[var(--accent)] font-semibold"
               >
-                <LayoutDashboard size={18} className="inline-block mr-2" aria-hidden="true" />
+                <LayoutDashboard size={18} className="inline-block mr-2" />
                 Dashboard
               </LinkItem>
             )}
-
-            <div className="flex justify-center mt-4">
-              <button
-                onClick={toggleTheme}
-                aria-label="Basculer le thème"
-                className="text-[var(--accent)] hover:text-[color-mix(in_oklab,var(--accent)_80%,var(--gold)_20%)] hover:scale-110 transition-transform duration-200"
-              >
-                {darkMode ? <FaSun size={22} /> : <FaMoon size={22} />}
-              </button>
-            </div>
-
-            <div className="flex flex-col items-center gap-3 mt-6 text-sm">
-              {user ? (
-                <>
-                  <span className="text-[var(--accent)] flex items-center gap-2">
-                    <User size={16} aria-hidden="true" />
-                    {user.firstname || user.email}
-                  </span>
-                  {isAdmin && (
-                    <span className="bg-[var(--accent)] text-[var(--bg)] text-xs px-2 py-1 rounded-md flex items-center gap-1">
-                      <Shield size={12} aria-hidden="true" /> Admin
-                    </span>
-                  )}
-                  <button
-                    onClick={() => {
-                      logout();
-                      setMenuOpen(false);
-                    }}
-                    className="text-[var(--accent)] hover:text-[color-mix(in_oklab,var(--accent)_80%,var(--gold)_20%)] flex items-center gap-1 mt-2"
-                  >
-                    <LogOut size={14} aria-hidden="true" /> Déconnexion
-                  </button>
-                </>
-              ) : (
-                <>
-                  <NavLink
-                    to="/register"
-                    onClick={() => setMenuOpen(false)}
-                    className="text-[#1A1A1A] dark:text-[#F2F2F2] hover:text-[var(--accent)] transition-colors z-50"
-                  >
-                    Inscription
-                  </NavLink>
-                  <NavLink
-                    to="/login"
-                    onClick={() => setMenuOpen(false)}
-                    className="text-[#1A1A1A] dark:text-[#F2F2F2] hover:text-[var(--accent)] transition-colors z-50"
-                  >
-                    Connexion
-                  </NavLink>
-                </>
-              )}
-            </div>
           </motion.nav>
         )}
       </AnimatePresence>
