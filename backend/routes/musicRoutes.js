@@ -15,36 +15,30 @@ import upload from "../middlewares/uploadMiddleware.js";
 
 const router = express.Router();
 
-/* ======================
-   🎵 CRÉER UNE MUSIQUE
-====================== */
 router.post(
   "/",
   protect,
   authorizeRoles("admin"),
-  upload.single("cover"), // Nom du champ pour l’image de pochette
+  upload.fields([
+    { name: "cover", maxCount: 1 }, 
+    { name: "audio", maxCount: 1 },
+  ]),
   validate(createMusicSchema),
   addMusic
 );
 
-/* ======================
-   🎧 LISTER TOUTES LES MUSIQUES
-====================== */
 router.get("/", fetchMusics);
 
-/* ======================
-   🎵 OBTENIR UNE MUSIQUE PAR ID
-====================== */
 router.get("/:id", fetchMusicById);
 
-/* ======================
-   ✏️ MODIFIER UNE MUSIQUE
-====================== */
 router.put(
   "/:id",
   protect,
   authorizeRoles("admin"),
-  upload.single("cover"), // mise à jour de la pochette
+  upload.fields([
+    { name: "cover", maxCount: 1 },
+    { name: "audio", maxCount: 1 },
+  ]),
   validate(updateMusicSchema),
   editMusic
 );
