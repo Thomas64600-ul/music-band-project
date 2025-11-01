@@ -8,12 +8,16 @@ export default function Footer() {
     <motion.footer
       role="contentinfo"
       aria-label="Pied de page du site REVEREN"
-      className="
-        relative overflow-hidden select-none text-center
-        bg-[var(--bg)] text-[var(--text)]
-        transition-colors duration-700 ease-in-out
-        mt-0 pt-0
-      "
+     className="
+  relative flex flex-col items-center justify-center
+  h-[70px] w-full overflow-hidden select-none text-center
+  bg-[var(--bg)] text-[var(--text)]
+  border-t-2 border-[var(--accent)]
+  transition-colors duration-700 ease-in-out
+  z-[50]
+"
+
+
       initial={{ opacity: 0, y: 50 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.2 }}
@@ -44,15 +48,7 @@ export default function Footer() {
         "
       />
 
-      <div
-        aria-hidden="true"
-        className="
-          absolute top-0 left-0 w-full h-[80px]
-          bg-gradient-to-b from-[var(--accent)]/20 via-transparent to-transparent
-          pointer-events-none
-        "
-      ></div>
-
+      
       <div className="max-w-6xl mx-auto flex flex-col items-center py-8 md:py-10 gap-5 relative z-10">
     
         <nav

@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-
 :root {
   --bg: #F9F9F9;
   --surface: #FFFFFF;
@@ -25,7 +24,6 @@
   --border: #2A2A2A;
 }
 
-
 @layer base {
   html,
   body,
@@ -46,26 +44,23 @@
   }
 
   main {
-    flex-grow: 1;
+  flex-grow: 1;
+  position: relative;
+  z-index: 1;
+  background-color: var(--bg);
+  color: var(--text);
+  transition: background-color 0.7s ease-in-out, color 0.7s ease-in-out;
+  margin-top: -1px;
+  padding-bottom: 140px !important; 
+}
+
+
+  footer {
     position: relative;
-    z-index: 1;
-    background-color: var(--bg);
-    color: var(--text);
-    transition: background-color 0.7s ease-in-out, color 0.7s ease-in-out;
-    margin-top: -1px; 
+    z-index: 10;
+    margin-top: 0;
   }
 }
-main {
-  margin-bottom: 0;
-  padding-bottom: 0 !important;
-}
-
-footer {
-  margin-top: 0;
-  position: relative;
-  z-index: 10;
-}
-
 
 
 
@@ -99,7 +94,6 @@ button {
   filter: blur(120px);
   opacity: 0.4;
 }
-
 
 .no-scrollbar::-webkit-scrollbar {
   display: none;
@@ -178,4 +172,3 @@ html {
 .animate-progressPulse {
   animation: progressPulse 1.2s ease-in-out infinite;
 }
-

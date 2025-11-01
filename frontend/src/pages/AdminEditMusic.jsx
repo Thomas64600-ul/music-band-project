@@ -14,6 +14,7 @@ export default function AdminEditMusic() {
     artist: "",
     url: "",
     cover: null,
+    audio: null,
   });
 
   const [preview, setPreview] = useState(null);
@@ -32,6 +33,7 @@ export default function AdminEditMusic() {
             artist: music.artist || "",
             url: music.url || "",
             cover: null,
+            audio: null,
           });
           setPreview(music.cover_url || null);
         } catch (error) {
@@ -50,7 +52,9 @@ export default function AdminEditMusic() {
     const { name, value, files } = e.target;
     if (files && files[0]) {
       setFormData((prev) => ({ ...prev, [name]: files[0] }));
-      setPreview(URL.createObjectURL(files[0]));
+
+      if (name === "cover") setPreview(URL.createObjectURL(files[0]));
+      if (name === "audio") setFormData((prev) => ({ ...prev, url: "" })); // vide le champ lien
     } else {
       setFormData((prev) => ({ ...prev, [name]: value }));
     }
@@ -105,7 +109,6 @@ export default function AdminEditMusic() {
         py-12 px-6 sm:px-12 relative overflow-hidden
       "
     >
-    
       <div
         className="
           absolute inset-0 -z-10
@@ -132,18 +135,10 @@ export default function AdminEditMusic() {
           {isNew ? "Ajouter une musique" : "Modifier la musique"}
         </h1>
 
-       
         {[
           { name: "title", label: "Titre *", type: "text", required: true },
           { name: "artist", label: "Artiste", type: "text", required: false },
-          {
-            name: "url",
-            label: "Lien audio (SoundCloud / Spotify / Cloudinary) *",
-            type: "url",
-            required: true,
-            placeholder: "https://soundcloud.com/reveren/only-god-forgives",
-          },
-        ].map(({ name, label, type, required, placeholder }) => (
+        ].map(({ name, label, type, required }) => (
           <div key={name} className="mb-5">
             <label
               htmlFor={name}
@@ -158,7 +153,6 @@ export default function AdminEditMusic() {
               value={formData[name]}
               onChange={handleChange}
               required={required}
-              placeholder={placeholder}
               className="
                 w-full p-3 rounded-md
                 bg-[color-mix(in_oklab,var(--bg)_94%,black_6%)]
@@ -171,6 +165,59 @@ export default function AdminEditMusic() {
             />
           </div>
         ))}
+
+        {!formData.audio && (
+          <div className="mb-8">
+            <label
+              htmlFor="url"
+              className="block mb-2 text-[var(--accent)] font-semibold"
+            >
+              Lien audio (SoundCloud / Spotify / Cloudinary) *
+            </label>
+            <input
+              id="url"
+              name="url"
+              type="url"
+              value={formData.url}
+              onChange={handleChange}
+              placeholder="https://soundcloud.com/reveren/only-god-forgives"
+              required={!formData.audio}
+              className="
+                w-full p-3 rounded-md
+                bg-[color-mix(in_oklab,var(--bg)_94%,black_6%)]
+                border border-[color-mix(in_oklab,var(--accent)_40%,transparent_60%)]
+                text-[color-mix(in_oklab,var(--text)_90%,var(--accent)_10%)]
+                focus:ring-2 focus:ring-[var(--accent)]/40
+                focus:border-[var(--accent)]
+                transition-all duration-300
+              "
+            />
+          </div>
+        )}
+
+        <div className="mb-8">
+          <label
+            htmlFor="audio"
+            className="block mb-2 text-[var(--accent)] font-semibold"
+          >
+            Fichier audio (MP3 / WAV)
+          </label>
+          <input
+            id="audio"
+            name="audio"
+            type="file"
+            accept="audio/*"
+            onChange={handleChange}
+            className="
+              block w-full text-[var(--text)]
+              border border-[color-mix(in_oklab,var(--accent)_40%,transparent_60%)]
+              rounded-md p-2
+              bg-[color-mix(in_oklab,var(--bg)_96%,black_4%)]
+              cursor-pointer transition-all duration-300
+              hover:border-[var(--accent)] hover:shadow-[0_0_15px_var(--accent)]
+            "
+          />
+        </div>
 
         <div className="mb-8">
           <label

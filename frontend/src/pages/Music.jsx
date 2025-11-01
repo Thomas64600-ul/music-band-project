@@ -5,11 +5,12 @@ import { motion } from "framer-motion";
 import Player from "../components/Player";
 import CommentSection from "../components/CommentSection";
 import Button from "../components/Button";
-
+import { usePlayer } from "../context/PlayerContext"; 
 export default function Music() {
   const [musics, setMusics] = useState([]);
   const [loading, setLoading] = useState(true);
   const { user } = useAuth();
+  const { playTrack, setPlaylist } = usePlayer(); 
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -22,6 +23,7 @@ export default function Music() {
           ? response
           : [];
         setMusics(musicList);
+        setPlaylist(musicList); 
       } catch (e) {
         console.error("Erreur chargement musiques :", e);
         setMusics([]);
@@ -29,7 +31,7 @@ export default function Music() {
         setLoading(false);
       }
     })();
-  }, []);
+  }, [setPlaylist]);
 
   if (loading)
     return (
@@ -76,7 +78,6 @@ export default function Music() {
         overflow-hidden
       "
     >
- 
       <div
         aria-hidden="true"
         className="
@@ -127,6 +128,8 @@ export default function Music() {
                 title={m.title}
                 artist={m.artist || "REVEREN"}
                 cover={m.cover_url}
+                
+                onPlay={() => playTrack(m, musics)}
               />
             </div>
 
@@ -137,6 +140,7 @@ export default function Music() {
         ))}
       </section>
 
+      
       <section
         aria-label="Dernier EP de REVEREN"
         className="text-center max-w-xl mt-12 mb-32"
@@ -181,6 +185,7 @@ export default function Music() {
     </motion.main>
   );
 }
+
 
 
 

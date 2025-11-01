@@ -1,7 +1,9 @@
 import { Routes, Route } from "react-router-dom";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
+import PlayerGlobal from "./components/PlayerGlobal";
 
+// Pages publiques
 import Home from "./pages/Home";
 import Music from "./pages/Music";
 import Concerts from "./pages/Concerts";
@@ -14,9 +16,11 @@ import Register from "./pages/Register";
 import NotFound from "./pages/NotFound";
 import VerifyEmail from "./pages/VerifyEmail";
 
+// Sécurité / admin
 import ProtectedRoute from "./components/ProtectedRoute";
 import AdminLayout from "./layouts/AdminLayout";
 
+// Pages admin
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminListArticles from "./pages/AdminListArticles";
 import AdminEditArticle from "./pages/AdminEditArticle";
@@ -36,7 +40,7 @@ export default function App() {
       className="min-h-screen flex flex-col transition-colors duration-500 
       bg-[var(--bg)] text-[var(--text)]"
     >
-      
+     
       <Header
         logoSrc="/src/assets/logo.png"
         links={[
@@ -49,9 +53,10 @@ export default function App() {
         ]}
       />
 
-      <main className="flex-grow pt-20 md:pt-28 pb-16 md:pb-18">
+  
+      <main className="flex-grow pt-20 md:pt-28 pb-36 md:pb-40">
         <Routes>
-          
+        
           <Route path="/" element={<Home />} />
           <Route path="/music" element={<Music />} />
           <Route path="/concerts" element={<Concerts />} />
@@ -63,6 +68,7 @@ export default function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/verify-email/:token" element={<VerifyEmail />} />
 
+         
           <Route
             path="/admin"
             element={
@@ -94,7 +100,6 @@ export default function App() {
               </ProtectedRoute>
             }
           />
-
           <Route
             path="/admin/concerts"
             element={
@@ -105,17 +110,6 @@ export default function App() {
               </ProtectedRoute>
             }
           />
-          <Route
-            path="/admin/concerts/:id"
-            element={
-              <ProtectedRoute requireAdmin={true}>
-                <AdminLayout>
-                  <AdminEditConcert />
-                </AdminLayout>
-              </ProtectedRoute>
-            }
-          />
-
           <Route
             path="/admin/musics"
             element={
@@ -136,7 +130,6 @@ export default function App() {
               </ProtectedRoute>
             }
           />
-
           <Route
             path="/admin/comments"
             element={
@@ -188,9 +181,14 @@ export default function App() {
             }
           />
 
+          {/* 404 */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
+
+      <PlayerGlobal />
+
+      <div style={{ height: "110px" }}></div>
 
       <Footer
         siteTitle="REVEREN"
@@ -203,8 +201,6 @@ export default function App() {
     </div>
   );
 }
-
-
 
 
 
