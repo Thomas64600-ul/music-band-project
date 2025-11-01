@@ -3,52 +3,65 @@ import { CloudinaryStorage } from "multer-storage-cloudinary";
 import { v2 as cloudinary } from "cloudinary";
 import "../config/cloudinary.js";
 
-
 const storage = new CloudinaryStorage({
   cloudinary,
   params: async (req, file) => {
-    let folder = "reveren_uploads/others";
-    let resource_type = "auto";
-    let allowed_formats = ["jpg", "jpeg", "png", "webp"];
-    let transformation = [{ width: 1200, crop: "limit" }];
+   
+    const isImage = file.mimetype.startsWith("image/");
+    const isAudio = file.mimetype.startsWith("audio/");
 
-    if (req.baseUrl.includes("articles")) folder = "reveren_uploads/articles";
-    else if (req.baseUrl.includes("concerts")) folder = "reveren_uploads/concerts";
-    else if (req.baseUrl.includes("musics")) {
-      folder = "reveren_uploads/musics";
-      resource_type = "video"; 
-      allowed_formats = ["mp3", "wav", "flac"];
-      transformation = undefined; 
+    let folder = "reveren_uploads/others";
+    if (req.baseUrl.includes("concerts")) folder = "reveren_uploads/concerts";
+    else if (req.baseUrl.includes("articles")) folder = "reveren_uploads/articles";
+    else if (req.baseUrl.includes("musics")) folder = "reveren_uploads/musics";
+
+    if (isImage) {
+      return {
+        folder,
+        allowed_formats: ["jpg", "jpeg", "png", "webp"],
+        transformation: [{ width: 1200, crop: "limit" }],
+        resource_type: "image",
+      };
     }
 
-    return {
-      folder,
-      resource_type, 
-      allowed_formats,
-      transformation,
-    };
+    if (isAudio) {
+      return {
+        folder,
+        allowed_formats: ["mp3", "wav", "ogg", "flac"],
+        resource_type: "video", 
+      };
+    }
+
+    throw new Error(`Type de fichier non pris en charge : ${file.mimetype}`);
   },
 });
 
 
 const fileFilter = (req, file, cb) => {
-  const allowedImage = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
-  const allowedAudio = ["audio/mpeg", "audio/wav", "audio/flac"];
+  const allowed = [
+    "image/jpeg",
+    "image/jpg",
+    "image/png",
+    "image/webp",
+    "audio/mpeg",
+    "audio/wav",
+    "audio/ogg",
+    "audio/flac",
+  ];
 
-  if (allowedImage.includes(file.mimetype) || allowedAudio.includes(file.mimetype)) {
-    cb(null, true);
-  } else {
-    cb(new Error("Format non supporté (image ou audio uniquement)."));
-  }
+  if (allowed.includes(file.mimetype)) cb(null, true);
+  else cb(new Error(`Format non supporté : ${file.mimetype}`));
 };
+
 
 const upload = multer({
   storage,
   fileFilter,
-  limits: { fileSize: 20 * 1024 * 1024 },
+  limits: { fileSize: 50 * 1024 * 1024 }, 
 });
 
 export default upload;
+
 
 
 
