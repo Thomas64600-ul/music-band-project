@@ -6,10 +6,10 @@ import "../config/cloudinary.js";
 const storage = new CloudinaryStorage({
   cloudinary,
   params: async (req, file) => {
-   
     const isImage = file.mimetype.startsWith("image/");
     const isAudio = file.mimetype.startsWith("audio/");
 
+  
     let folder = "reveren_uploads/others";
     if (req.baseUrl.includes("concerts")) folder = "reveren_uploads/concerts";
     else if (req.baseUrl.includes("articles")) folder = "reveren_uploads/articles";
@@ -21,6 +21,7 @@ const storage = new CloudinaryStorage({
         allowed_formats: ["jpg", "jpeg", "png", "webp"],
         transformation: [{ width: 1200, crop: "limit" }],
         resource_type: "image",
+        public_id: `${Date.now()}-${file.originalname.replace(/\.[^/.]+$/, "")}`,
       };
     }
 
@@ -28,10 +29,14 @@ const storage = new CloudinaryStorage({
       return {
         folder,
         allowed_formats: ["mp3", "wav", "ogg", "flac"],
-        resource_type: "video", 
+        
+        resource_type: "video",
+        
+        public_id: `${Date.now()}-${file.originalname.replace(/\s+/g, "_")}`,
       };
     }
 
+   
     throw new Error(`Type de fichier non pris en charge : ${file.mimetype}`);
   },
 });
@@ -61,6 +66,7 @@ const upload = multer({
 });
 
 export default upload;
+
 
 
 
