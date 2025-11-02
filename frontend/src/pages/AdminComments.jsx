@@ -259,12 +259,10 @@ export default function AdminComments() {
                           ? `${c.firstname} ${c.lastname || ""}`
                           : "Anonyme"}
                       </td>
-                      <td
-                        className="py-3 px-4 text-[var(--text)] max-w-[300px] truncate"
-                        title={c.content}
-                      >
-                        {c.content}
+                      <td className="py-3 px-4 text-[var(--text)] max-w-[500px] break-words">
+                      {c.content}
                       </td>
+
                       <td className="py-3 px-4 text-[var(--accent)] whitespace-nowrap">
                         {c.article_title || c.target_type || "—"}
                       </td>

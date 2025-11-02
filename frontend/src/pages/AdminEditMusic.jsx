@@ -54,7 +54,7 @@ export default function AdminEditMusic() {
       setFormData((prev) => ({ ...prev, [name]: files[0] }));
 
       if (name === "cover") setPreview(URL.createObjectURL(files[0]));
-      if (name === "audio") setFormData((prev) => ({ ...prev, url: "" })); // vide le champ lien
+      if (name === "audio") setFormData((prev) => ({ ...prev, url: "" })); 
     } else {
       setFormData((prev) => ({ ...prev, [name]: value }));
     }
@@ -172,7 +172,7 @@ export default function AdminEditMusic() {
               htmlFor="url"
               className="block mb-2 text-[var(--accent)] font-semibold"
             >
-              Lien audio (SoundCloud / Spotify / Cloudinary) *
+              Lien audio (Cloudinary ou fichier .mp3 direct) *
             </label>
             <input
               id="url"

@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   FaPlay,
   FaPause,
@@ -26,39 +26,26 @@ export default function PlayerGlobal() {
   const [volume, setVolume] = useState(1);
   const [isMuted, setIsMuted] = useState(false);
 
-
-  const { scrollYProgress } = useScroll();
-  const y = useTransform(scrollYProgress, [0, 1], [0, 10]);
-  const opacity = useTransform(scrollYProgress, [0.9, 1], [1, 0]);
-
- 
-  useEffect(() => {
-    if (!audioRef.current) return;
-    audioRef.current.volume = volume;
-    audioRef.current.muted = isMuted;
-  }, [volume, isMuted]);
-
-
   useEffect(() => {
     const audio = audioRef.current;
-    if (!audio || !currentTrack) return;
+    if (!audio || !currentTrack?.url) return;
 
-    audio.load(); 
+    audio.pause();
+    audio.src = currentTrack.url;
+
     if (isPlaying) {
-      audio.play().catch((err) =>
-        console.warn("Lecture audio bloquée par le navigateur :", err)
-      );
+      audio.play().catch(() => {});
+    } else {
+      audio.pause();
     }
   }, [currentTrack, isPlaying]);
 
-  
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
 
     const updateProgress = () =>
       setProgress((audio.currentTime / audio.duration) * 100 || 0);
-
     const handleEnd = () => nextTrack();
 
     audio.addEventListener("timeupdate", updateProgress);
@@ -70,126 +57,130 @@ export default function PlayerGlobal() {
     };
   }, [nextTrack]);
 
-  
+  useEffect(() => {
+    if (!audioRef.current) return;
+    audioRef.current.volume = isMuted ? 0 : volume;
+  }, [volume, isMuted]);
+
   const togglePlay = () => {
-    if (!audioRef.current || !currentTrack) return;
+    if (!currentTrack) return;
     if (isPlaying) stopTrack();
     else playTrack(currentTrack, playlist);
   };
 
-  const handleVolume = (e) => {
-    const value = parseFloat(e.target.value);
-    setVolume(value);
-    setIsMuted(value === 0);
-  };
-
-  const toggleMute = () => setIsMuted((v) => !v);
-
-  if (!currentTrack) return null;
-
- 
-  const isPlayable =
-    /(mp3|wav|ogg|flac)(\?.*)?$/i.test(currentTrack?.url || "") ||
-    currentTrack?.url?.includes("res.cloudinary.com");
-
   return (
-    <motion.div
-      style={{ y, opacity }}
-      initial={{ opacity: 0, y: 60 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: 60 }}
-      transition={{ duration: 0.4, ease: "easeOut" }}
-      className="
-        fixed bottom-[70px] inset-x-0 mx-auto
-        w-[96%] sm:w-[92%] md:w-[80%] lg:w-[65%]
-        bg-[color-mix(in_oklab,var(--bg)_90%,black_10%)]
-        border-t-2 border-[var(--accent)]
-        shadow-[0_-2px_25px_rgba(179,18,45,0.4)]
-        backdrop-blur-md
-        rounded-t-2xl sm:rounded-t-xl
-        z-[90]
-        flex flex-col
-        transition-all duration-500
-      "
-    >
-  
-      <div className="absolute inset-0 rounded-t-2xl bg-[var(--accent)]/10 blur-2xl pointer-events-none"></div>
+    <AnimatePresence>
+      {currentTrack && (
+        <motion.div
+          key="player"
+          initial={{ opacity: 0, y: 80 }}
+          animate={{
+            opacity: isPlaying ? 1 : 0, 
+            y: isPlaying ? 0 : 80,
+            scale: isPlaying ? 1 : 0.95,
+          }}
+          exit={{ opacity: 0, y: 100, scale: 0.9 }}
+          transition={{ duration: 0.6, ease: "easeInOut" }}
+          className={`fixed bottom-[70px] inset-x-0 mx-auto w-[95%] sm:w-[85%] md:w-[70%] lg:w-[60%]
+           border-2 rounded-2xl sm:rounded-3xl backdrop-blur-md z-[90]
+           ${
+           isPlaying
+          ? "border-[var(--accent)] bg-[color-mix(in_oklab,var(--bg)_80%,black_20%)] player-pulse shadow-[0_0_25px_rgba(179,18,45,0.5)]"
+          : "pointer-events-none"
+          }
+         `}
 
-      <div className="flex items-center justify-between px-3 py-2 sm:px-6 relative z-10">
-     
-        <div className="flex items-center gap-3 w-[45%] sm:w-auto truncate">
-          {currentTrack.cover_url && (
-            <img
-              src={currentTrack.cover_url}
-              alt={currentTrack.title}
-              className="w-10 h-10 rounded-md object-cover shadow-[0_0_8px_var(--accent)]"
-            />
-          )}
-          <div className="truncate">
-            <h3 className="text-sm sm:text-base font-semibold text-[var(--accent)] truncate">
-              {currentTrack.title}
-            </h3>
-            <p className="text-xs text-[var(--subtext)] italic truncate">
-              {currentTrack.artist}
-            </p>
+        >
+          <div
+            className="flex flex-col sm:flex-row items-center justify-between gap-2 px-3 py-3 
+                       transition-all duration-500"
+          >
+          
+            <div className="flex items-center gap-3 w-full sm:w-[40%] truncate justify-center sm:justify-start">
+              {currentTrack.cover_url && (
+                <img
+                  src={currentTrack.cover_url}
+                  alt={currentTrack.title}
+                  className="w-10 h-10 sm:w-12 sm:h-12 rounded-md object-cover shadow-[0_0_10px_rgba(179,18,45,0.4)]"
+                />
+              )}
+              <div className="text-center sm:text-left">
+                <h3 className="text-sm sm:text-base font-semibold text-[var(--accent)] truncate">
+                  {currentTrack.title}
+                </h3>
+                <p className="text-xs text-[var(--subtext)] italic truncate">
+                  {currentTrack.artist}
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-center gap-4 sm:gap-6 my-2 sm:my-0">
+              <button
+                onClick={prevTrack}
+                className="hover:scale-110 transition-transform"
+              >
+                <FaStepBackward size={14} className="text-[var(--accent)]" />
+              </button>
+              <button
+                onClick={togglePlay}
+                className="hover:scale-125 transition-transform"
+              >
+                {isPlaying ? (
+                  <FaPause size={22} className="text-[var(--accent)]" />
+                ) : (
+                  <FaPlay size={22} className="text-[var(--accent)]" />
+                )}
+              </button>
+              <button
+                onClick={nextTrack}
+                className="hover:scale-110 transition-transform"
+              >
+                <FaStepForward size={14} className="text-[var(--accent)]" />
+              </button>
+            </div>
+
+            <div className="flex items-center gap-2 w-full sm:w-[20%] justify-center sm:justify-end">
+              <button onClick={() => setIsMuted(!isMuted)}>
+                {isMuted ? (
+                  <FaVolumeMute size={16} className="text-[var(--accent)]" />
+                ) : (
+                  <FaVolumeUp size={16} className="text-[var(--accent)]" />
+                )}
+              </button>
+              <input
+                type="range"
+                min="0"
+                max="1"
+                step="0.01"
+                value={volume}
+                onChange={(e) => setVolume(parseFloat(e.target.value))}
+                className="w-20 sm:w-24 accent-[var(--accent)] cursor-pointer"
+              />
+            </div>
           </div>
-        </div>
 
-        <div className="flex items-center justify-center gap-3 sm:gap-4">
-          <button
-            onClick={prevTrack}
-            className="text-[var(--accent)] hover:text-[var(--gold)] transition-transform hover:scale-110"
-          >
-            <FaStepBackward size={14} className="sm:w-4 sm:h-4" />
-          </button>
+<div className="relative w-[98%] mx-auto mt-[2px] h-[5px] rounded-full overflow-hidden bg-[color-mix(in_oklab,var(--border)_60%,black_40%)] shadow-[inset_0_0_6px_rgba(255,215,0,0.2)]">
+  <motion.div
+    className="absolute top-0 left-0 h-[5px] rounded-full bg-gradient-to-r from-[var(--accent)] via-[var(--gold)] to-[var(--accent)] shadow-[0_0_12px_var(--gold)]"
+    style={{ width: `${progress}%` }}
+    animate={{ width: `${progress}%` }}
+    transition={{
+      type: "spring",
+      stiffness: 80,
+      damping: 15,
+      mass: 0.4,
+    }}
+  />
+</div>
 
-          <button
-            onClick={togglePlay}
-            className="relative text-[var(--accent)] hover:text-[var(--gold)] transition-transform hover:scale-110"
-          >
-            {isPlaying ? <FaPause size={20} /> : <FaPlay size={20} />}
-            {isPlaying && (
-              <span className="absolute inset-0 rounded-full bg-[var(--accent)]/25 blur-sm animate-pulse"></span>
-            )}
-          </button>
 
-          <button
-            onClick={nextTrack}
-            className="text-[var(--accent)] hover:text-[var(--gold)] transition-transform hover:scale-110"
-          >
-            <FaStepForward size={14} className="sm:w-4 sm:h-4" />
-          </button>
-        </div>
 
-        <div className="hidden sm:flex items-center gap-2 w-[20%] justify-end">
-          <button
-            onClick={toggleMute}
-            className="text-[var(--subtext)] hover:text-[var(--gold)]"
-          >
-            {isMuted ? <FaVolumeMute size={16} /> : <FaVolumeUp size={16} />}
-          </button>
-          <input
-            type="range"
-            min="0"
-            max="1"
-            step="0.01"
-            value={volume}
-            onChange={handleVolume}
-            className="w-20 accent-[var(--accent)] cursor-pointer"
-          />
-        </div>
-      </div>
-
-      <div className="relative w-full h-[3px] bg-[var(--border)] overflow-hidden">
-        <div
-          className="absolute top-0 left-0 h-[3px] bg-gradient-to-r from-[var(--accent)] to-[var(--gold)] transition-all duration-300"
-          style={{ width: `${progress}%` }}
-        ></div>
-      </div>
-
-      {isPlayable && (
-        <audio ref={audioRef} src={currentTrack.url} preload="metadata" />
+          <audio ref={audioRef} preload="metadata" />
+        </motion.div>
       )}
-    </motion.div>
+    </AnimatePresence>
   );
 }
+
+
+

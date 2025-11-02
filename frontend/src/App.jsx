@@ -3,7 +3,7 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import PlayerGlobal from "./components/PlayerGlobal";
 
-// Pages publiques
+
 import Home from "./pages/Home";
 import Music from "./pages/Music";
 import Concerts from "./pages/Concerts";
@@ -16,11 +16,10 @@ import Register from "./pages/Register";
 import NotFound from "./pages/NotFound";
 import VerifyEmail from "./pages/VerifyEmail";
 
-// Sécurité / admin
+
 import ProtectedRoute from "./components/ProtectedRoute";
 import AdminLayout from "./layouts/AdminLayout";
 
-// Pages admin
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminListArticles from "./pages/AdminListArticles";
 import AdminEditArticle from "./pages/AdminEditArticle";

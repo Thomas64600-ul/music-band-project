@@ -5,35 +5,41 @@ import { motion } from "framer-motion";
 import Player from "../components/Player";
 import CommentSection from "../components/CommentSection";
 import Button from "../components/Button";
-import { usePlayer } from "../context/PlayerContext"; 
+import { usePlayer } from "../context/PlayerContext";
+
 export default function Music() {
   const [musics, setMusics] = useState([]);
   const [loading, setLoading] = useState(true);
   const { user } = useAuth();
-  const { playTrack, setPlaylist } = usePlayer(); 
+  const { setPlaylist } = usePlayer();
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    (async () => {
+
+    const fetchMusics = async () => {
       try {
         const response = await get("/musics");
-        const musicList = Array.isArray(response?.data)
-          ? response.data
-          : Array.isArray(response)
-          ? response
-          : [];
+        const musicList =
+          response?.data && Array.isArray(response.data)
+            ? response.data
+            : Array.isArray(response)
+            ? response
+            : [];
+
         setMusics(musicList);
-        setPlaylist(musicList); 
-      } catch (e) {
-        console.error("Erreur chargement musiques :", e);
+        setPlaylist(musicList);
+      } catch (error) {
+        console.error("Erreur chargement musiques :", error);
         setMusics([]);
       } finally {
         setLoading(false);
       }
-    })();
+    };
+
+    fetchMusics();
   }, [setPlaylist]);
 
-  if (loading)
+  if (loading) {
     return (
       <p
         role="status"
@@ -42,13 +48,11 @@ export default function Music() {
         Chargement des morceaux...
       </p>
     );
+  }
 
-  if (!musics.length)
+  if (!musics.length) {
     return (
-      <main
-        role="main"
-        className="bg-[var(--bg)] text-center py-24 text-[var(--text)] transition-colors duration-700 ease-in-out"
-      >
+      <main className="bg-[var(--bg)] text-center py-24 text-[var(--text)] transition-colors duration-700 ease-in-out">
         <h1 className="text-3xl font-bold text-[var(--accent)] mb-4 drop-shadow-[0_0_10px_var(--accent)]">
           Aucune musique publiée
         </h1>
@@ -56,12 +60,12 @@ export default function Music() {
           Restez à l’écoute —{" "}
           <span className="text-[var(--accent)] font-semibold">REVEREN</span> prépare du lourd 🔥
         </p>
-
         <div className="max-w-4xl mx-auto mt-16 px-6">
           <CommentSection type="music" relatedId={0} user={user} />
         </div>
       </main>
     );
+  }
 
   return (
     <motion.main
@@ -78,6 +82,7 @@ export default function Music() {
         overflow-hidden
       "
     >
+     
       <div
         aria-hidden="true"
         className="
@@ -109,10 +114,10 @@ export default function Music() {
         {musics.map((m) => (
           <motion.article
             key={m.id}
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 25 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.4 }}
             className="
               relative rounded-2xl overflow-hidden
               bg-[var(--surface)] text-[var(--text)]
@@ -128,8 +133,7 @@ export default function Music() {
                 title={m.title}
                 artist={m.artist || "REVEREN"}
                 cover={m.cover_url}
-                
-                onPlay={() => playTrack(m, musics)}
+                musics={musics}
               />
             </div>
 
@@ -140,11 +144,7 @@ export default function Music() {
         ))}
       </section>
 
-      
-      <section
-        aria-label="Dernier EP de REVEREN"
-        className="text-center max-w-xl mt-12 mb-32"
-      >
+      <section className="text-center max-w-xl mt-12 mb-32">
         <h2 className="text-2xl font-semibold mb-3 text-[var(--gold)] tracking-wide">
           Nouvel EP –{" "}
           <span className="text-[var(--accent)] italic">Electric Sunrise</span>
@@ -185,6 +185,7 @@ export default function Music() {
     </motion.main>
   );
 }
+
 
 
 

@@ -8,22 +8,20 @@ export default function Footer() {
     <motion.footer
       role="contentinfo"
       aria-label="Pied de page du site REVEREN"
-     className="
-  relative flex flex-col items-center justify-center
-  h-[70px] w-full overflow-hidden select-none text-center
-  bg-[var(--bg)] text-[var(--text)]
-  border-t-2 border-[var(--accent)]
-  transition-colors duration-700 ease-in-out
-  z-[50]
-"
-
-
+      className="
+        relative flex flex-col items-center justify-center
+        h-[90px] w-full overflow-hidden select-none text-center
+        bg-[var(--bg)] text-[var(--text)]
+        border-t border-[var(--border)]
+        transition-colors duration-700 ease-in-out
+        z-[50]
+      "
       initial={{ opacity: 0, y: 50 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.2 }}
       transition={{ duration: 1.2, ease: 'easeOut' }}
     >
-    
+     
       <motion.div
         aria-hidden="true"
         initial={{ opacity: 0.4 }}
@@ -48,9 +46,18 @@ export default function Footer() {
         "
       />
 
-      
-      <div className="max-w-6xl mx-auto flex flex-col items-center py-8 md:py-10 gap-5 relative z-10">
-    
+      <div
+        aria-hidden="true"
+        className="
+          absolute bottom-[-40px] left-1/2 -translate-x-1/2
+          w-[60vw] h-[60px]
+          bg-[radial-gradient(circle,var(--accent)_0%,transparent_70%)]
+          opacity-25 blur-[60px]
+          pointer-events-none z-0
+        "
+      ></div>
+
+      <div className="max-w-6xl mx-auto flex flex-col items-center py-6 gap-4 relative z-10">
         <nav
           aria-label="Liens vers les réseaux sociaux du groupe REVEREN"
           className="flex justify-center gap-6 text-lg sm:text-xl"
@@ -68,7 +75,8 @@ export default function Footer() {
               aria-label={`Ouvrir la page ${label} de REVEREN dans un nouvel onglet`}
               title={`REVEREN sur ${label}`}
               className="
-                relative group transition-transform duration-300 hover:scale-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]/50 rounded-full p-1
+                relative group transition-transform duration-300 hover:scale-110 focus:outline-none
+                focus-visible:ring-2 focus-visible:ring-[var(--accent)]/50 rounded-full p-1
               "
             >
               <Icon

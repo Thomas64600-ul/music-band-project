@@ -3,33 +3,21 @@ import { createContext, useContext, useState, useEffect, useCallback } from "rea
 const PlayerContext = createContext();
 
 export function PlayerProvider({ children }) {
-  const [playlist, setPlaylist] = useState([]);              
-  const [currentTrack, setCurrentTrack] = useState(null);    
+  const [playlist, setPlaylist] = useState([]);
+  const [currentTrack, setCurrentTrack] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
 
-  
   const playTrack = useCallback((track, list = []) => {
-    if (!track) return;
-
-   
+    if (!track?.url) return;
     if (list.length) setPlaylist(list);
 
-   
-    setCurrentTrack((prev) => {
-      if (prev && prev.url === track.url) {
-        setIsPlaying((p) => !p);
-        return prev;
-      }
-      setIsPlaying(true);
-      return track;
-    });
+    setCurrentTrack(track);
+    setIsPlaying(true);
   }, []);
 
-  const stopTrack = useCallback(() => {
-    setIsPlaying(false);
-  }, []);
+  const stopTrack = useCallback(() => setIsPlaying(false), []);
 
-  const playNext = useCallback(() => {
+  const nextTrack = useCallback(() => {
     if (!playlist.length || !currentTrack) return;
     const index = playlist.findIndex((t) => t.url === currentTrack.url);
     const next = playlist[(index + 1) % playlist.length];
@@ -37,7 +25,7 @@ export function PlayerProvider({ children }) {
     setIsPlaying(true);
   }, [playlist, currentTrack]);
 
-  const playPrev = useCallback(() => {
+  const prevTrack = useCallback(() => {
     if (!playlist.length || !currentTrack) return;
     const index = playlist.findIndex((t) => t.url === currentTrack.url);
     const prev = playlist[(index - 1 + playlist.length) % playlist.length];
@@ -46,21 +34,9 @@ export function PlayerProvider({ children }) {
   }, [playlist, currentTrack]);
 
   useEffect(() => {
-    const savedTrack = localStorage.getItem("currentTrack");
-    const savedPlaylist = localStorage.getItem("playlist");
-    const savedState = localStorage.getItem("isPlaying");
-
-    if (savedTrack) setCurrentTrack(JSON.parse(savedTrack));
-    if (savedPlaylist) setPlaylist(JSON.parse(savedPlaylist));
-    if (savedState) setIsPlaying(savedState === "true");
-  }, []);
-
-  useEffect(() => {
-    if (currentTrack)
-      localStorage.setItem("currentTrack", JSON.stringify(currentTrack));
-    if (playlist.length)
-      localStorage.setItem("playlist", JSON.stringify(playlist));
+    localStorage.setItem("currentTrack", JSON.stringify(currentTrack));
     localStorage.setItem("isPlaying", isPlaying);
+    localStorage.setItem("playlist", JSON.stringify(playlist));
   }, [currentTrack, playlist, isPlaying]);
 
   return (
@@ -72,8 +48,8 @@ export function PlayerProvider({ children }) {
         isPlaying,
         playTrack,
         stopTrack,
-        playNext,
-        playPrev,
+        nextTrack,
+        prevTrack,
       }}
     >
       {children}
@@ -82,3 +58,6 @@ export function PlayerProvider({ children }) {
 }
 
 export const usePlayer = () => useContext(PlayerContext);
+
+
+

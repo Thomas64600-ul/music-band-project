@@ -230,7 +230,7 @@ export default function AdminMessages() {
                       <td className="py-3 px-4 text-[var(--accent)] whitespace-nowrap">
                         {m.email}
                       </td>
-                      <td className="py-3 px-4 text-[color-mix(in_oklab,var(--subtext)_90%,var(--accent)_10%)] max-w-sm truncate">
+                      <td className="py-3 px-4 text-[color-mix(in_oklab,var(--subtext)_90%,var(--accent)_10%)] max-w-[500px] break-words">
                         {m.message}
                       </td>
                       <td className="py-3 px-4 text-center">

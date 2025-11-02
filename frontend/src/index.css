@@ -172,3 +172,35 @@ html {
 .animate-progressPulse {
   animation: progressPulse 1.2s ease-in-out infinite;
 }
+
+@keyframes reverenPulse {
+  0% {
+    box-shadow:
+      0 0 25px rgba(179, 18, 45, 0.6),
+      0 0 50px rgba(179, 18, 45, 0.4),
+      0 0 70px rgba(255, 215, 0, 0.2);
+  }
+  40% {
+    box-shadow:
+      0 0 40px rgba(255, 215, 0, 0.6),
+      0 0 80px rgba(179, 18, 45, 0.6),
+      0 0 120px rgba(255, 215, 0, 0.3);
+  }
+  70% {
+    box-shadow:
+      0 0 60px rgba(179, 18, 45, 0.9),
+      0 0 120px rgba(255, 215, 0, 0.6),
+      0 0 160px rgba(179, 18, 45, 0.5);
+  }
+  100% {
+    box-shadow:
+      0 0 25px rgba(179, 18, 45, 0.6),
+      0 0 50px rgba(179, 18, 45, 0.4),
+      0 0 70px rgba(255, 215, 0, 0.2);
+  }
+}
+
+.player-pulse {
+  animation: reverenPulse 2.5s ease-in-out infinite;
+  transition: box-shadow 0.4s ease-in-out;
+}
