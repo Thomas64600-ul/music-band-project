@@ -110,6 +110,16 @@ export default function App() {
             }
           />
           <Route
+             path="/admin/concerts/:id"
+             element={
+              <ProtectedRoute requireAdmin={true}>
+                <AdminLayout>
+                  <AdminEditConcert />
+                </AdminLayout>
+              </ProtectedRoute>
+             }
+           />
+          <Route
             path="/admin/musics"
             element={
               <ProtectedRoute requireAdmin={true}>
