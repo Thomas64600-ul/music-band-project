@@ -8,7 +8,10 @@ import {
 } from "../controllers/musicController.js";
 
 import { validate } from "../middlewares/validationMiddleware.js";
-import { createMusicSchema, updateMusicSchema } from "../schemas/musicSchema.js";
+import {
+  createMusicSchema,
+  updateMusicSchema,
+} from "../schemas/musicSchema.js";
 import { protect } from "../middlewares/authMiddleware.js";
 import { authorizeRoles } from "../middlewares/roleMiddleware.js";
 import upload from "../middlewares/uploadMiddleware.js";
@@ -20,9 +23,10 @@ router.post(
   protect,
   authorizeRoles("admin"),
   upload.fields([
-    { name: "cover", maxCount: 1 }, 
-    { name: "audio", maxCount: 1 },
+    { name: "audio", maxCount: 1 }, 
+    { name: "cover", maxCount: 1 },
   ]),
+ 
   validate(createMusicSchema),
   addMusic
 );
@@ -36,19 +40,14 @@ router.put(
   protect,
   authorizeRoles("admin"),
   upload.fields([
-    { name: "cover", maxCount: 1 },
     { name: "audio", maxCount: 1 },
+    { name: "cover", maxCount: 1 },
   ]),
   validate(updateMusicSchema),
   editMusic
 );
 
-
-router.delete(
-  "/:id",
-  protect,
-  authorizeRoles("admin"),
-  removeMusic
-);
+router.delete("/:id", protect, authorizeRoles("admin"), removeMusic);
 
 export default router;
+

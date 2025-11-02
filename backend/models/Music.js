@@ -1,7 +1,6 @@
 import pool from "../config/db.js";
 
-
-async function createMusic(title, artist, url, cover_url, author_id = null) {
+async function createMusic(title, artist = null, url = null, cover_url = null, author_id = null) {
   const result = await pool.query(
     `
     INSERT INTO musics (title, artist, url, cover_url, author_id, created_at)
@@ -27,7 +26,6 @@ async function createMusic(title, artist, url, cover_url, author_id = null) {
   return music.rows[0];
 }
 
-
 async function getAllMusics(limit = 20, offset = 0) {
   const result = await pool.query(
     `
@@ -44,7 +42,6 @@ async function getAllMusics(limit = 20, offset = 0) {
   return result.rows;
 }
 
-
 async function getMusicById(id) {
   const result = await pool.query(
     `
@@ -60,18 +57,24 @@ async function getMusicById(id) {
   return result.rows[0];
 }
 
-
 async function updateMusic(id, title, artist, url, cover_url = null) {
   const query = cover_url
     ? `
       UPDATE musics
-      SET title = $1, artist = $2, url = $3, cover_url = $4, updated_at = NOW()
+      SET title = COALESCE($1, title),
+          artist = COALESCE($2, artist),
+          url = COALESCE($3, url),
+          cover_url = COALESCE($4, cover_url),
+          updated_at = NOW()
       WHERE id = $5
       RETURNING *
       `
     : `
       UPDATE musics
-      SET title = $1, artist = $2, url = $3, updated_at = NOW()
+      SET title = COALESCE($1, title),
+          artist = COALESCE($2, artist),
+          url = COALESCE($3, url),
+          updated_at = NOW()
       WHERE id = $4
       RETURNING *
       `;
@@ -83,7 +86,6 @@ async function updateMusic(id, title, artist, url, cover_url = null) {
   const result = await pool.query(query, values);
   return result.rows[0];
 }
-
 
 async function deleteMusic(id) {
   const result = await pool.query(`DELETE FROM musics WHERE id = $1`, [id]);

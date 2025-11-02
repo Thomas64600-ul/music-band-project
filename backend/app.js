@@ -14,15 +14,18 @@ import donationRoutes from "./routes/donationRoutes.js";
 import messageRoutes from "./routes/messageRoutes.js";
 import commentRoutes from "./routes/commentRoutes.js";
 import musicRoutes from "./routes/musicRoutes.js";
-import statsRoutes from "./routes/statsRoutes.js"; 
+import statsRoutes from "./routes/statsRoutes.js";
 
 dotenv.config();
 const app = express();
 
 app.set("trust proxy", 1);
 app.disable("x-powered-by");
+
+
 app.use(compression());
 app.use(morgan(process.env.NODE_ENV !== "production" ? "dev" : "combined"));
+
 
 app.use(
   helmet({
@@ -35,8 +38,10 @@ app.use(
           "'self'",
           process.env.CLIENT_URL || "http://localhost:5173",
           "https://api.stripe.com",
+          "https://res.cloudinary.com",
         ],
         "script-src": ["'self'", "'unsafe-inline'", "https://js.stripe.com"],
+        "media-src": ["'self'", "data:", "blob:", "res.cloudinary.com"], 
       },
     },
   })
@@ -45,14 +50,12 @@ app.use(
 app.use(
   cors({
     origin: function (origin, callback) {
-     
       const allowedOrigins = [
         "https://music-band-project-five.vercel.app",
         "http://localhost:5173",
         "https://music-band-project.onrender.com",
       ];
 
-     
       const vercelRegex = /^https:\/\/music-band-project-[a-z0-9-]+\.vercel\.app$/;
 
       if (
@@ -79,13 +82,9 @@ app.use(
   })
 );
 
-
-
-
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-
 
 app.use("/api/users", userRoutes);
 app.use("/api/articles", articleRoutes);
@@ -94,8 +93,7 @@ app.use("/api/comments", commentRoutes);
 app.use("/api/musics", musicRoutes);
 app.use("/api/messages", messageRoutes);
 app.use("/api/donations", donationRoutes);
-app.use("/api/stats", statsRoutes); 
-
+app.use("/api/stats", statsRoutes);
 
 app.use(
   "/api/donations/webhook",
@@ -116,6 +114,5 @@ if (process.env.NODE_ENV !== "production") {
 app.use(errorHandler);
 
 export default app;
-
 
 

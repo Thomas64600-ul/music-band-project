@@ -1,6 +1,5 @@
 import Joi from "joi";
 
-
 export const createMusicSchema = Joi.object({
   title: Joi.string()
     .min(2)
@@ -22,11 +21,10 @@ export const createMusicSchema = Joi.object({
 
   url: Joi.string()
     .uri()
-    .required()
+    .allow("", null)
+    .optional()
     .messages({
-      "string.empty": "Le lien audio est requis.",
       "string.uri": "Le lien audio doit être une URL valide (ex: https://...).",
-      "any.required": "Le champ URL est obligatoire.",
     }),
 
   cover_url: Joi.string()
@@ -37,8 +35,6 @@ export const createMusicSchema = Joi.object({
       "string.uri": "L’URL de la pochette doit être valide.",
     }),
 });
-
-
 
 export const updateMusicSchema = Joi.object({
   title: Joi.string()

@@ -9,13 +9,13 @@ import { sendEmail } from "../services/emailService.js";
 
 export async function addMusic(req, res, next) {
   try {
-    const { title, artist, url } = req.validatedBody;
+    const { title, artist } = req.body;
     const author_id = req.user?.id;
 
-    const audioFile = req.files?.audio?.[0];
+    const audioFile = req.files?.audio?.[0] || req.file; 
     const coverFile = req.files?.cover?.[0];
 
-    const audio_url = audioFile?.path || url;
+    const audio_url = audioFile?.path || req.body.url; 
     const cover_url = coverFile?.path || null;
 
     if (!title || !audio_url) {
@@ -25,12 +25,20 @@ export async function addMusic(req, res, next) {
       });
     }
 
-    const newMusic = await createMusic(title, artist, audio_url, cover_url, author_id);
+    const newMusic = await createMusic(
+      title,
+      artist,
+      audio_url,
+      cover_url,
+      author_id
+    );
 
     await sendEmail(
       process.env.ADMIN_EMAIL,
       "Nouveau morceau ajouté",
-      `Un nouveau morceau vient d’être ajouté par ${req.user.firstname || "un utilisateur inconnu"}.`,
+      `Un nouveau morceau vient d’être ajouté par ${
+        req.user.firstname || "un utilisateur"
+      }.`,
       "adminNewMusic.html",
       {
         title,
@@ -44,13 +52,15 @@ export async function addMusic(req, res, next) {
 
     res.status(201).json({
       success: true,
-      message: "Musique ajoutée avec succès.",
+      message: "Musique ajoutée avec succès 🎶",
       data: newMusic,
     });
   } catch (error) {
+    console.error("Erreur ajout musique :", error);
     next(error);
   }
 }
+
 
 export async function fetchMusics(req, res, next) {
   try {
