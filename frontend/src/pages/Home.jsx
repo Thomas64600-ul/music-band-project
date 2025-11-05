@@ -2,15 +2,16 @@ import React, { useEffect } from "react";
 import { motion } from "framer-motion";
 import Button from "../components/Button";
 import groupImage from "../assets/groupImage.webp";
-
+import groupImageMobile from "../assets/groupImage-mobile.webp";
 export default function Home() {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
   useEffect(() => {
-  const timer = setTimeout(() => window.scrollTo(0, 0), 100);
-  return () => clearTimeout(timer);
-}, []);
+    const timer = setTimeout(() => window.scrollTo(0, 0), 100);
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <main
@@ -22,22 +23,32 @@ export default function Home() {
         transition-colors duration-700 ease-in-out
       "
     >
-     
+      
       <section className="relative h-[70vh] md:h-[90vh] overflow-hidden">
+      
         <img
-  src="/groupImage-blur.webp"
-  alt=""
-  aria-hidden="true"
-  className="absolute inset-0 w-full h-full object-cover blur-2xl scale-105"
-  loading="eager"
-/>
+          src="/groupImage-blur.webp"
+          alt=""
+          aria-hidden="true"
+          className="absolute inset-0 w-full h-full object-cover blur-2xl scale-105"
+          loading="eager"
+          fetchpriority="low"
+          decoding="async"
+        />
+
         <motion.img
   src={groupImage}
+  srcSet={`
+    ${groupImageMobile} 800w,
+    ${groupImage} 1920w
+  `}
+  sizes="(max-width: 768px) 100vw, 1920px"
   alt="Photo du groupe REVEREN sur scène"
-  loading="lazy"
   width="1920"
   height="1080"
+  fetchpriority="high"
   decoding="async"
+  loading="eager"
   initial={{ scale: 1 }}
   whileInView={{ scale: 1.08 }}
   viewport={{ once: true }}

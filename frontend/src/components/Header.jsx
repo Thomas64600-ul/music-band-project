@@ -1,10 +1,15 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, lazy, Suspense } from "react";
 import { NavLink } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { FaBars, FaTimes, FaSun, FaMoon } from "react-icons/fa";
-import { User, LogOut, Shield, LayoutDashboard } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
-import logo from "/logo.webp"; 
+import { motion } from "framer-motion";
+import logo from "/logo-small.webp"; 
+
+
+const FaBars = lazy(() => import("react-icons/fa").then(m => ({ default: m.FaBars })));
+const FaTimes = lazy(() => import("react-icons/fa").then(m => ({ default: m.FaTimes })));
+const FaSun = lazy(() => import("react-icons/fa").then(m => ({ default: m.FaSun })));
+const FaMoon = lazy(() => import("react-icons/fa").then(m => ({ default: m.FaMoon })));
+const { User, LogOut, Shield } = await import("lucide-react");
 
 function LinkItem({ to, children, onClick, className = "" }) {
   return (
@@ -14,7 +19,7 @@ function LinkItem({ to, children, onClick, className = "" }) {
       end
       className={({ isActive }) =>
         [
-          "relative group inline-block transition-colors duration-300",
+          "relative group inline-block transition-colors duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] rounded-md",
           isActive
             ? "text-[var(--accent)]"
             : "text-[var(--text)] opacity-90 hover:text-[var(--accent)]",
@@ -51,9 +56,6 @@ export default function Header({ links = [] }) {
     localStorage.setItem("theme", darkMode ? "dark" : "light");
   }, [darkMode]);
 
-  const toggleTheme = () => setDarkMode((v) => !v);
-  const toggleMenu = () => setMenuOpen((v) => !v);
-
   useEffect(() => {
     const onScroll = () => setIsScrolled(window.scrollY > 20);
     window.addEventListener("scroll", onScroll);
@@ -69,6 +71,7 @@ export default function Header({ links = [] }) {
             : "bg-white shadow-[0_2px_20px_rgba(0,0,0,0.05)]"
           : "bg-[var(--bg)]"
       }`}
+      role="banner"
     >
       {isAdmin && (
         <div className="bg-[var(--accent)] text-[var(--bg)] text-center text-sm py-1 font-semibold tracking-wide border-b border-[color-mix(in_oklab,var(--accent)_80%,black_20%)] shadow-[0_0_12px_var(--accent)] animate-pulse">
@@ -77,37 +80,30 @@ export default function Header({ links = [] }) {
       )}
 
       <div className="flex items-center justify-between px-4 sm:px-12 py-3 sm:py-5 relative">
-        
-        <button
-          onClick={toggleTheme}
-          className="hidden sm:block text-[var(--accent)] hover:text-[var(--gold)] hover:scale-110 transition-transform duration-200"
-          aria-label="Basculer le thème clair/sombre"
-        >
-          {darkMode ? <FaSun size={22} /> : <FaMoon size={22} />}
-        </button>
+       
+        <Suspense fallback={null}>
+          <button
+            onClick={() => setDarkMode(v => !v)}
+            className="hidden sm:block text-[var(--accent)] hover:text-[var(--gold)] hover:scale-110 transition-transform duration-200"
+            aria-label="Basculer le thème clair/sombre"
+          >
+            {darkMode ? <FaSun size={22} /> : <FaMoon size={22} />}
+          </button>
+        </Suspense>
 
         <div className="flex justify-center items-center flex-1 sm:translate-x-[60px] md:translate-x-[80px] relative z-0">
           <div className="absolute -z-10 w-[160px] h-[160px] sm:w-[200px] sm:h-[200px] rounded-full bg-[var(--accent)] blur-[80px] opacity-60"></div>
 
           <motion.img
             src={logo}
-            alt="Logo REVEREN"
-            fetchpriority="high"
-            decoding="async"
+            alt="Logo du groupe REVEREN"
             width="140"
             height="40"
-            animate={{
-              scale: isScrolled ? 0.95 : 1,
-              opacity: [1, 0.9, 1],
-            }}
-            transition={{
-              duration: 4,
-              repeat: Infinity,
-              repeatType: "mirror",
-            }}
-            className={`object-contain transition-all duration-500 pointer-events-none ${
-              isScrolled ? "h-16 sm:h-[95px]" : "h-20 sm:h-[110px]"
-            } rounded-md`}
+            fetchpriority="high"
+            decoding="async"
+            animate={{ scale: isScrolled ? 0.95 : 1 }}
+            transition={{ duration: 0.4 }}
+            className="object-contain transition-transform duration-500 pointer-events-none h-16 sm:h-[95px] rounded-md"
           />
         </div>
 
@@ -134,13 +130,13 @@ export default function Header({ links = [] }) {
             <>
               <NavLink
                 to="/register"
-                className="text-[#1A1A1A] dark:text-[#F2F2F2] hover:text-[var(--accent)] transition-colors"
+                className="hover:text-[var(--accent)] transition-colors"
               >
                 Inscription
               </NavLink>
               <NavLink
                 to="/login"
-                className="text-[#1A1A1A] dark:text-[#F2F2F2] hover:text-[var(--accent)] transition-colors"
+                className="hover:text-[var(--accent)] transition-colors"
               >
                 Connexion
               </NavLink>
@@ -148,19 +144,19 @@ export default function Header({ links = [] }) {
           )}
         </div>
 
-        <button
-          onClick={toggleMenu}
-          className="text-[var(--accent)] hover:text-[var(--gold)] hover:scale-110 transition-transform duration-200 sm:hidden z-20"
-          aria-label={menuOpen ? "Fermer le menu" : "Ouvrir le menu"}
-        >
-          {menuOpen ? <FaTimes size={22} /> : <FaBars size={22} />}
-        </button>
+        <Suspense fallback={null}>
+          <button
+            onClick={() => setMenuOpen(v => !v)}
+            className="text-[var(--accent)] hover:text-[var(--gold)] hover:scale-110 transition-transform duration-200 sm:hidden z-20"
+            aria-label={menuOpen ? "Fermer le menu" : "Ouvrir le menu"}
+          >
+            {menuOpen ? <FaTimes size={22} /> : <FaBars size={22} />}
+          </button>
+        </Suspense>
       </div>
-
     </header>
   );
 }
-
 
 
 
