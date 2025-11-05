@@ -1,12 +1,16 @@
 import React, { useEffect } from "react";
 import { motion } from "framer-motion";
 import Button from "../components/Button";
-import groupImage from "../assets/groupImage.png";
+import groupImage from "../assets/groupImage.webp";
 
 export default function Home() {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+  useEffect(() => {
+  const timer = setTimeout(() => window.scrollTo(0, 0), 100);
+  return () => clearTimeout(timer);
+}, []);
 
   return (
     <main
@@ -20,24 +24,37 @@ export default function Home() {
     >
      
       <section className="relative h-[70vh] md:h-[90vh] overflow-hidden">
+        <img
+  src="/groupImage-blur.webp"
+  alt=""
+  aria-hidden="true"
+  className="absolute inset-0 w-full h-full object-cover blur-2xl scale-105"
+  loading="eager"
+/>
         <motion.img
-          src={groupImage}
-          alt="Photo du groupe REVEREN sur scène"
-          initial={{ scale: 1 }}
-          animate={{ scale: 1.08 }}
-          transition={{
-            duration: 15,
-            ease: "easeInOut",
-            repeat: Infinity,
-            repeatType: "reverse",
-          }}
-          className="
-            absolute inset-0 w-full h-full object-cover
-            object-[50%_30%]
-            contrast-125 brightness-[0.85]
-            dark:brightness-[0.8] dark:contrast-110
-          "
-        />
+  src={groupImage}
+  alt="Photo du groupe REVEREN sur scène"
+  loading="lazy"
+  width="1920"
+  height="1080"
+  decoding="async"
+  initial={{ scale: 1 }}
+  whileInView={{ scale: 1.08 }}
+  viewport={{ once: true }}
+  transition={{
+    duration: 15,
+    ease: "easeInOut",
+    repeat: Infinity,
+    repeatType: "reverse",
+  }}
+  className="
+    absolute inset-0 w-full h-full object-cover
+    object-[50%_30%]
+    contrast-125 brightness-[0.85]
+    dark:brightness-[0.8] dark:contrast-110
+  "
+/>
+
 
         <div
           className="

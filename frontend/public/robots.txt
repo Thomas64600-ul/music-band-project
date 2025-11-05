@@ -1,0 +1,14 @@
+# robots.txt – Fichier d'indexation pour REVEREN
+
+User-agent: *
+Allow: /
+
+# Exclure les répertoires sensibles (si tu as un dashboard admin)
+Disallow: /admin
+Disallow: /api
+
+# Sitemap pour le référencement
+Sitemap: https://reveren.vercel.app/sitemap.xml
+
+# Informations supplémentaires (optionnel)
+Host: https://reveren.vercel.app
