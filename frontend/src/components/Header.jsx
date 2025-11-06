@@ -1,15 +1,10 @@
-import { useState, useEffect, lazy, Suspense } from "react";
+import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { motion } from "framer-motion";
-import logo from "/logo-small.webp"; 
-
-
-const FaBars = lazy(() => import("react-icons/fa").then(m => ({ default: m.FaBars })));
-const FaTimes = lazy(() => import("react-icons/fa").then(m => ({ default: m.FaTimes })));
-const FaSun = lazy(() => import("react-icons/fa").then(m => ({ default: m.FaSun })));
-const FaMoon = lazy(() => import("react-icons/fa").then(m => ({ default: m.FaMoon })));
-const { User, LogOut, Shield } = await import("lucide-react");
+import { FaBars, FaTimes, FaSun, FaMoon } from "react-icons/fa";
+import { User, LogOut, Shield, LayoutDashboard } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import logo from "/logo.webp"; 
 
 function LinkItem({ to, children, onClick, className = "" }) {
   return (
@@ -19,12 +14,14 @@ function LinkItem({ to, children, onClick, className = "" }) {
       end
       className={({ isActive }) =>
         [
-          "relative group inline-block transition-colors duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] rounded-md",
+          "relative group inline-block transition-colors duration-300",
           isActive
             ? "text-[var(--accent)]"
             : "text-[var(--text)] opacity-90 hover:text-[var(--accent)]",
           'after:content-[""] after:absolute after:left-1/2 after:-translate-x-1/2 after:-bottom-1 after:h-[2px] after:bg-[var(--accent)] after:transition-all after:duration-300',
-          isActive ? "after:w-3/4 after:opacity-100" : "after:w-0 after:opacity-60",
+          isActive
+            ? "after:w-3/4 after:opacity-100"
+            : "after:w-0 after:opacity-60",
           "group-hover:after:w-3/4 group-focus-visible:after:w-3/4",
           className,
         ].join(" ")
@@ -56,6 +53,9 @@ export default function Header({ links = [] }) {
     localStorage.setItem("theme", darkMode ? "dark" : "light");
   }, [darkMode]);
 
+  const toggleTheme = () => setDarkMode((v) => !v);
+  const toggleMenu = () => setMenuOpen((v) => !v);
+
   useEffect(() => {
     const onScroll = () => setIsScrolled(window.scrollY > 20);
     window.addEventListener("scroll", onScroll);
@@ -71,7 +71,6 @@ export default function Header({ links = [] }) {
             : "bg-white shadow-[0_2px_20px_rgba(0,0,0,0.05)]"
           : "bg-[var(--bg)]"
       }`}
-      role="banner"
     >
       {isAdmin && (
         <div className="bg-[var(--accent)] text-[var(--bg)] text-center text-sm py-1 font-semibold tracking-wide border-b border-[color-mix(in_oklab,var(--accent)_80%,black_20%)] shadow-[0_0_12px_var(--accent)] animate-pulse">
@@ -80,30 +79,36 @@ export default function Header({ links = [] }) {
       )}
 
       <div className="flex items-center justify-between px-4 sm:px-12 py-3 sm:py-5 relative">
-       
-        <Suspense fallback={null}>
-          <button
-            onClick={() => setDarkMode(v => !v)}
-            className="hidden sm:block text-[var(--accent)] hover:text-[var(--gold)] hover:scale-110 transition-transform duration-200"
-            aria-label="Basculer le thème clair/sombre"
-          >
-            {darkMode ? <FaSun size={22} /> : <FaMoon size={22} />}
-          </button>
-        </Suspense>
+        <button
+          onClick={toggleTheme}
+          className="hidden sm:block text-[var(--accent)] hover:text-[var(--gold)] hover:scale-110 transition-transform duration-200"
+          aria-label="Basculer le thème clair/sombre"
+        >
+          {darkMode ? <FaSun size={22} /> : <FaMoon size={22} />}
+        </button>
 
         <div className="flex justify-center items-center flex-1 sm:translate-x-[60px] md:translate-x-[80px] relative z-0">
           <div className="absolute -z-10 w-[160px] h-[160px] sm:w-[200px] sm:h-[200px] rounded-full bg-[var(--accent)] blur-[80px] opacity-60"></div>
 
           <motion.img
             src={logo}
-            alt="Logo du groupe REVEREN"
+            alt="Logo REVEREN"
+            fetchPriority="high"
+            decoding="async"
             width="140"
             height="40"
-            fetchpriority="high"
-            decoding="async"
-            animate={{ scale: isScrolled ? 0.95 : 1 }}
-            transition={{ duration: 0.4 }}
-            className="object-contain transition-transform duration-500 pointer-events-none h-16 sm:h-[95px] rounded-md"
+            animate={{
+              scale: isScrolled ? 0.95 : 1,
+              opacity: [1, 0.9, 1],
+            }}
+            transition={{
+              duration: 4,
+              repeat: Infinity,
+              repeatType: "mirror",
+            }}
+            className={`object-contain transition-all duration-500 pointer-events-none ${
+              isScrolled ? "h-16 sm:h-[95px]" : "h-20 sm:h-[110px]"
+            } rounded-md`}
           />
         </div>
 
@@ -130,13 +135,13 @@ export default function Header({ links = [] }) {
             <>
               <NavLink
                 to="/register"
-                className="hover:text-[var(--accent)] transition-colors"
+                className="text-[#1A1A1A] dark:text-[#F2F2F2] hover:text-[var(--accent)] transition-colors"
               >
                 Inscription
               </NavLink>
               <NavLink
                 to="/login"
-                className="hover:text-[var(--accent)] transition-colors"
+                className="text-[#1A1A1A] dark:text-[#F2F2F2] hover:text-[var(--accent)] transition-colors"
               >
                 Connexion
               </NavLink>
@@ -144,16 +149,137 @@ export default function Header({ links = [] }) {
           )}
         </div>
 
-        <Suspense fallback={null}>
-          <button
-            onClick={() => setMenuOpen(v => !v)}
-            className="text-[var(--accent)] hover:text-[var(--gold)] hover:scale-110 transition-transform duration-200 sm:hidden z-20"
-            aria-label={menuOpen ? "Fermer le menu" : "Ouvrir le menu"}
-          >
-            {menuOpen ? <FaTimes size={22} /> : <FaBars size={22} />}
-          </button>
-        </Suspense>
+        <button
+          onClick={toggleMenu}
+          className="text-[var(--accent)] hover:text-[var(--gold)] hover:scale-110 transition-transform duration-200 sm:hidden z-20"
+          aria-label={menuOpen ? "Fermer le menu" : "Ouvrir le menu"}
+        >
+          {menuOpen ? <FaTimes size={22} /> : <FaBars size={22} />}
+        </button>
       </div>
+
+      <div className="hidden sm:flex flex-col items-center">
+        <div className="flex justify-center border-t border-[var(--border)] py-2 bg-[var(--bg)] relative w-full">
+          <nav className="flex space-x-8 text-sm font-semibold">
+            {links.map((l) => (
+              <LinkItem key={l.name} to={l.path}>
+                {l.name}
+              </LinkItem>
+            ))}
+            {isAdmin && (
+              <LinkItem
+                to="/admin"
+                className="text-[var(--accent)] hover:text-[var(--gold)]"
+              >
+                Dashboard
+              </LinkItem>
+            )}
+          </nav>
+
+          <motion.div
+            initial={{ opacity: 0.4 }}
+            animate={{
+              opacity: [0.4, 0.8, 0.4],
+              boxShadow: [
+                "0 0 12px var(--accent)",
+                "0 0 18px var(--gold)",
+                "0 0 12px var(--accent)",
+              ],
+            }}
+            transition={{
+              duration: 3,
+              repeat: Infinity,
+              repeatType: "mirror",
+            }}
+            className="absolute bottom-0 left-0 w-full h-[2px] bg-[var(--accent)]"
+          />
+        </div>
+      </div>
+
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.nav
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3 }}
+            className="sm:hidden flex flex-col items-center py-4 border-t border-[var(--border)] bg-[var(--bg)] relative z-50"
+          >
+            {links.map((l) => (
+              <LinkItem
+                key={l.name}
+                to={l.path}
+                onClick={() => setMenuOpen(false)}
+                className="block w-full text-center py-3 text-lg"
+              >
+                {l.name}
+              </LinkItem>
+            ))}
+
+            {isAdmin && (
+              <LinkItem
+                to="/admin"
+                onClick={() => setMenuOpen(false)}
+                className="block w-full text-center py-3 text-[var(--accent)] font-semibold"
+              >
+                <LayoutDashboard size={18} className="inline-block mr-2" />
+                Dashboard
+              </LinkItem>
+            )}
+
+            <div className="flex justify-center mt-4">
+              <button
+                onClick={toggleTheme}
+                className="text-[var(--accent)] hover:text-[var(--gold)] hover:scale-110 transition-transform duration-200"
+              >
+                {darkMode ? <FaSun size={22} /> : <FaMoon size={22} />}
+              </button>
+            </div>
+
+            <div className="flex flex-col items-center gap-3 mt-6 text-sm">
+              {user ? (
+                <>
+                  <span className="text-[var(--accent)] flex items-center gap-2">
+                    <User size={16} />
+                    {user.firstname || user.email}
+                  </span>
+                  {isAdmin && (
+                    <span className="bg-[var(--accent)] text-[var(--bg)] text-xs px-2 py-1 rounded-md flex items-center gap-1">
+                      <Shield size={12} /> Admin
+                    </span>
+                  )}
+                  <button
+                    onClick={() => {
+                      logout();
+                      setMenuOpen(false);
+                    }}
+                    className="text-[var(--accent)] hover:text-[var(--gold)] flex items-center gap-1 mt-2"
+                  >
+                    <LogOut size={14} /> Déconnexion
+                  </button>
+                </>
+              ) : (
+                <>
+                  <NavLink
+                    to="/register"
+                    onClick={() => setMenuOpen(false)}
+                    className="text-[#1A1A1A] dark:text-[#F2F2F2] hover:text-[var(--accent)] transition-colors z-50"
+                  >
+                    Inscription
+                  </NavLink>
+                  <NavLink
+                    to="/login"
+                    onClick={() => setMenuOpen(false)}
+                    className="text-[#1A1A1A] dark:text-[#F2F2F2] hover:text-[var(--accent)] transition-colors z-50"
+                  >
+                    Connexion
+                  </NavLink>
+                </>
+              )}
+            </div>
+          </motion.nav>
+        )}
+      </AnimatePresence>
     </header>
   );
 }

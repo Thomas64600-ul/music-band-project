@@ -32,7 +32,7 @@ export default function Home() {
           aria-hidden="true"
           className="absolute inset-0 w-full h-full object-cover blur-2xl scale-105"
           loading="eager"
-          fetchpriority="low"
+          fetchPriority="low"
           decoding="async"
         />
 
@@ -46,7 +46,7 @@ export default function Home() {
   alt="Photo du groupe REVEREN sur scène"
   width="1920"
   height="1080"
-  fetchpriority="high"
+  fetchPriority="high"
   decoding="async"
   loading="eager"
   initial={{ scale: 1 }}
