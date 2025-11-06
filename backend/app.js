@@ -21,11 +21,8 @@ const app = express();
 
 app.set("trust proxy", 1);
 app.disable("x-powered-by");
-
-
 app.use(compression());
 app.use(morgan(process.env.NODE_ENV !== "production" ? "dev" : "combined"));
-
 
 app.use(
   helmet({
@@ -39,9 +36,10 @@ app.use(
           process.env.CLIENT_URL || "http://localhost:5173",
           "https://api.stripe.com",
           "https://res.cloudinary.com",
+          "https://music-band-project.onrender.com",
         ],
         "script-src": ["'self'", "'unsafe-inline'", "https://js.stripe.com"],
-        "media-src": ["'self'", "data:", "blob:", "res.cloudinary.com"], 
+        "media-src": ["'self'", "data:", "blob:", "res.cloudinary.com"],
       },
     },
   })
@@ -49,36 +47,14 @@ app.use(
 
 app.use(
   cors({
-    origin: function (origin, callback) {
-      const allowedOrigins = [
-        "https://music-band-project-five.vercel.app",
-        "http://localhost:5173",
-        "https://music-band-project.onrender.com",
-      ];
-
-      const vercelRegex = /^https:\/\/music-band-project-[a-z0-9-]+\.vercel\.app$/;
-
-      if (
-        !origin ||
-        allowedOrigins.includes(origin) ||
-        vercelRegex.test(origin)
-      ) {
-        callback(null, true);
-      } else {
-        console.warn("CORS refusé pour :", origin);
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-    allowedHeaders: [
-      "Content-Type",
-      "Authorization",
-      "X-Requested-With",
-      "Accept",
-      "Origin",
+    origin: [
+      "https://music-band-project-five.vercel.app", 
+      "http://localhost:5173", 
+      "https://music-band-project.onrender.com", 
     ],
-    exposedHeaders: ["Set-Cookie"],
+    credentials: true, 
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
@@ -114,5 +90,6 @@ if (process.env.NODE_ENV !== "production") {
 app.use(errorHandler);
 
 export default app;
+
 
 

@@ -185,15 +185,45 @@ export async function logout(req, res, next) {
 
 export async function me(req, res, next) {
   try {
-    const user = await getUserById(req.user.id);
-    if (!user)
-      return res.status(404).json({ success: false, error: "Utilisateur introuvable." });
+ 
+    if (!req.user || !req.user.id) {
+      return res.status(401).json({
+        success: false,
+        message: "Non autorisé : utilisateur non authentifié.",
+      });
+    }
 
-    res.status(200).json({ success: true, data: user });
+    const user = await getUserById(req.user.id);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "Utilisateur introuvable ou supprimé.",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Utilisateur authentifié.",
+      data: {
+        id: user.id,
+        firstname: user.firstname,
+        lastname: user.lastname,
+        email: user.email,
+        role: user.role,
+        image_url: user.image_url,
+        is_verified: user.is_verified,
+      },
+    });
   } catch (error) {
-    next(error);
+    console.error("Erreur dans /me :", error.message);
+    return res.status(500).json({
+      success: false,
+      message: "Erreur interne du serveur.",
+    });
   }
 }
+
 
 export async function forgotPassword(req, res, next) {
   try {
