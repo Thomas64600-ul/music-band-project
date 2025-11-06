@@ -1,11 +1,10 @@
-import { Routes, Route, BrowserRouter as Router } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import { Suspense, lazy } from "react";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Loader from "./components/Loader";
 import AdminWrapper from "./layouts/AdminWrapper";
-
 
 const PlayerGlobal = lazy(() => import("./components/PlayerGlobal"));
 
@@ -76,7 +75,7 @@ export default function App() {
             <Route
               path="/admin"
               element={
-                <ProtectedRoute requireAdmin={true}>
+                <ProtectedRoute requireAdmin>
                   <AdminWrapper>
                     <AdminDashboard />
                   </AdminWrapper>
@@ -87,7 +86,7 @@ export default function App() {
             <Route
               path="/admin/articles"
               element={
-                <ProtectedRoute requireAdmin={true}>
+                <ProtectedRoute requireAdmin>
                   <AdminWrapper>
                     <AdminListArticles />
                   </AdminWrapper>
@@ -98,7 +97,7 @@ export default function App() {
             <Route
               path="/admin/articles/:id"
               element={
-                <ProtectedRoute requireAdmin={true}>
+                <ProtectedRoute requireAdmin>
                   <AdminWrapper>
                     <AdminEditArticle />
                   </AdminWrapper>
@@ -109,7 +108,7 @@ export default function App() {
             <Route
               path="/admin/concerts"
               element={
-                <ProtectedRoute requireAdmin={true}>
+                <ProtectedRoute requireAdmin>
                   <AdminWrapper>
                     <AdminListConcerts />
                   </AdminWrapper>
@@ -120,7 +119,7 @@ export default function App() {
             <Route
               path="/admin/concerts/:id"
               element={
-                <ProtectedRoute requireAdmin={true}>
+                <ProtectedRoute requireAdmin>
                   <AdminWrapper>
                     <AdminEditConcert />
                   </AdminWrapper>
@@ -131,7 +130,7 @@ export default function App() {
             <Route
               path="/admin/musics"
               element={
-                <ProtectedRoute requireAdmin={true}>
+                <ProtectedRoute requireAdmin>
                   <AdminWrapper>
                     <AdminListMusics />
                   </AdminWrapper>
@@ -142,7 +141,7 @@ export default function App() {
             <Route
               path="/admin/musics/:id"
               element={
-                <ProtectedRoute requireAdmin={true}>
+                <ProtectedRoute requireAdmin>
                   <AdminWrapper>
                     <AdminEditMusic />
                   </AdminWrapper>
@@ -153,7 +152,7 @@ export default function App() {
             <Route
               path="/admin/comments"
               element={
-                <ProtectedRoute requireAdmin={true}>
+                <ProtectedRoute requireAdmin>
                   <AdminWrapper>
                     <AdminComments />
                   </AdminWrapper>
@@ -164,7 +163,7 @@ export default function App() {
             <Route
               path="/admin/messages"
               element={
-                <ProtectedRoute requireAdmin={true}>
+                <ProtectedRoute requireAdmin>
                   <AdminWrapper>
                     <AdminMessages />
                   </AdminWrapper>
@@ -175,7 +174,7 @@ export default function App() {
             <Route
               path="/admin/donations"
               element={
-                <ProtectedRoute requireAdmin={true}>
+                <ProtectedRoute requireAdmin>
                   <AdminWrapper>
                     <AdminDonations />
                   </AdminWrapper>
@@ -186,7 +185,7 @@ export default function App() {
             <Route
               path="/admin/users"
               element={
-                <ProtectedRoute requireAdmin={true}>
+                <ProtectedRoute requireAdmin>
                   <AdminWrapper>
                     <AdminUsers />
                   </AdminWrapper>
@@ -197,7 +196,7 @@ export default function App() {
             <Route
               path="/admin/stats"
               element={
-                <ProtectedRoute requireAdmin={true}>
+                <ProtectedRoute requireAdmin>
                   <AdminWrapper>
                     <AdminStats />
                   </AdminWrapper>
@@ -214,8 +213,6 @@ export default function App() {
         <PlayerGlobal />
       </Suspense>
 
-      <div style={{ height: "110px" }}></div>
-
       <Footer
         siteTitle="REVEREN"
         socials={[
@@ -227,6 +224,7 @@ export default function App() {
     </div>
   );
 }
+
 
 
 
