@@ -17,7 +17,9 @@ api.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
 
 api.interceptors.request.use(
   (config) => {
+   
     const token = localStorage.getItem("token");
+
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -44,7 +46,7 @@ api.interceptors.response.use(
       const { status } = error.response;
 
       if (status === 401) {
-        console.warn("Session expirée ou non autorisée.");
+        console.warn("Session expirée ou non autorisée (401).");
         localStorage.removeItem("token");
       } else if (status >= 500) {
         console.error("Erreur serveur :", error.response.data);
@@ -62,12 +64,12 @@ export const get = async (url, config = {}) => {
   return data;
 };
 
-export const post = async (url, body, config = {}) => {
+export const post = async (url, body = {}, config = {}) => {
   const { data } = await api.post(url, body, { ...config, withCredentials: true });
   return data;
 };
 
-export const put = async (url, body, config = {}) => {
+export const put = async (url, body = {}, config = {}) => {
   const { data } = await api.put(url, body, { ...config, withCredentials: true });
   return data;
 };
@@ -98,3 +100,4 @@ export async function createStripeSession({ amount, message, email, user_id }) {
 }
 
 export default api;
+

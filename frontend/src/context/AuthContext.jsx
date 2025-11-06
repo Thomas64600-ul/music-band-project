@@ -12,11 +12,18 @@ export function AuthProvider({ children }) {
     let isMounted = true;
     (async () => {
       try {
-        const res = await get("/users/me");
-        if (isMounted) setUser(res?.data || null);
+        const res = await get("/users/me", { withCredentials: true });
+        if (isMounted && res?.data) {
+          setUser(res.data);
+        } else if (isMounted) {
+          setUser(null);
+        }
       } catch (err) {
         if (isMounted) {
-          console.warn("Aucun utilisateur connecté :", err?.response?.status);
+          console.warn(
+            "Session expirée ou non connectée :",
+            err?.response?.status || err?.message
+          );
           setUser(null);
         }
       } finally {
@@ -41,9 +48,9 @@ export function AuthProvider({ children }) {
 
   async function login(payload) {
     try {
-      const res = await post("/users/login", payload);
+      const res = await post("/users/login", payload, { withCredentials: true });
       if (res.success) {
-        const me = await get("/users/me");
+        const me = await get("/users/me", { withCredentials: true });
         setUser(me?.data || null);
       }
       return res;
@@ -56,7 +63,7 @@ export function AuthProvider({ children }) {
 
   async function logout() {
     try {
-      await post("/users/logout");
+      await post("/users/logout", {}, { withCredentials: true });
     } catch (err) {
       console.warn("Erreur de déconnexion :", err);
     } finally {
@@ -117,9 +124,12 @@ export function AuthProvider({ children }) {
 export function useAuth() {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error("useAuth doit être utilisé à l'intérieur d'un <AuthProvider>");
+    throw new Error(
+      "useAuth doit être utilisé à l'intérieur d'un <AuthProvider>"
+    );
   }
   return context;
 }
+
 
 

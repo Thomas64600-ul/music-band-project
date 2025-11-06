@@ -2,19 +2,25 @@
 <html lang="fr">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0A0A0A" />
+    <title>REVEREN – Rock & Electro</title>
 
     <link rel="icon" type="image/webp" href="/logo-small.webp" />
-
-    <link rel="preload" as="image" href="/groupImage.webp" fetchpriority="high" />
-    <link rel="preload" as="image" href="/groupImage-blur.webp" />
-    <link rel="preload" as="image" href="/logo-small.webp" fetchpriority="high" />
 
     <link rel="preconnect" href="https://music-band-project.onrender.com" crossorigin />
     <link rel="preconnect" href="https://res.cloudinary.com" crossorigin />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
-  
+    <link
+      rel="preload"
+      as="image"
+      href="/groupImage.webp"
+      fetchpriority="high"
+      importance="high"
+    />
+
     <link
       rel="preload"
       as="style"
@@ -33,37 +39,10 @@
       />
     </noscript>
 
-    <script>
-      if (window.location.hostname.includes("vercel.app")) {
-        const preloadCSS = document.createElement("link");
-        preloadCSS.rel = "preload";
-        preloadCSS.as = "style";
-        preloadCSS.href = "/assets/main.css";
-        document.head.appendChild(preloadCSS);
-
-        const stylesheet = document.createElement("link");
-        stylesheet.rel = "stylesheet";
-        stylesheet.href = "/assets/main.css";
-        document.head.appendChild(stylesheet);
-
-        const preloadScript = document.createElement("link");
-        preloadScript.rel = "preload";
-        preloadScript.as = "script";
-        preloadScript.href = "/main.js";
-        document.head.appendChild(preloadScript);
-      }
-    </script>
-
-    <script type="module" src="/src/main.jsx" defer></script>
-
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#0A0A0A" />
-    <title>REVEREN – Rock & Electro</title>
     <meta
       name="description"
       content="REVEREN fusionne rock électrique et vibrations électroniques. Découvrez nos morceaux, nos concerts, nos articles et soutenez le groupe."
     />
-
     <meta property="og:title" content="REVEREN – Groupe Rock Électro" />
     <meta
       property="og:description"
@@ -72,6 +51,8 @@
     <meta property="og:image" content="/logo-small.webp" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://reveren.vercel.app/" />
+
+    <script type="module" src="/src/main.jsx" defer></script>
   </head>
 
   <body class="bg-[#0A0A0A] text-[#F2F2F2] font-['Poppins',sans-serif]">
