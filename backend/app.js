@@ -25,6 +25,26 @@ app.use(compression());
 app.use(morgan(process.env.NODE_ENV !== "production" ? "dev" : "combined"));
 
 app.use(
+  cors({
+    origin: [
+      "http://localhost:5173",
+      "https://music-band-project-five.vercel.app",
+      /\.vercel\.app$/,
+    ],
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    allowedHeaders: [
+      "Content-Type",
+      "Authorization",
+      "Accept",
+      "Origin",
+      "X-Requested-With",
+    ],
+    exposedHeaders: ["Set-Cookie"],
+  })
+);
+
+app.use(
   helmet({
     crossOriginResourcePolicy: false,
     contentSecurityPolicy: {
@@ -46,23 +66,9 @@ app.use(
 );
 
 app.use(
-  cors({
-    origin: [
-      "http://localhost:5173",
-      "https://music-band-project-five.vercel.app",
-      /\.vercel\.app$/,
-    ],
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-    allowedHeaders: [
-      "Content-Type",
-      "Authorization",
-      "Accept",
-      "Origin",
-      "X-Requested-With",
-    ],
-    exposedHeaders: ["Set-Cookie"],
-  })
+  "/api/donations/webhook",
+  express.raw({ type: "application/json" }),
+  donationRoutes
 );
 
 app.use(express.json({ limit: "10mb" }));
@@ -78,12 +84,6 @@ app.use("/api/messages", messageRoutes);
 app.use("/api/donations", donationRoutes);
 app.use("/api/stats", statsRoutes);
 
-app.use(
-  "/api/donations/webhook",
-  express.raw({ type: "application/json" }),
-  donationRoutes
-);
-
 if (process.env.NODE_ENV !== "production") {
   const { default: testRoute } = await import("./routes/testRoute.js");
   app.use("/api", testRoute);
@@ -93,6 +93,10 @@ if (process.env.NODE_ENV !== "production") {
     res.json({ cookies: req.cookies || {} });
   });
 }
+
+app.get("/", (req, res) => {
+  res.status(200).send("API Music Band active et en ligne !");
+});
 
 app.use(errorHandler);
 
