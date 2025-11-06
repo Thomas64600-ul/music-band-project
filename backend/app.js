@@ -48,13 +48,20 @@ app.use(
 app.use(
   cors({
     origin: [
-      "https://music-band-project-five.vercel.app", 
-      "http://localhost:5173", 
-      "https://music-band-project.onrender.com", 
+      "http://localhost:5173",
+      "https://music-band-project-five.vercel.app",
+      /\.vercel\.app$/,
     ],
-    credentials: true, 
+    credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
+    allowedHeaders: [
+      "Content-Type",
+      "Authorization",
+      "Accept",
+      "Origin",
+      "X-Requested-With",
+    ],
+    exposedHeaders: ["Set-Cookie"],
   })
 );
 
