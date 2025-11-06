@@ -1,13 +1,14 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, BrowserRouter as Router } from "react-router-dom";
 import { Suspense, lazy } from "react";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
-import PlayerGlobal from "./components/PlayerGlobal";
 import ProtectedRoute from "./components/ProtectedRoute";
-import AdminLayout from "./layouts/AdminLayout";
-import Loader from "./components/Loader"; // ✅ ton composant de chargement global
+import Loader from "./components/Loader";
+import AdminWrapper from "./layouts/AdminWrapper";
 
-// ✅ Pages publiques en lazy loading
+
+const PlayerGlobal = lazy(() => import("./components/PlayerGlobal"));
+
 const Home = lazy(() => import("./pages/Home"));
 const Music = lazy(() => import("./pages/Music"));
 const Concerts = lazy(() => import("./pages/Concerts"));
@@ -20,7 +21,6 @@ const Register = lazy(() => import("./pages/Register"));
 const VerifyEmail = lazy(() => import("./pages/VerifyEmail"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
-// ✅ Pages admin (chargées uniquement si l’utilisateur est admin)
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
 const AdminListArticles = lazy(() => import("./pages/AdminListArticles"));
 const AdminEditArticle = lazy(() => import("./pages/AdminEditArticle"));
@@ -40,9 +40,8 @@ export default function App() {
       className="min-h-screen flex flex-col transition-colors duration-500 
       bg-[var(--bg)] text-[var(--text)]"
     >
-    
       <Header
-        logoSrc="/logo.webp"
+        logoSrc="/logo-small.webp"
         links={[
           { name: "Accueil", path: "/" },
           { name: "Musique", path: "/music" },
@@ -62,7 +61,7 @@ export default function App() {
           }
         >
           <Routes>
-       
+           
             <Route path="/" element={<Home />} />
             <Route path="/music" element={<Music />} />
             <Route path="/concerts" element={<Concerts />} />
@@ -78,9 +77,9 @@ export default function App() {
               path="/admin"
               element={
                 <ProtectedRoute requireAdmin={true}>
-                  <AdminLayout>
+                  <AdminWrapper>
                     <AdminDashboard />
-                  </AdminLayout>
+                  </AdminWrapper>
                 </ProtectedRoute>
               }
             />
@@ -89,9 +88,9 @@ export default function App() {
               path="/admin/articles"
               element={
                 <ProtectedRoute requireAdmin={true}>
-                  <AdminLayout>
+                  <AdminWrapper>
                     <AdminListArticles />
-                  </AdminLayout>
+                  </AdminWrapper>
                 </ProtectedRoute>
               }
             />
@@ -100,9 +99,9 @@ export default function App() {
               path="/admin/articles/:id"
               element={
                 <ProtectedRoute requireAdmin={true}>
-                  <AdminLayout>
+                  <AdminWrapper>
                     <AdminEditArticle />
-                  </AdminLayout>
+                  </AdminWrapper>
                 </ProtectedRoute>
               }
             />
@@ -111,9 +110,9 @@ export default function App() {
               path="/admin/concerts"
               element={
                 <ProtectedRoute requireAdmin={true}>
-                  <AdminLayout>
+                  <AdminWrapper>
                     <AdminListConcerts />
-                  </AdminLayout>
+                  </AdminWrapper>
                 </ProtectedRoute>
               }
             />
@@ -122,9 +121,9 @@ export default function App() {
               path="/admin/concerts/:id"
               element={
                 <ProtectedRoute requireAdmin={true}>
-                  <AdminLayout>
+                  <AdminWrapper>
                     <AdminEditConcert />
-                  </AdminLayout>
+                  </AdminWrapper>
                 </ProtectedRoute>
               }
             />
@@ -133,9 +132,9 @@ export default function App() {
               path="/admin/musics"
               element={
                 <ProtectedRoute requireAdmin={true}>
-                  <AdminLayout>
+                  <AdminWrapper>
                     <AdminListMusics />
-                  </AdminLayout>
+                  </AdminWrapper>
                 </ProtectedRoute>
               }
             />
@@ -144,9 +143,9 @@ export default function App() {
               path="/admin/musics/:id"
               element={
                 <ProtectedRoute requireAdmin={true}>
-                  <AdminLayout>
+                  <AdminWrapper>
                     <AdminEditMusic />
-                  </AdminLayout>
+                  </AdminWrapper>
                 </ProtectedRoute>
               }
             />
@@ -155,9 +154,9 @@ export default function App() {
               path="/admin/comments"
               element={
                 <ProtectedRoute requireAdmin={true}>
-                  <AdminLayout>
+                  <AdminWrapper>
                     <AdminComments />
-                  </AdminLayout>
+                  </AdminWrapper>
                 </ProtectedRoute>
               }
             />
@@ -166,9 +165,9 @@ export default function App() {
               path="/admin/messages"
               element={
                 <ProtectedRoute requireAdmin={true}>
-                  <AdminLayout>
+                  <AdminWrapper>
                     <AdminMessages />
-                  </AdminLayout>
+                  </AdminWrapper>
                 </ProtectedRoute>
               }
             />
@@ -177,9 +176,9 @@ export default function App() {
               path="/admin/donations"
               element={
                 <ProtectedRoute requireAdmin={true}>
-                  <AdminLayout>
+                  <AdminWrapper>
                     <AdminDonations />
-                  </AdminLayout>
+                  </AdminWrapper>
                 </ProtectedRoute>
               }
             />
@@ -188,9 +187,9 @@ export default function App() {
               path="/admin/users"
               element={
                 <ProtectedRoute requireAdmin={true}>
-                  <AdminLayout>
+                  <AdminWrapper>
                     <AdminUsers />
-                  </AdminLayout>
+                  </AdminWrapper>
                 </ProtectedRoute>
               }
             />
@@ -199,9 +198,9 @@ export default function App() {
               path="/admin/stats"
               element={
                 <ProtectedRoute requireAdmin={true}>
-                  <AdminLayout>
+                  <AdminWrapper>
                     <AdminStats />
-                  </AdminLayout>
+                  </AdminWrapper>
                 </ProtectedRoute>
               }
             />
@@ -211,8 +210,12 @@ export default function App() {
         </Suspense>
       </main>
 
-      <PlayerGlobal />
+      <Suspense fallback={null}>
+        <PlayerGlobal />
+      </Suspense>
+
       <div style={{ height: "110px" }}></div>
+
       <Footer
         siteTitle="REVEREN"
         socials={[
@@ -224,7 +227,6 @@ export default function App() {
     </div>
   );
 }
-
 
 
 

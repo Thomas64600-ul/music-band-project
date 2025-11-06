@@ -4,7 +4,7 @@ import { useAuth } from "../context/AuthContext";
 import { FaBars, FaTimes, FaSun, FaMoon } from "react-icons/fa";
 import { User, LogOut, Shield, LayoutDashboard } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import logo from "/logo.webp"; 
+import logo from "/logo-small.webp"; 
 
 function LinkItem({ to, children, onClick, className = "" }) {
   return (
