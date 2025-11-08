@@ -5,6 +5,7 @@ import cors from "cors";
 import morgan from "morgan";
 import helmet from "helmet";
 import compression from "compression";
+import fs from "fs";
 import { errorHandler } from "./middlewares/errorHandler.js";
 
 import userRoutes from "./routes/userRoutes.js";
@@ -21,7 +22,18 @@ const app = express();
 
 app.set("trust proxy", 1);
 app.disable("x-powered-by");
-app.use(compression());
+
+app.use(
+  compression({
+    level: 6,
+    threshold: 1024,
+    filter: (req, res) => {
+      if (req.headers["x-no-compression"]) return false;
+      return compression.filter(req, res);
+    },
+  })
+);
+
 app.use(morgan(process.env.NODE_ENV !== "production" ? "dev" : "combined"));
 
 app.use(
@@ -94,6 +106,18 @@ if (process.env.NODE_ENV !== "production") {
   });
 }
 
+if (fs.existsSync("dist")) {
+  console.log("Dossier 'dist' détecté — activation du cache statique.");
+  app.use(
+    express.static("dist", {
+      maxAge: "1y",
+      immutable: true,
+    })
+  );
+} else {
+  console.log("Dossier 'dist' non trouvé — aucune ressource statique servie.");
+}
+
 app.get("/", (req, res) => {
   res.status(200).send("API Music Band active et en ligne !");
 });
@@ -101,6 +125,7 @@ app.get("/", (req, res) => {
 app.use(errorHandler);
 
 export default app;
+
 
 
 
