@@ -4,12 +4,12 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-  "dev": "vite",
-  "build": "vite build && npm run compress",
-  "lint": "eslint .",
-  "preview": "vite preview",
-  "compress": "find dist -type f \\( -name '*.js' -o -name '*.css' -o -name '*.html' -o -name '*.svg' -o -name '*.json' \\) -exec brotli --quality 11 --keep {} \\;"
-},
+    "dev": "vite",
+    "build": "vite build && npm run compress",
+    "lint": "eslint .",
+    "preview": "vite preview",
+    "compress": "find dist -type f \\( -name '*.js' -o -name '*.css' -o -name '*.html' -o -name '*.svg' -o -name '*.json' \\) -exec brotli --quality 11 --keep {} \\;"
+  },
   "dependencies": {
     "axios": "^1.12.2",
     "canvas-confetti": "^1.9.3",
@@ -34,6 +34,7 @@
     "globals": "^16.4.0",
     "postcss": "^8.5.6",
     "tailwindcss": "^3.4.13",
-    "vite": "^7.1.7"
+    "vite": "^7.1.7",
+    "vite-plugin-compression": "^0.5.1"
   }
 }
