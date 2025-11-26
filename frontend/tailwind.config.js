@@ -6,7 +6,6 @@ export default {
   ],
   theme: {
     extend: {
-      
       colors: {
         primary: "#FF2B6A",
         primaryGlow: "#FF5C8D",
@@ -82,6 +81,5 @@ export default {
   },
   plugins: [],
 };
-
 
 
