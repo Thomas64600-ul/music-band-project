@@ -60,7 +60,7 @@ export default function App() {
           }
         >
           <Routes>
-           
+         
             <Route path="/" element={<Home />} />
             <Route path="/music" element={<Music />} />
             <Route path="/concerts" element={<Concerts />} />
@@ -71,6 +71,7 @@ export default function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/verify-email/:token" element={<VerifyEmail />} />
+
 
             <Route
               path="/admin"
@@ -89,6 +90,17 @@ export default function App() {
                 <ProtectedRoute requireAdmin>
                   <AdminWrapper>
                     <AdminListArticles />
+                  </AdminWrapper>
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/admin/articles/edit/:id"
+              element={
+                <ProtectedRoute requireAdmin>
+                  <AdminWrapper>
+                    <AdminEditArticle />
                   </AdminWrapper>
                 </ProtectedRoute>
               }
@@ -224,7 +236,6 @@ export default function App() {
     </div>
   );
 }
-
 
 
 
