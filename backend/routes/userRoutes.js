@@ -23,7 +23,8 @@ import {
 } from "../schemas/userSchema.js";
 
 import { protect } from "../middlewares/authMiddleware.js";
-import upload from "../middlewares/uploadMiddleware.js";
+import { upload } from "../middlewares/uploadMiddleware.js";
+
 import {
   loginLimiter,
   registerLimiter,
