@@ -14,8 +14,7 @@ import {
 } from "../schemas/musicSchema.js";
 import { protect } from "../middlewares/authMiddleware.js";
 import { authorizeRoles } from "../middlewares/roleMiddleware.js";
-import { upload } from "../middlewares/uploadMiddleware.js";
-
+import upload from "../middlewares/uploadMiddleware.js"; 
 
 const router = express.Router();
 
@@ -24,16 +23,14 @@ router.post(
   protect,
   authorizeRoles("admin"),
   upload.fields([
-    { name: "audio", maxCount: 1 }, 
+    { name: "audio", maxCount: 1 },
     { name: "cover", maxCount: 1 },
   ]),
- 
   validate(createMusicSchema),
   addMusic
 );
 
 router.get("/", fetchMusics);
-
 router.get("/:id", fetchMusicById);
 
 router.put(

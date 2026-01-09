@@ -9,19 +9,22 @@ import { sendEmail } from "../services/emailService.js";
 
 export async function addMusic(req, res, next) {
   try {
-    const { title, artist } = req.body;
+ 
+    const body = req.validatedBody ?? req.body ?? {};
+    const { title, artist, url } = body;
+
     const author_id = req.user?.id;
 
-    const audioFile = req.files?.audio?.[0] || req.file; 
+    const audioFile = req.files?.audio?.[0];
     const coverFile = req.files?.cover?.[0];
 
-    const audio_url = audioFile?.path || req.body.url; 
+    const audio_url = audioFile?.path || url;
     const cover_url = coverFile?.path || null;
 
     if (!title || !audio_url) {
       return res.status(400).json({
         success: false,
-        error: "Le titre et le fichier audio sont requis.",
+        error: "Le titre et un fichier audio OU une URL audio sont requis.",
       });
     }
 
@@ -37,20 +40,20 @@ export async function addMusic(req, res, next) {
       process.env.ADMIN_EMAIL,
       "Nouveau morceau ajouté",
       `Un nouveau morceau vient d’être ajouté par ${
-        req.user.firstname || "un utilisateur"
+        req.user?.firstname || "un utilisateur"
       }.`,
       "adminNewMusic.html",
       {
         title,
         artist: artist || "—",
-        author: `${req.user.firstname || ""} ${req.user.lastname || ""}`,
+        author: `${req.user?.firstname || ""} ${req.user?.lastname || ""}`.trim(),
         date: new Date().toLocaleString("fr-FR", { timeZone: "Europe/Paris" }),
         url: audio_url,
         cover_url,
       }
     );
 
-    res.status(201).json({
+    return res.status(201).json({
       success: true,
       message: "Musique ajoutée avec succès 🎶",
       data: newMusic,
@@ -60,7 +63,6 @@ export async function addMusic(req, res, next) {
     next(error);
   }
 }
-
 
 export async function fetchMusics(req, res, next) {
   try {
@@ -104,11 +106,13 @@ export async function fetchMusicById(req, res, next) {
 
 export async function editMusic(req, res, next) {
   try {
-    const { title, artist, url } = req.validatedBody;
+   
+    const { title, artist, url } = req.validatedBody ?? {};
     const user = req.user;
 
     const audioFile = req.files?.audio?.[0];
     const coverFile = req.files?.cover?.[0];
+
     const audio_url = audioFile?.path || url;
     const cover_url = coverFile?.path || null;
 
@@ -127,7 +131,14 @@ export async function editMusic(req, res, next) {
       });
     }
 
-    const updated = await updateMusic(req.params.id, title, artist, audio_url, cover_url);
+    const updated = await updateMusic(
+      req.params.id,
+      title,
+      artist,
+      audio_url,
+      cover_url
+    );
+
     if (!updated) {
       return res.status(404).json({
         success: false,
@@ -140,12 +151,12 @@ export async function editMusic(req, res, next) {
     await sendEmail(
       process.env.ADMIN_EMAIL,
       "Musique mise à jour",
-      `Une musique a été modifiée par ${req.user.firstname || "un administrateur"}.`,
+      `Une musique a été modifiée par ${req.user?.firstname || "un administrateur"}.`,
       "adminMusicUpdated.html",
       {
         title: title || updatedMusic.title,
         artist: artist || updatedMusic.artist,
-        author: `${req.user.firstname || ""} ${req.user.lastname || ""}`,
+        author: `${req.user?.firstname || ""} ${req.user?.lastname || ""}`.trim(),
         date: new Date().toLocaleString("fr-FR", { timeZone: "Europe/Paris" }),
         url: audio_url || updatedMusic.url,
         cover_url: cover_url || updatedMusic.cover_url,
@@ -196,7 +207,7 @@ export async function removeMusic(req, res, next) {
       "adminMusicDeleted.html",
       {
         title: music.title,
-        author: `${req.user.firstname || ""} ${req.user.lastname || ""}`,
+        author: `${req.user?.firstname || ""} ${req.user?.lastname || ""}`.trim(),
         date: new Date().toLocaleString("fr-FR", { timeZone: "Europe/Paris" }),
       }
     );
@@ -209,4 +220,5 @@ export async function removeMusic(req, res, next) {
     next(error);
   }
 }
+
 

@@ -1,84 +1,68 @@
-// import multer from "multer";
+import multer from "multer";
+import pkg from "multer-storage-cloudinary";
+const { CloudinaryStorage } = pkg;
 
-// import pkg from "multer-storage-cloudinary";
-// const { CloudinaryStorage } = pkg;
+import { v2 as cloudinary } from "cloudinary";
+import "../config/cloudinary.js";
 
-// import { v2 as cloudinary } from "cloudinary";
-// import "../config/cloudinary.js";
+const storage = new CloudinaryStorage({
+  cloudinary,
+  params: async (req, file) => {
+    const isImage = file.mimetype.startsWith("image/");
+    const isAudio = file.mimetype.startsWith("audio/");
 
-// const storage = new CloudinaryStorage({
-//   cloudinary,
-//   params: async (req, file) => {
-//     const isImage = file.mimetype.startsWith("image/");
-//     const isAudio = file.mimetype.startsWith("audio/");
+    let folder = "reveren_uploads/others";
+    if (req.baseUrl.includes("concerts")) folder = "reveren_uploads/concerts";
+    else if (req.baseUrl.includes("articles")) folder = "reveren_uploads/articles";
+    else if (req.baseUrl.includes("musics")) folder = "reveren_uploads/musics";
 
-//     let folder = "reveren_uploads/others";
-//     if (req.baseUrl.includes("concerts")) folder = "reveren_uploads/concerts";
-//     else if (req.baseUrl.includes("articles")) folder = "reveren_uploads/articles";
-//     else if (req.baseUrl.includes("musics")) folder = "reveren_uploads/musics";
+    if (isImage) {
+      return {
+        folder,
+        allowed_formats: ["jpg", "jpeg", "png", "webp"],
+        transformation: [{ width: 1200, crop: "limit" }],
+        resource_type: "image",
+        public_id: `${Date.now()}-${file.originalname.replace(/\.[^/.]+$/, "")}`,
+      };
+    }
 
-//     if (isImage) {
-//       return {
-//         folder,
-//         allowed_formats: ["jpg", "jpeg", "png", "webp"],
-//         transformation: [{ width: 1200, crop: "limit" }],
-//         resource_type: "image",
-//         public_id: `${Date.now()}-${file.originalname.replace(/\.[^/.]+$/, "")}`,
-//       };
-//     }
+    if (isAudio) {
+      return {
+        folder,
+        allowed_formats: ["mp3", "wav", "ogg", "flac"],
+        resource_type: "video",
+        public_id: `${Date.now()}-${file.originalname.replace(/\s+/g, "_")}`,
+      };
+    }
 
-//     if (isAudio) {
-//       return {
-//         folder,
-//         allowed_formats: ["mp3", "wav", "ogg", "flac"],
-//         resource_type: "video",
-//         public_id: `${Date.now()}-${file.originalname.replace(/\s+/g, "_")}`,
-//       };
-//     }
+    throw new Error(`Type de fichier non pris en charge : ${file.mimetype}`);
+  },
+});
 
-//     throw new Error(`Type de fichier non pris en charge : ${file.mimetype}`);
-//   },
-// });
+const fileFilter = (req, file, cb) => {
+  const allowed = [
+    "image/jpeg",
+    "image/jpg",
+    "image/png",
+    "image/webp",
+    "audio/mpeg",
+    "audio/wav",
+    "audio/ogg",
+    "audio/flac",
+  ];
 
-// const fileFilter = (req, file, cb) => {
-//   const allowed = [
-//     "image/jpeg",
-//     "image/jpg",
-//     "image/png",
-//     "image/webp",
-//     "audio/mpeg",
-//     "audio/wav",
-//     "audio/ogg",
-//     "audio/flac",
-//   ];
-
-//   if (allowed.includes(file.mimetype)) cb(null, true);
-//   else cb(new Error(`Format non supporté : ${file.mimetype}`));
-// };
-
-// const upload = multer({
-//   storage,
-//   fileFilter,
-//   limits: { fileSize: 50 * 1024 * 1024 },
-// });
-
-// export default upload;
-
-
-
-// Upload désactivé temporairement pour la démo
-// Middleware d'upload désactivé temporairement
-// ===============================================================
-// UPLOAD TEMPORAIREMENT DÉSACTIVÉ POUR LA DÉMO
-// ===============================================================
-
-const fakeHandler = (req, res, next) => {
-  console.log("⚠ Upload désactivé temporairement (fake middleware)");
-  next();
+  if (allowed.includes(file.mimetype)) cb(null, true);
+  else cb(new Error(`Format non supporté : ${file.mimetype}`));
 };
 
-export const upload = {
-  single: () => fakeHandler,
-  array: () => fakeHandler,
-  fields: () => fakeHandler,
-};
+const upload = multer({
+  storage,
+  fileFilter,
+  limits: { fileSize: 50 * 1024 * 1024 },
+});
+
+export default upload;
+
+
+
+
