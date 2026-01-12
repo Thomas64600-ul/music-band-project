@@ -77,6 +77,8 @@ app.use(
   })
 );
 
+app.use("/api/donations/webhook", express.raw({ type: "application/json" }));
+
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
