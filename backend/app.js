@@ -8,7 +8,6 @@ import compression from "compression";
 import fs from "fs";
 import { errorHandler } from "./middlewares/errorHandler.js";
 
-
 import userRoutes from "./routes/userRoutes.js";
 import articleRoutes from "./routes/articleRoutes.js";
 import concertRoutes from "./routes/concertRoutes.js";
@@ -78,12 +77,6 @@ app.use(
   })
 );
 
-app.use(
-  "/api/donations/webhook",
-  express.raw({ type: "application/json" }),
-  donationRoutes
-);
-
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -94,7 +87,9 @@ app.use("/api/concerts", concertRoutes);
 app.use("/api/comments", commentRoutes);
 app.use("/api/musics", musicRoutes);
 app.use("/api/messages", messageRoutes);
+
 app.use("/api/donations", donationRoutes);
+
 app.use("/api/stats", statsRoutes);
 
 if (process.env.NODE_ENV !== "production") {
@@ -126,7 +121,4 @@ app.get("/", (req, res) => {
 app.use(errorHandler);
 
 export default app;
-
-
-
 
