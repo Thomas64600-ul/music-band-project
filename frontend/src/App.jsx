@@ -18,6 +18,8 @@ const Cagnotte = lazy(() => import("./pages/Cagnotte"));
 const Login = lazy(() => import("./pages/Login"));
 const Register = lazy(() => import("./pages/Register"));
 const VerifyEmail = lazy(() => import("./pages/VerifyEmail"));
+const DonationSuccess = lazy(() => import("./pages/DonationSuccess"));
+const DonationCancel = lazy(() => import("./pages/DonationCancel"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
@@ -67,6 +69,8 @@ export default function App() {
             <Route path="/blog" element={<Blog />} />
             <Route path="/blog/:id" element={<ArticleDetail />} />
             <Route path="/cagnotte" element={<Cagnotte />} />
+            <Route path="/donation-success" element={<DonationSuccess />} />
+            <Route path="/donation-cancel" element={<DonationCancel />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
