@@ -55,8 +55,8 @@ export default function Cagnotte() {
         user_id: localStorage.getItem("userId") || null,
       });
 
-      setShowModal(true); 
-      launchConfetti(); 
+      setShowModal(true);
+      launchConfetti();
     } catch (error) {
       console.error("Erreur Stripe:", error);
       alert("Erreur lors de la création du paiement.");
@@ -73,10 +73,26 @@ export default function Cagnotte() {
   }, [showModal]);
 
   const donations = [
-    { amount: 10, description: "Un grand merci sur nos réseaux" },
-    { amount: 25, description: "Votre nom dans les remerciements de l’album" },
-    { amount: 50, description: "Accès anticipé à un titre inédit" },
-    { amount: 100, description: "Invitation backstage à un concert" },
+    {
+      amount: 10,
+      description:
+        "Soutien symbolique : vous aidez à lancer le projet et à diffuser notre musique.",
+    },
+    {
+      amount: 25,
+      description:
+        "Soutien actif : vous participez au financement studio, mix et mastering.",
+    },
+    {
+      amount: 50,
+      description:
+        "Soutien fort : vous contribuez directement à la production du clip et des visuels.",
+    },
+    {
+      amount: 100,
+      description:
+        "Soutien majeur : vous faites avancer le projet plus vite (studio + clip + communication).",
+    },
   ];
 
   return (
@@ -88,7 +104,6 @@ export default function Cagnotte() {
         text-center relative overflow-hidden transition-colors duration-700
       "
     >
-   
       <div
         className="
           absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
@@ -99,8 +114,7 @@ export default function Cagnotte() {
         "
       ></div>
 
-   
-      <div className="relative inline-block mb-12">
+      <div className="relative inline-block mb-10">
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#B3122D33] to-transparent blur-md"></div>
         <h2 className="relative text-3xl md:text-4xl font-extrabold text-[#B3122D] drop-shadow-[0_0_10px_#B3122D55] tracking-wider">
           Soutenez REVEREN
@@ -108,11 +122,32 @@ export default function Cagnotte() {
         <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-48 h-[2px] bg-gradient-to-r from-transparent via-[#B3122D] to-transparent animate-glow-line"></div>
       </div>
 
-      <p className="max-w-xl mx-auto text-gray-600 dark:text-gray-400 text-base md:text-lg mb-12">
-        Aidez-nous à financer notre prochain album et nos tournées !
-      </p>
+      <div className="max-w-2xl mx-auto mb-12">
+        <p className="text-gray-700 dark:text-gray-300 text-base md:text-lg leading-relaxed">
+          <span className="font-semibold text-[#B3122D]">REVEREN démarre.</span>{" "}
+          On a la musique, l’énergie et la vision. Il nous manque les moyens pour
+          la rendre visible : studio, mix/master, clip, diffusion.
+          <br />
+          <br />
+          Votre don devient du concret : une session studio, un montage vidéo,
+          une sortie propre sur les plateformes. Merci de nous aider à
+          transformer un projet naissant en vraie aventure.
+        </p>
 
-    
+        <div className="mt-6 text-sm text-gray-600 dark:text-gray-400">
+          <p className="font-semibold mb-2 text-[#B3122D]">
+            À quoi servira votre soutien ?
+          </p>
+          <ul className="space-y-1">
+            <li>🎙️ Enregistrement studio</li>
+            <li>🎚️ Mix & mastering</li>
+            <li>🎬 Clip / contenu vidéo</li>
+            <li>📣 Diffusion & communication</li>
+            <li>🚐 Répétitions & logistique</li>
+          </ul>
+        </div>
+      </div>
+
       <div className="max-w-md mx-auto mb-14">
         <div className="bg-gray-200 dark:bg-[#1A1A1A] rounded-full h-4 overflow-hidden shadow-inner">
           <div
@@ -123,9 +158,7 @@ export default function Cagnotte() {
         <p className="text-sm text-gray-600 dark:text-gray-400 mt-3 font-medium transition-all">
           {collected.toLocaleString()} € collectés sur {goal.toLocaleString()} €
           {"  "}
-          <span className="text-[#B3122D] font-semibold">
-            ({percentage}%)
-          </span>
+          <span className="text-[#B3122D] font-semibold">({percentage}%)</span>
         </p>
       </div>
 
@@ -150,7 +183,12 @@ export default function Cagnotte() {
           transition-all duration-300 hover:shadow-[0_0_25px_#B3122D55]
         "
       >
-        <h3 className="text-[#B3122D] font-bold text-xl mb-4">Montant libre</h3>
+        <h3 className="text-[#B3122D] font-bold text-xl mb-2">Montant libre</h3>
+
+        <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+          Choisissez le montant. Laissez votre email pour recevoir les nouvelles
+          du projet (coulisses, avancées studio/clip).
+        </p>
 
         <input
           type="email"
@@ -208,6 +246,10 @@ export default function Cagnotte() {
         >
           {loading ? "Redirection..." : "Faire un don"}
         </button>
+
+        <p className="text-xs text-gray-500 dark:text-gray-500 mt-4">
+          Merci 🙏 Chaque soutien aide concrètement le projet à avancer.
+        </p>
       </div>
 
       <AnimatePresence>
