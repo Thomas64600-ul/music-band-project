@@ -8,19 +8,30 @@ async function createDonation(
   stripe_session_id = null,
   stripe_payment_intent = null,
   currency = "eur",
-  email = null
+  email = null,
+  status = "pending"
 ) {
   const result = await pool.query(
     `
     INSERT INTO donations
-      (user_id, amount, message, stripe_session_id, stripe_payment_intent, currency, email)
-    VALUES ($1, $2, $3, $4, $5, $6, $7)
+      (user_id, amount, message, stripe_session_id, stripe_payment_intent, currency, email, status)
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
     RETURNING *
     `,
-    [user_id, amount, message, stripe_session_id, stripe_payment_intent, currency, email]
+    [
+      user_id,
+      amount,
+      message,
+      stripe_session_id,
+      stripe_payment_intent,
+      currency,
+      email,
+      status,
+    ]
   );
   return result.rows[0];
 }
+
 
 
 async function getAllDonations() {
@@ -84,12 +95,14 @@ async function updateDonationStatus(session_id, status, payment_intent = null) {
 async function getDonationStats() {
   const result = await pool.query(`
     SELECT 
-      COUNT(*) AS total_dons,
-      SUM(amount) AS total_montant,
-      COUNT(CASE WHEN user_id IS NULL THEN 1 END) AS dons_anonymes,
-      COUNT(CASE WHEN user_id IS NOT NULL THEN 1 END) AS dons_connectes
-    FROM donations;
+      COUNT(*)::text AS total_dons,
+      COALESCE(SUM(amount), 0)::text AS total_montant,
+      COUNT(*) FILTER (WHERE user_id IS NULL)::text AS dons_anonymes,
+      COUNT(*) FILTER (WHERE user_id IS NOT NULL)::text AS dons_connectes
+    FROM donations
+    WHERE status = 'succeeded';
   `);
+
   return result.rows[0];
 }
 

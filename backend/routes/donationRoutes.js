@@ -7,6 +7,7 @@ import {
   fetchDonationsByUser,
   removeDonation,
   fetchDonationStats,
+  fetchDonationPublicStats,
   createCheckoutSession,
   handleStripeWebhook,
 } from "../controllers/donationController.js";
@@ -24,20 +25,28 @@ const router = express.Router();
 
 router.post("/webhook", handleStripeWebhook);
 
-router.post("/", validate(createDonationSchema), addDonation);
+router.post(
+  "/create-checkout-session",
+  validate(stripeDonationSchema),
+  createCheckoutSession
+);
 
-router.post("/create-checkout-session", validate(stripeDonationSchema), createCheckoutSession);
+router.get("/public-stats", fetchDonationPublicStats);
+
+router.post("/", validate(createDonationSchema), addDonation);
 
 router.get("/user", protect, fetchDonationsByUser);
 
 router.get("/", protect, authorizeRoles("admin"), fetchDonations);
-
 router.get("/stats", protect, authorizeRoles("admin"), fetchDonationStats);
-
 router.get("/:id", protect, authorizeRoles("admin"), fetchDonationById);
-
-router.put("/:id", protect, authorizeRoles("admin"), validate(updateDonationSchema), editDonation);
-
+router.put(
+  "/:id",
+  protect,
+  authorizeRoles("admin"),
+  validate(updateDonationSchema),
+  editDonation
+);
 router.delete("/:id", protect, authorizeRoles("admin"), removeDonation);
 
 export default router;

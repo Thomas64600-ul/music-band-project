@@ -29,7 +29,8 @@ async function findDonationBySessionId(sessionId) {
 export async function addDonation(req, res, next) {
   try {
     const { user_id, amount, message } = req.validatedBody;
-    const newDonation = await createDonation(user_id, amount, message);
+
+    const newDonation = await createDonation(user_id, amount, message, null, null, "eur", null, "succeeded");
 
     await sendEmail(
       process.env.ADMIN_EMAIL,
@@ -120,6 +121,18 @@ export async function fetchDonationStats(req, res, next) {
   }
 }
 
+export async function fetchDonationPublicStats(req, res, next) {
+  try {
+    const stats = await getDonationStats();
+    res.json({
+      total_dons: stats.total_dons,
+      total_montant: stats.total_montant,
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
 export async function createCheckoutSession(req, res, next) {
   try {
     const { user_id, amount, message, email } = req.validatedBody;
@@ -139,7 +152,7 @@ export async function createCheckoutSession(req, res, next) {
               name: "Don à REVEREN",
               description: message || "Soutien au groupe",
             },
-            unit_amount: Math.round(amount * 100),
+            unit_amount: Math.round(Number(amount) * 100),
           },
           quantity: 1,
         },
@@ -160,9 +173,10 @@ export async function createCheckoutSession(req, res, next) {
       amount,
       message,
       session.id,
-      null, 
+      null,
       "eur",
-      email || null
+      email || null,
+      "pending"
     );
 
     res.status(200).json({ url: session.url });
@@ -178,7 +192,7 @@ export async function handleStripeWebhook(req, res, next) {
 
   try {
     event = stripe.webhooks.constructEvent(
-      req.body, 
+      req.body,
       sig,
       process.env.STRIPE_WEBHOOK_SECRET
     );
@@ -192,7 +206,11 @@ export async function handleStripeWebhook(req, res, next) {
       case "checkout.session.completed": {
         const session = event.data.object;
 
-        await updateDonationStatus(session.id, "succeeded", session.payment_intent);
+        await updateDonationStatus(
+          session.id,
+          "succeeded",
+          session.payment_intent
+        );
         console.log(`Paiement confirmé pour session ${session.id}`);
 
         const donation = await findDonationBySessionId(session.id);
@@ -200,7 +218,8 @@ export async function handleStripeWebhook(req, res, next) {
         if (donation) {
           const donorEmail = donation.email || session.customer_details?.email;
           const donorName =
-            session.customer_details?.name?.split(" ")[0] || "Cher·e donateur·rice";
+            session.customer_details?.name?.split(" ")[0] ||
+            "Cher·e donateur·rice";
 
           await sendEmail(
             process.env.ADMIN_EMAIL,
@@ -213,8 +232,12 @@ export async function handleStripeWebhook(req, res, next) {
               status: "Validé",
               donor:
                 donation.email ||
-                (donation.user_id ? `Utilisateur #${donation.user_id}` : "Anonyme"),
-              date: new Date().toLocaleString("fr-FR", { timeZone: "Europe/Paris" }),
+                (donation.user_id
+                  ? `Utilisateur #${donation.user_id}`
+                  : "Anonyme"),
+              date: new Date().toLocaleString("fr-FR", {
+                timeZone: "Europe/Paris",
+              }),
             }
           );
 
@@ -263,9 +286,13 @@ export async function handleStripeWebhook(req, res, next) {
                 amount: donation.amount,
                 donor:
                   donation.email ||
-                  (donation.user_id ? `Utilisateur #${donation.user_id}` : "Anonyme"),
+                  (donation.user_id
+                    ? `Utilisateur #${donation.user_id}`
+                    : "Anonyme"),
                 message: donation.message || "—",
-                date: new Date().toLocaleString("fr-FR", { timeZone: "Europe/Paris" }),
+                date: new Date().toLocaleString("fr-FR", {
+                  timeZone: "Europe/Paris",
+                }),
                 reason,
               }
             );
@@ -275,7 +302,6 @@ export async function handleStripeWebhook(req, res, next) {
             "payment_intent.payment_failed reçu mais aucune session trouvée pour intent:",
             intent.id
           );
-      
         }
 
         break;
@@ -291,6 +317,7 @@ export async function handleStripeWebhook(req, res, next) {
     next(error);
   }
 }
+
 
 
 
