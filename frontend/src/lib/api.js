@@ -80,24 +80,25 @@ export const del = async (url, config = {}) => {
 };
 
 export async function createStripeSession({ amount, message, email, user_id }) {
-  try {
-    const { data } = await api.post("/donations/create-checkout-session", {
-      amount,
-      message,
-      email,
-      user_id,
-    });
+  const data = await post("/donations/create-checkout-session", {
+    amount,
+    message,
+    email,
+    user_id,
+  });
 
-    if (data?.url) {
-      window.location.href = data.url;
-    } else {
-      throw new Error("Aucune URL de paiement reçue.");
-    }
-  } catch (error) {
-    console.error("Erreur Stripe :", error);
-    alert("Une erreur est survenue lors de la création du paiement.");
+  if (data?.url) {
+    window.location.href = data.url;
+    return data.url;
   }
+
+  throw new Error("Aucune URL de paiement reçue.");
 }
+
+export async function getPublicDonationStats() {
+  return get("/donations/public-stats");
+}
+
 
 export default api;
 

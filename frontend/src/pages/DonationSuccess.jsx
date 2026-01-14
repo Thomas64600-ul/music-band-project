@@ -1,67 +1,118 @@
-import { Link, useSearchParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useSearchParams, Link } from "react-router-dom";
+import confetti from "canvas-confetti";
 
 export default function DonationSuccess() {
-  const [searchParams] = useSearchParams();
-  const sessionId = searchParams.get("session_id");
+  const [params] = useSearchParams();
+  const sessionId = params.get("session_id");
+
+  const [hasShot, setHasShot] = useState(false);
+
+  useEffect(() => {
+    if (hasShot) return;
+
+    const duration = 1500;
+    const end = Date.now() + duration;
+    const colors = ["#B3122D", "#FFD700", "#FF4C4C"];
+
+    (function frame() {
+      confetti({
+        particleCount: 5,
+        angle: 60,
+        spread: 70,
+        origin: { x: 0 },
+        colors,
+      });
+      confetti({
+        particleCount: 5,
+        angle: 120,
+        spread: 70,
+        origin: { x: 1 },
+        colors,
+      });
+      if (Date.now() < end) requestAnimationFrame(frame);
+    })();
+
+    setHasShot(true);
+  }, [hasShot]);
 
   return (
-    <main
+    <section
       className="
-        min-h-screen flex flex-col justify-center items-center text-center
-        bg-[#0A0A0A] text-[#F2F2F2]
-        transition-colors duration-700 ease-in-out
-        px-4
+        px-6 sm:px-12 py-24 md:py-28 
+        text-center relative overflow-hidden
+        bg-[#F8F8F8] text-[#1A1A1A]
+        dark:bg-[#0A0A0A] dark:text-[#F2F2F2]
+        transition-colors duration-700
       "
-      role="main"
     >
-      <h1
+      <div
         className="
-          text-3xl md:text-4xl font-extrabold text-[#B3122D]
-          mb-4 drop-shadow-[0_0_10px_#B3122D55]
+          absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
+          w-[80vw] sm:w-[60vw] h-[80vw] sm:h-[60vw]
+          bg-[radial-gradient(circle_at_center,#FFD1A133_0%,transparent_70%)]
+          dark:bg-[radial-gradient(circle_at_center,#B3122D44_0%,transparent_70%)]
+          blur-[150px] opacity-60 pointer-events-none -z-10
+        "
+      ></div>
+
+      <div
+        className="
+          max-w-xl mx-auto
+          bg-white dark:bg-[#111]
+          border border-gray-200 dark:border-[#B3122D]/60
+          rounded-2xl p-8
+          shadow-[0_0_20px_rgba(0,0,0,0.06)]
+          dark:shadow-[0_0_25px_#B3122D40]
         "
       >
-        Merci pour votre soutien 🤘
-      </h1>
+        <h1 className="text-3xl md:text-4xl font-extrabold text-[#B3122D] drop-shadow-[0_0_10px_#B3122D55]">
+          Merci pour votre soutien 🤘
+        </h1>
 
-      <p className="text-gray-400 max-w-md leading-relaxed mb-6">
-        Votre don aide{" "}
-        <span className="text-[#FFD700] font-semibold">REVEREN</span> à créer
-        encore plus de musique et à partager sa passion avec le monde 🎶
-      </p>
-
-      {sessionId && (
-        <p className="text-xs text-gray-500 mb-6">
-          Référence : <span className="font-mono">{sessionId}</span>
+        <p className="mt-4 text-gray-700 dark:text-gray-300 leading-relaxed">
+          Votre paiement a bien été confirmé. Grâce à vous, REVEREN avance
+          concrètement : studio, mix/master, clip et diffusion.
         </p>
-      )}
 
-      <div className="flex flex-col sm:flex-row gap-4">
-        <Link
-          to="/cagnotte"
-          className="
-            px-6 py-3 bg-[#B3122D] text-white rounded-lg font-semibold
-            hover:bg-[#8E0F24] hover:shadow-[0_0_20px_#B3122D80]
-            focus:outline-none focus:ring-2 focus:ring-[#FFD700]/60
-            active:scale-95
-            transition-all duration-300 ease-in-out
-          "
-        >
-          Retour à la cagnotte
-        </Link>
+        {sessionId && (
+          <p className="mt-3 text-xs text-gray-500 dark:text-gray-500">
+            Référence : <span className="font-mono">{sessionId}</span>
+          </p>
+        )}
 
-        <Link
-          to="/"
-          className="
-            px-6 py-3 border border-[#FFD700] text-[#FFD700] rounded-lg font-semibold
-            hover:bg-[#FFD700]/10 hover:shadow-[0_0_20px_#FFD70050]
-            focus:outline-none focus:ring-2 focus:ring-[#FFD700]/60
-            active:scale-95
-            transition-all duration-300 ease-in-out
-          "
-        >
-          Retour à l’accueil
-        </Link>
+        <div className="mt-6 flex flex-col sm:flex-row gap-3 justify-center">
+          <Link
+            to="/cagnotte"
+            className="
+              bg-[#B3122D] hover:bg-[#A01025]
+              text-white font-semibold py-2 px-6 rounded-full
+              transition-all duration-300
+              hover:shadow-[0_0_25px_#B3122D88]
+            "
+          >
+            Retour à la cagnotte
+          </Link>
+
+          <Link
+            to="/"
+            className="
+              border border-gray-300 dark:border-gray-700
+              text-gray-700 dark:text-gray-200
+              font-semibold py-2 px-6 rounded-full
+              hover:border-[#B3122D] hover:text-[#B3122D]
+              transition-all duration-300
+            "
+          >
+            Revenir à l’accueil
+          </Link>
+        </div>
+
+        <p className="mt-6 text-sm text-gray-600 dark:text-gray-400">
+          Vous pouvez suivre les avancées sur nos réseaux : coulisses studio,
+          annonces et sorties.
+        </p>
       </div>
-    </main>
+    </section>
   );
 }
