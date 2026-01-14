@@ -5,7 +5,8 @@ export const API_BASE_URL =
 
 const api = axios.create({
   baseURL: API_BASE_URL,
-  withCredentials: true, 
+  withCredentials: true,
+  timeout: 8000, 
   headers: {
     "Content-Type": "application/json",
     Accept: "application/json",
@@ -17,7 +18,6 @@ api.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
 
 api.interceptors.request.use(
   (config) => {
-   
     const token = localStorage.getItem("token");
 
     if (token) {
@@ -35,7 +35,6 @@ api.interceptors.request.use(
 
 api.interceptors.response.use(
   (response) => {
-  
     if (response.data?.token) {
       localStorage.setItem("token", response.data.token);
     }
@@ -44,14 +43,19 @@ api.interceptors.response.use(
   (error) => {
     if (error.response) {
       const { status } = error.response;
+      const url = error.config?.url || "";
 
       if (status === 401) {
-        console.warn("Session expirée ou non autorisée (401).");
-        localStorage.removeItem("token");
+      
+        if (!url.includes("/users/me")) {
+          console.warn("Session expirée ou non autorisée (401).");
+          localStorage.removeItem("token");
+        }
       } else if (status >= 500) {
         console.error("Erreur serveur :", error.response.data);
       }
     } else {
+   
       console.error("Erreur réseau :", error.message);
     }
 
@@ -98,7 +102,6 @@ export async function createStripeSession({ amount, message, email, user_id }) {
 export async function getPublicDonationStats() {
   return get("/donations/public-stats");
 }
-
 
 export default api;
 

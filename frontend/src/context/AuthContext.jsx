@@ -5,33 +5,44 @@ const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
+
   const [loading, setLoading] = useState(true);
+
   const [error, setError] = useState(null);
 
   useEffect(() => {
     let isMounted = true;
+
+    const timeoutId = setTimeout(() => {
+      if (isMounted) setLoading(false);
+    }, 4000); 
+
     (async () => {
       try {
-        const res = await get("/users/me", { withCredentials: true });
-        if (isMounted && res?.data) {
-          setUser(res.data);
-        } else if (isMounted) {
-          setUser(null);
-        }
+        const res = await get("/users/me"); 
+
+        if (!isMounted) return;
+
+        if (res?.data) setUser(res.data);
+        else setUser(null);
       } catch (err) {
-        if (isMounted) {
-          console.warn(
-            "Session expirée ou non connectée :",
-            err?.response?.status || err?.message
-          );
-          setUser(null);
+        if (!isMounted) return;
+
+        const status = err?.response?.status;
+        if (status !== 401) {
+          console.warn("Erreur session:", status || err?.message);
         }
+
+        setUser(null);
       } finally {
+        clearTimeout(timeoutId);
         if (isMounted) setLoading(false);
       }
     })();
+
     return () => {
       isMounted = false;
+      clearTimeout(timeoutId);
     };
   }, []);
 
@@ -48,11 +59,13 @@ export function AuthProvider({ children }) {
 
   async function login(payload) {
     try {
-      const res = await post("/users/login", payload, { withCredentials: true });
+      const res = await post("/users/login", payload);
+
       if (res.success) {
-        const me = await get("/users/me", { withCredentials: true });
+        const me = await get("/users/me");
         setUser(me?.data || null);
       }
+
       return res;
     } catch (err) {
       console.error("Erreur de connexion :", err);
@@ -63,7 +76,7 @@ export function AuthProvider({ children }) {
 
   async function logout() {
     try {
-      await post("/users/logout", {}, { withCredentials: true });
+      await post("/users/logout", {});
     } catch (err) {
       console.warn("Erreur de déconnexion :", err);
     } finally {
@@ -87,22 +100,15 @@ export function AuthProvider({ children }) {
     isAdmin,
   };
 
-  if (loading) {
-    return (
-      <div
-        role="status"
-        aria-live="polite"
-        className="flex items-center justify-center min-h-screen text-[var(--accent)] animate-pulse"
-      >
-        Chargement de la session utilisateur…
-        <span className="sr-only">Connexion en cours</span>
-      </div>
-    );
-  }
-
   return (
     <AuthContext.Provider value={value}>
       {children}
+
+      {loading && (
+        <div className="fixed top-3 left-3 text-xs text-[var(--subtext)] opacity-80">
+          Vérification session…
+        </div>
+      )}
 
       {user && (
         <div
