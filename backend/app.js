@@ -41,7 +41,7 @@ app.use(
     origin: [
       "http://localhost:5173",
       "https://music-band-project-five.vercel.app",
-      "https://reveren.fastasturtlerecords.fr",
+      "https://reveren.contactfastasturtlerecords.fr",
       /\.vercel\.app$/,
     ],
     credentials: true,
