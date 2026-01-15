@@ -9,9 +9,14 @@ export function PlayerProvider({ children }) {
 
   const playTrack = useCallback((track, list = []) => {
     if (!track?.url) return;
+
     if (list.length) setPlaylist(list);
 
-    setCurrentTrack(track);
+    setCurrentTrack((prev) => {
+      if (prev?.url === track.url) return prev; 
+      return track;
+    });
+
     setIsPlaying(true);
   }, []);
 
@@ -19,23 +24,27 @@ export function PlayerProvider({ children }) {
 
   const nextTrack = useCallback(() => {
     if (!playlist.length || !currentTrack) return;
+
     const index = playlist.findIndex((t) => t.url === currentTrack.url);
     const next = playlist[(index + 1) % playlist.length];
+
     setCurrentTrack(next);
     setIsPlaying(true);
   }, [playlist, currentTrack]);
 
   const prevTrack = useCallback(() => {
     if (!playlist.length || !currentTrack) return;
+
     const index = playlist.findIndex((t) => t.url === currentTrack.url);
     const prev = playlist[(index - 1 + playlist.length) % playlist.length];
+
     setCurrentTrack(prev);
     setIsPlaying(true);
   }, [playlist, currentTrack]);
 
   useEffect(() => {
     localStorage.setItem("currentTrack", JSON.stringify(currentTrack));
-    localStorage.setItem("isPlaying", isPlaying);
+    localStorage.setItem("isPlaying", String(isPlaying));
     localStorage.setItem("playlist", JSON.stringify(playlist));
   }, [currentTrack, playlist, isPlaying]);
 

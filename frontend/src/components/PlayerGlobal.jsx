@@ -30,15 +30,26 @@ export default function PlayerGlobal() {
     const audio = audioRef.current;
     if (!audio || !currentTrack?.url) return;
 
-    audio.pause();
-    audio.src = currentTrack.url;
+    const alreadySame = audio.src && audio.src.includes(currentTrack.url);
+
+    if (!alreadySame) {
+      audio.pause();
+      audio.src = currentTrack.url;
+      audio.load(); 
+      setProgress(0);
+    }
+  }, [currentTrack?.url]);
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio || !currentTrack?.url) return;
 
     if (isPlaying) {
       audio.play().catch(() => {});
     } else {
       audio.pause();
     }
-  }, [currentTrack, isPlaying]);
+  }, [isPlaying, currentTrack?.url]);
 
   useEffect(() => {
     const audio = audioRef.current;
@@ -46,6 +57,7 @@ export default function PlayerGlobal() {
 
     const updateProgress = () =>
       setProgress((audio.currentTime / audio.duration) * 100 || 0);
+
     const handleEnd = () => nextTrack();
 
     audio.addEventListener("timeupdate", updateProgress);
@@ -74,28 +86,24 @@ export default function PlayerGlobal() {
         <motion.div
           key="player"
           initial={{ opacity: 0, y: 80 }}
+        
           animate={{
-            opacity: isPlaying ? 1 : 0, 
-            y: isPlaying ? 0 : 80,
-            scale: isPlaying ? 1 : 0.95,
+            opacity: 1,
+            y: 0,
+            scale: 1,
           }}
           exit={{ opacity: 0, y: 100, scale: 0.9 }}
           transition={{ duration: 0.6, ease: "easeInOut" }}
           className={`fixed bottom-[70px] inset-x-0 mx-auto w-[95%] sm:w-[85%] md:w-[70%] lg:w-[60%]
-           border-2 rounded-2xl sm:rounded-3xl backdrop-blur-md z-[90]
-           ${
-           isPlaying
-          ? "border-[var(--accent)] bg-[color-mix(in_oklab,var(--bg)_80%,black_20%)] player-pulse shadow-[0_0_25px_rgba(179,18,45,0.5)]"
-          : "pointer-events-none"
-          }
-         `}
-
+            border-2 rounded-2xl sm:rounded-3xl backdrop-blur-md z-[90]
+            ${
+              isPlaying
+                ? "border-[var(--accent)] bg-[color-mix(in_oklab,var(--bg)_80%,black_20%)] player-pulse shadow-[0_0_25px_rgba(179,18,45,0.5)]"
+                : "border-[var(--border)] bg-[color-mix(in_oklab,var(--bg)_88%,black_12%)] opacity-95"
+            }
+          `}
         >
-          <div
-            className="flex flex-col sm:flex-row items-center justify-between gap-2 px-3 py-3 
-                       transition-all duration-500"
-          >
-          
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-2 px-3 py-3 transition-all duration-500">
             <div className="flex items-center gap-3 w-full sm:w-[40%] truncate justify-center sm:justify-start">
               {currentTrack.cover_url && (
                 <img
@@ -118,12 +126,15 @@ export default function PlayerGlobal() {
               <button
                 onClick={prevTrack}
                 className="hover:scale-110 transition-transform"
+                type="button"
               >
                 <FaStepBackward size={14} className="text-[var(--accent)]" />
               </button>
+
               <button
                 onClick={togglePlay}
                 className="hover:scale-125 transition-transform"
+                type="button"
               >
                 {isPlaying ? (
                   <FaPause size={22} className="text-[var(--accent)]" />
@@ -131,22 +142,25 @@ export default function PlayerGlobal() {
                   <FaPlay size={22} className="text-[var(--accent)]" />
                 )}
               </button>
+
               <button
                 onClick={nextTrack}
                 className="hover:scale-110 transition-transform"
+                type="button"
               >
                 <FaStepForward size={14} className="text-[var(--accent)]" />
               </button>
             </div>
 
             <div className="flex items-center gap-2 w-full sm:w-[20%] justify-center sm:justify-end">
-              <button onClick={() => setIsMuted(!isMuted)}>
+              <button onClick={() => setIsMuted(!isMuted)} type="button">
                 {isMuted ? (
                   <FaVolumeMute size={16} className="text-[var(--accent)]" />
                 ) : (
                   <FaVolumeUp size={16} className="text-[var(--accent)]" />
                 )}
               </button>
+
               <input
                 type="range"
                 min="0"
@@ -159,21 +173,19 @@ export default function PlayerGlobal() {
             </div>
           </div>
 
-<div className="relative w-[98%] mx-auto mt-[2px] h-[5px] rounded-full overflow-hidden bg-[color-mix(in_oklab,var(--border)_60%,black_40%)] shadow-[inset_0_0_6px_rgba(255,215,0,0.2)]">
-  <motion.div
-    className="absolute top-0 left-0 h-[5px] rounded-full bg-gradient-to-r from-[var(--accent)] via-[var(--gold)] to-[var(--accent)] shadow-[0_0_12px_var(--gold)]"
-    style={{ width: `${progress}%` }}
-    animate={{ width: `${progress}%` }}
-    transition={{
-      type: "spring",
-      stiffness: 80,
-      damping: 15,
-      mass: 0.4,
-    }}
-  />
-</div>
-
-
+          <div className="relative w-[98%] mx-auto mt-[2px] h-[5px] rounded-full overflow-hidden bg-[color-mix(in_oklab,var(--border)_60%,black_40%)] shadow-[inset_0_0_6px_rgba(255,215,0,0.2)]">
+            <motion.div
+              className="absolute top-0 left-0 h-[5px] rounded-full bg-gradient-to-r from-[var(--accent)] via-[var(--gold)] to-[var(--accent)] shadow-[0_0_12px_var(--gold)]"
+              style={{ width: `${progress}%` }}
+              animate={{ width: `${progress}%` }}
+              transition={{
+                type: "spring",
+                stiffness: 80,
+                damping: 15,
+                mass: 0.4,
+              }}
+            />
+          </div>
 
           <audio ref={audioRef} preload="metadata" />
         </motion.div>
