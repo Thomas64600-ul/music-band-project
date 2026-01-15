@@ -144,35 +144,6 @@ export default function Music() {
         ))}
       </section>
 
-      <section className="text-center max-w-xl mt-12 mb-32">
-        <h2 className="text-2xl font-semibold mb-3 text-[var(--gold)] tracking-wide">
-          Nouvel EP –{" "}
-          <span className="text-[var(--accent)] italic">Electric Sunrise</span>
-        </h2>
-        <p className="text-[var(--subtext)] mb-6">
-          Découvrez le nouveau titre de{" "}
-          <span className="text-[var(--accent)] font-semibold">REVEREN</span>,
-          un mélange explosif de riffs électro et d’énergie live.
-        </p>
-        <Button
-          variant="primary"
-          as="a"
-          href="https://spotify.com"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="
-            mt-2 px-6 py-3 rounded-md 
-            bg-[var(--accent)] text-white font-semibold 
-            hover:bg-[var(--gold)] hover:text-[var(--bg)]
-            hover:shadow-[0_0_25px_var(--gold)] 
-            transition-all duration-300 ease-in-out
-            active:scale-95
-          "
-        >
-          ÉCOUTER SUR SPOTIFY
-        </Button>
-      </section>
-
       <div
         aria-hidden="true"
         className="
