@@ -5,6 +5,7 @@ import Footer from "./components/Footer";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Loader from "./components/Loader";
 import AdminWrapper from "./layouts/AdminWrapper";
+import CookieBanner from "./components/CookieBanner"; 
 
 const PlayerGlobal = lazy(() => import("./components/PlayerGlobal"));
 
@@ -62,7 +63,6 @@ export default function App() {
           }
         >
           <Routes>
-         
             <Route path="/" element={<Home />} />
             <Route path="/music" element={<Music />} />
             <Route path="/concerts" element={<Concerts />} />
@@ -75,7 +75,6 @@ export default function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/verify-email/:token" element={<VerifyEmail />} />
-
 
             <Route
               path="/admin"
@@ -229,6 +228,8 @@ export default function App() {
         <PlayerGlobal />
       </Suspense>
 
+      <CookieBanner />
+
       <Footer
         siteTitle="REVEREN"
         socials={[
@@ -240,6 +241,7 @@ export default function App() {
     </div>
   );
 }
+
 
 
 
