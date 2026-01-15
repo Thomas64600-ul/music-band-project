@@ -41,6 +41,7 @@ app.use(
     origin: [
       "http://localhost:5173",
       "https://music-band-project-five.vercel.app",
+      "https://reveren.fastasturtlerecords.fr",
       /\.vercel\.app$/,
     ],
     credentials: true,
@@ -69,6 +70,7 @@ app.use(
           "https://api.stripe.com",
           "https://res.cloudinary.com",
           "https://music-band-project.onrender.com",
+          "https://reveren.fastasturtlerecords.fr", 
         ],
         "script-src": ["'self'", "'unsafe-inline'", "https://js.stripe.com"],
         "media-src": ["'self'", "data:", "blob:", "res.cloudinary.com"],
@@ -83,15 +85,22 @@ app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
+app.get("/api/health", (req, res) => {
+  res.status(200).json({
+    ok: true,
+    status: "UP",
+    ts: Date.now(),
+    env: process.env.NODE_ENV || "development",
+  });
+});
+
 app.use("/api/users", userRoutes);
 app.use("/api/articles", articleRoutes);
 app.use("/api/concerts", concertRoutes);
 app.use("/api/comments", commentRoutes);
 app.use("/api/musics", musicRoutes);
 app.use("/api/messages", messageRoutes);
-
 app.use("/api/donations", donationRoutes);
-
 app.use("/api/stats", statsRoutes);
 
 if (process.env.NODE_ENV !== "production") {
@@ -123,4 +132,5 @@ app.get("/", (req, res) => {
 app.use(errorHandler);
 
 export default app;
+
 
