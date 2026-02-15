@@ -27,7 +27,7 @@ export default function Home() {
       <section className="relative h-[70vh] md:h-[90vh] overflow-hidden">
       
         <img
-          src="/groupImage-blur.webp"
+          src="/groupImage.webp"
           alt=""
           aria-hidden="true"
           className="absolute inset-0 w-full h-full object-cover blur-2xl scale-105"
