@@ -64,8 +64,8 @@ export default function Footer() {
         >
           {[
             { Icon: FaInstagram, href: "https://instagram.com", label: "Instagram" },
-            { Icon: FaYoutube, href: "https://youtube.com", label: "YouTube" },
-            { Icon: FaSpotify, href: "https://spotify.com", label: "Spotify" },
+            { Icon: FaYoutube, href: "https://www.youtube.com/channel/UCPeUE4ZH4AEyR-tRlIJUyuA", label: "YouTube" },
+            { Icon: FaSpotify, href: "https://open.spotify.com/artist/6xmpYJ5oCqv3oNp6jBXXu6", label: "Spotify" },
           ].map(({ Icon, href, label }) => (
             <a
               key={label}
