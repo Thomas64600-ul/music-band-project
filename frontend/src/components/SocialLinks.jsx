@@ -3,7 +3,7 @@ import { FaInstagram, FaYoutube, FaSpotify, FaLink } from "react-icons/fa";
 
 export default function SocialLinks() {
   const links = [
-    { name: "Instagram", icon: <FaInstagram />, url: "https://instagram.com" },
+    { name: "Instagram", icon: <FaInstagram />, url: "https://www.instagram.com/reveren.music?igsh=b2ViNTAzOHRyZGEz" },
     { name: "YouTube", icon: <FaYoutube />, url: "https://www.youtube.com/channel/UCPeUE4ZH4AEyR-tRlIJUyuA" },
     { name: "Spotify", icon: <FaSpotify />, url: "https://open.spotify.com/artist/6xmpYJ5oCqv3oNp6jBXXu6" },
     { name: "Site officiel", icon: <FaLink />, url: "https://reveren.contactfastasturtlerecords.fr/" },

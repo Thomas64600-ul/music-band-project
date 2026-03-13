@@ -63,7 +63,7 @@ export default function Footer() {
           className="flex justify-center gap-6 text-lg sm:text-xl"
         >
           {[
-            { Icon: FaInstagram, href: "https://instagram.com", label: "Instagram" },
+            { Icon: FaInstagram, href: "https://www.instagram.com/reveren.music?igsh=b2ViNTAzOHRyZGEz", label: "Instagram" },
             { Icon: FaYoutube, href: "https://www.youtube.com/channel/UCPeUE4ZH4AEyR-tRlIJUyuA", label: "YouTube" },
             { Icon: FaSpotify, href: "https://open.spotify.com/artist/6xmpYJ5oCqv3oNp6jBXXu6", label: "Spotify" },
           ].map(({ Icon, href, label }) => (
